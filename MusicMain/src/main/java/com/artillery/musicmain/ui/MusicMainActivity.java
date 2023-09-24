@@ -2,10 +2,7 @@ package com.artillery.musicmain.ui;
 
 import android.os.Bundle;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import com.artillery.musicbase.base.BaseActivity;
-import com.artillery.musicbase.base.ViewModelFactory;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.databinding.ActivityMusicMainBinding;
@@ -25,9 +22,4 @@ public class MusicMainActivity extends BaseActivity<ActivityMusicMainBinding, Mu
         return BR.musicModel;
     }
 
-    @Override
-    public MusicMainViewModel initViewModel() {
-        ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
-        return ViewModelProviders.of(this, factory).get(MusicMainViewModel.class);
-    }
 }
