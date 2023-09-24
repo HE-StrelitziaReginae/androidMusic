@@ -3,22 +3,17 @@ plugins {
 }
 
 android {
-    namespace rootProject.ext.android.namespace
+    namespace rootProject.ext.android.musicBase
     compileSdk rootProject.ext.android.compileSdk
 
     defaultConfig {
         minSdk rootProject.ext.android.minSdk
         targetSdk rootProject.ext.android.targetSdk
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+    dataBinding {
+        enabled true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -27,6 +22,9 @@ android {
 }
 
 dependencies {
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'junit:junit:4.12'
+    implementation 'androidx.test.ext:junit:1.1.5'
     api fileTree(include: ['*.jar'], dir: 'libs')
     //support
     api rootProject.ext.support["support-v4"]
@@ -64,8 +62,6 @@ dependencies {
     api(rootProject.ext.dependencies.glide) {
         exclude group: 'com.android.support'
     }
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     annotationProcessor rootProject.ext.dependencies["glide-compiler"]
     //recyclerview的dataBinding套装
     api(rootProject.ext.dependencies.bindingcollectionadapter) {
@@ -80,6 +76,4 @@ dependencies {
     //Google LiveData和ViewModel组件
     api rootProject.ext.dependencies["lifecycle-extensions"]
     annotationProcessor rootProject.ext.dependencies["lifecycle-compiler"]
-    //图片框架
-    api 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
 }

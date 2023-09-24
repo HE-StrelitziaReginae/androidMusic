@@ -2,6 +2,9 @@ ext {
     //android开发版本配置
     android = [
             namespace        : 'com.artillery.music',
+            musicMain        : 'com.artillery.musicmain',
+            musicService     : 'com.artillery.musicservice',
+            musicBase        : 'com.artillery.musicbase',
             compileSdk       : 33,
             buildToolsVersion: "33.0.3",
             applicationId    : "com.artillery.music",

@@ -8,9 +8,10 @@ import java.util.Stack;
 
 /**
  * activity堆栈式管理
+ *
+ * @author ArtilleryOrchid
  */
 public class AppManager {
-
     private static Stack<Activity> activityStack;
     private static Stack<Fragment> fragmentStack;
     private static AppManager instance;
@@ -71,8 +72,7 @@ public class AppManager {
      * 获取当前Activity（堆栈中最后一个压入的）
      */
     public Activity currentActivity() {
-        Activity activity = activityStack.lastElement();
-        return activity;
+        return activityStack.lastElement();
     }
 
     /**
@@ -124,13 +124,16 @@ public class AppManager {
      * @author kymjs
      */
     public Activity getActivity(Class<?> cls) {
-        if (activityStack != null) for (Activity activity : activityStack) {
-            if (activity.getClass().equals(cls)) {
-                return activity;
+        if (activityStack != null) {
+            for (Activity activity : activityStack) {
+                if (activity.getClass().equals(cls)) {
+                    return activity;
+                }
             }
         }
         return null;
     }
+
 
     /**
      * 添加Fragment到堆栈
@@ -150,6 +153,7 @@ public class AppManager {
             fragmentStack.remove(fragment);
         }
     }
+
 
     /**
      * 是否有Fragment
@@ -171,10 +175,11 @@ public class AppManager {
         return null;
     }
 
+
     /**
      * 退出应用程序
      */
-    public void AppExit() {
+    public void appExit() {
         try {
             finishAllActivity();
             // 杀死该应用进程

@@ -1,19 +1,19 @@
-package com.artillery.androidmusic;
-
-import android.os.Bundle;
+package com.artillery.musicmain.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.artillery.music.R;
+import android.os.Bundle;
+
+import com.artillery.musicmain.R;
 
 /**
  * @author ArtilleryOrchid
  */
-public class MainActivity extends AppCompatActivity {
+public class MusicListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_music_list);
     }
 }

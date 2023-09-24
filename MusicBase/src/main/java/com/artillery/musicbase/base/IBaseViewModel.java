@@ -1,5 +1,6 @@
 package com.artillery.musicbase.base;
 
+
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
@@ -8,6 +9,7 @@ import androidx.lifecycle.OnLifecycleEvent;
 /**
  * @author ArtilleryOrchid
  */
+
 public interface IBaseViewModel extends LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
