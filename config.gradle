@@ -59,6 +59,9 @@ ext {
             //Google AAC
             "lifecycle-extensions"                 : "androidx.lifecycle:lifecycle-extensions:2.0.0",
             "lifecycle-compiler"                   : "androidx.lifecycle:lifecycle-compiler:2.0.0",
+            //room
+            "room-runtime"                         : "androidx.room:room-runtime:2.2.5",
+            "room-compiler"                        : "androidx.room:room-compiler:2.2.5",
     ]
 }
 

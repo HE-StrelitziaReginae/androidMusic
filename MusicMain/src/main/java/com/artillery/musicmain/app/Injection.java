@@ -1,11 +1,14 @@
 package com.artillery.musicmain.app;
 
-import com.artillery.musicmain.data.Repository;
-import com.artillery.musicmain.data.source.HttpDataSource;
-import com.artillery.musicmain.data.source.LocalDataSource;
-import com.artillery.musicmain.data.source.http.HttpDataSourceImpl;
+import com.artillery.musicmain.data.MusicRepository;
+import com.artillery.musicmain.data.source.MusicHttpSource;
+import com.artillery.musicmain.data.source.MusicLocalSource;
+import com.artillery.musicmain.data.source.MusicPlaySource;
+import com.artillery.musicmain.data.source.contract.MusicPlayContractImpl;
+import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
+import com.artillery.musicmain.data.source.http.MusicHttpSourceImpl;
 import com.artillery.musicmain.data.source.http.service.ApiService;
-import com.artillery.musicmain.data.source.local.LocalDataSourceImpl;
+import com.artillery.musicmain.data.source.local.MusicLocalSourceImpl;
 import com.artillery.musicmain.net.RetrofitClient;
 
 /**
@@ -15,14 +18,16 @@ import com.artillery.musicmain.net.RetrofitClient;
  * @author ArtilleryOrchid
  */
 public class Injection {
-    public static Repository provideRepository() {
-        //网络API服务
-        ApiService apiService = RetrofitClient.getInstance().create(ApiService.class);
-        //网络数据源
-        HttpDataSource httpDataSource = HttpDataSourceImpl.getInstance(apiService);
+    public static MusicRepository provideRepository() {
+//        //网络API服务
+//        ApiService apiService = RetrofitClient.getInstance().create(ApiService.class);
+//        //网络数据源
+//        MusicHttpSource httpDataSource = MusicHttpSourceImpl.getInstance(apiService);
         //本地数据源
-        LocalDataSource localDataSource = LocalDataSourceImpl.getInstance();
+        MusicLocalSource localDataSource = MusicLocalSourceImpl.getInstance();
+        //服务注册
+        MusicPlaySource musicPlaySource = MusicPlayContractImpl.getInstance();
         //两条分支组成一个数据仓库
-        return Repository.getInstance(httpDataSource, localDataSource);
+        return MusicRepository.getInstance(localDataSource, musicPlaySource);
     }
 }

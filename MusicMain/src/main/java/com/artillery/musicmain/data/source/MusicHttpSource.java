@@ -5,5 +5,5 @@ package com.artillery.musicmain.data.source;
  *
  * @author ArtilleryOrchid
  */
-public interface HttpDataSource {
+public interface MusicHttpSource {
 }

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.artillery.music.R;
-import com.artillery.musicmain.ui.MusicMainActivity;
+import com.artillery.musicmain.ui.music.MusicMainActivity;
 
 /**
  * @author ArtilleryOrchid

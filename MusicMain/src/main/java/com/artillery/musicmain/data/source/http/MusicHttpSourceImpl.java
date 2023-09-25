@@ -1,20 +1,20 @@
 package com.artillery.musicmain.data.source.http;
 
 import com.artillery.musicmain.data.source.http.service.ApiService;
-import com.artillery.musicmain.data.source.HttpDataSource;
+import com.artillery.musicmain.data.source.MusicHttpSource;
 
 /**
  * @author ArtilleryOrchid
  */
-public class HttpDataSourceImpl implements HttpDataSource {
+public class MusicHttpSourceImpl implements MusicHttpSource {
     private ApiService apiService;
-    private volatile static HttpDataSourceImpl INSTANCE = null;
+    private volatile static MusicHttpSourceImpl INSTANCE = null;
 
-    public static HttpDataSourceImpl getInstance(ApiService apiService) {
+    public static MusicHttpSourceImpl getInstance(ApiService apiService) {
         if (INSTANCE == null) {
-            synchronized (HttpDataSourceImpl.class) {
+            synchronized (MusicHttpSourceImpl.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new HttpDataSourceImpl(apiService);
+                    INSTANCE = new MusicHttpSourceImpl(apiService);
                 }
             }
         }
@@ -25,7 +25,7 @@ public class HttpDataSourceImpl implements HttpDataSource {
         INSTANCE = null;
     }
 
-    private HttpDataSourceImpl(ApiService apiService) {
+    private MusicHttpSourceImpl(ApiService apiService) {
         this.apiService = apiService;
     }
 }

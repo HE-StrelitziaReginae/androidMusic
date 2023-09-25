@@ -1,18 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="com.artillery.musicmain.ui.MusicMainViewModel" />
+        <import type="com.artillery.musicmain.ui.music.MusicMainViewModel" />
 
         <variable
             name="musicModel"
-            type="com.artillery.musicmain.ui.MusicMainViewModel" />
+            type="com.artillery.musicmain.ui.music.MusicMainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/music_action_liner"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_300"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/music_pre"
+                binding:onClickCommand="@{musicModel.pre}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_50"
+                android:layout_marginEnd="@dimen/dp_50"
+                android:text="@string/music_play"
+                binding:onClickCommand="@{musicModel.play}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/music_next"
+                binding:onClickCommand="@{musicModel.next}" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/music_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/music_action_liner" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

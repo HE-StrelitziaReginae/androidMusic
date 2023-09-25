@@ -8,7 +8,8 @@ import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.ViewModel;
 
 import com.artillery.musicbase.base.ViewModelFactory;
-import com.artillery.musicmain.data.Repository;
+import com.artillery.musicmain.data.MusicRepository;
+import com.artillery.musicmain.ui.music.MusicMainViewModel;
 
 /**
  * @author ArtilleryOrchid
@@ -17,7 +18,7 @@ public class AppViewModelFactory extends ViewModelFactory {
     @SuppressLint("StaticFieldLeak")
     private static volatile AppViewModelFactory INSTANCE;
     private final Application mApplication;
-    private final Repository mRepository;
+    private final MusicRepository mRepository;
 
     public static AppViewModelFactory getInstance(Application application) {
         if (INSTANCE == null) {
@@ -35,15 +36,18 @@ public class AppViewModelFactory extends ViewModelFactory {
         INSTANCE = null;
     }
 
-    private AppViewModelFactory(Application application, Repository repository) {
+    private AppViewModelFactory(Application application, MusicRepository repository) {
         super(application);
-        this.mApplication = application;
-        this.mRepository = repository;
+        mApplication = application;
+        mRepository = repository;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        if (modelClass.isAssignableFrom(MusicMainViewModel.class)) {
+            return (T) new MusicMainViewModel(mApplication, mRepository);
+        }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
 }
