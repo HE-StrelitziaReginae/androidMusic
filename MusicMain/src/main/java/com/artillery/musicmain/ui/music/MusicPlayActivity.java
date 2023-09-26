@@ -49,6 +49,9 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
                         * ((float) mMusicListener.getProgress() / (float) getCurrentSongDuration()));
                 updateProgressTextWithDuration(mMusicListener.getProgress());
                 if (progress >= 0 && progress <= binding.musicSeekbar.getMax()) {
+                    KLog.e(" getMax ===========> " + binding.musicSeekbar.getMax());
+                    KLog.e(" mMusicListener ===========> " + mMusicListener.getProgress());
+                    KLog.e(" getCurrentSongDuration ===========> " + getCurrentSongDuration());
                     KLog.e(" progress ===========> " + progress);
                     binding.musicSeekbar.setProgress(progress, true);
                 }
@@ -92,7 +95,6 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
     @Override
     public void initViewObservable() {
         viewModel.mMusicRepository.bindMusicView(this);
-        binding.musicSeekbar.setKeyProgressIncrement(1);
         binding.musicSeekbar.setOnSeekBarChangeListener(this);
         viewModel.play = new BindingCommand(new BindingAction() {
             @Override
@@ -176,7 +178,7 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
 
     private long getCurrentSongDuration() {
         Song currentSong = mMusicListener.getPlayingSong();
-        long duration = 0L;
+        int duration = 0;
         if (currentSong != null) {
             duration = currentSong.getDuration();
         }
