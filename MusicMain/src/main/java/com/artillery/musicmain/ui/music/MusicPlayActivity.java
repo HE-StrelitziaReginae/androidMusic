@@ -3,10 +3,13 @@ package com.artillery.musicmain.ui.music;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.text.format.DateUtils;
 import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.artillery.musicbase.base.BaseActivity;
@@ -31,14 +34,14 @@ import java.util.ArrayList;
 /**
  * @author ArtilleryOrchid
  */
+@RequiresApi(api = Build.VERSION_CODES.P)
 public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, MusicPlayViewModel> implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
-    private static final long UPDATE_PROGRESS_INTERVAL = 1000;
     private MusicListener mMusicListener;
     private PlayList mPlayList;
     private int mStartIndex = 0;
     private Song mSong;
-    private Handler mHandler = new Handler();
-    private Runnable mProgressCallback = new Runnable() {
+    private final Handler mHandler = Handler.createAsync(Looper.getMainLooper());
+    private final Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
             if (mMusicListener.isPlaying()) {
@@ -46,13 +49,10 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
                         * ((float) mMusicListener.getProgress() / (float) getCurrentSongDuration()));
                 updateProgressTextWithDuration(mMusicListener.getProgress());
                 if (progress >= 0 && progress <= binding.musicSeekbar.getMax()) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        binding.musicSeekbar.setProgress(progress, true);
-                    } else {
-                        binding.musicSeekbar.setProgress(progress);
-                    }
-                    mHandler.postDelayed(this, UPDATE_PROGRESS_INTERVAL);
+                    KLog.e(" progress ===========> " + progress);
+                    binding.musicSeekbar.setProgress(progress, true);
                 }
+                mHandler.postDelayed(mProgressCallback, DateUtils.SECOND_IN_MILLIS);
             }
         }
     };
@@ -92,6 +92,7 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
     @Override
     public void initViewObservable() {
         viewModel.mMusicRepository.bindMusicView(this);
+        binding.musicSeekbar.setKeyProgressIncrement(1);
         binding.musicSeekbar.setOnSeekBarChangeListener(this);
         viewModel.play = new BindingCommand(new BindingAction() {
             @Override

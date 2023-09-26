@@ -8,4 +8,5 @@
     <string name="music_home_tab">音乐</string>
     <string name="music_online_tab">在线</string>
     <string name="music_mine_tab">我的</string>
+    <string name="music_time">00:00</string>
 </resources>

@@ -27,7 +27,7 @@ public class Song implements Parcelable {
     @ColumnInfo
     private String path;
     @ColumnInfo
-    private long duration;
+    private int duration;
     @ColumnInfo
     private int size;
     @ColumnInfo
@@ -89,11 +89,11 @@ public class Song implements Parcelable {
         this.path = path;
     }
 
-    public long getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(long duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
@@ -126,7 +126,7 @@ public class Song implements Parcelable {
         dest.writeString(this.artist);
         dest.writeString(this.album);
         dest.writeString(this.path);
-        dest.writeLong(this.duration);
+        dest.writeInt(this.duration);
         dest.writeInt(this.size);
         dest.writeInt(this.favorite ? 1 : 0);
     }
@@ -138,7 +138,7 @@ public class Song implements Parcelable {
         this.artist = in.readString();
         this.album = in.readString();
         this.path = in.readString();
-        this.duration = in.readLong();
+        this.duration = in.readInt();
         this.size = in.readInt();
         this.favorite = in.readInt() == 1;
     }
