@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.artillery.musicbase.base.ViewModelFactory;
 import com.artillery.musicmain.data.MusicRepository;
-import com.artillery.musicmain.ui.music.MusicMainViewModel;
+import com.artillery.musicmain.ui.music.MusicPlayViewModel;
 
 /**
  * @author ArtilleryOrchid
@@ -45,8 +45,8 @@ public class AppViewModelFactory extends ViewModelFactory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(MusicMainViewModel.class)) {
-            return (T) new MusicMainViewModel(mApplication, mRepository);
+        if (modelClass.isAssignableFrom(MusicPlayViewModel.class)) {
+            return (T) new MusicPlayViewModel(mApplication, mRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

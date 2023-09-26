@@ -11,17 +11,18 @@ import com.artillery.musicmain.data.MusicRepository;
 /**
  * @author ArtilleryOrchid
  */
-public class MusicMainViewModel extends BaseViewModel<MusicRepository> {
+public class MusicPlayViewModel extends BaseViewModel<MusicRepository> {
     public BindingCommand pre;
     public BindingCommand play;
     public BindingCommand next;
     public MusicRepository mMusicRepository;
 
-    public MusicMainViewModel(@NonNull Application application, MusicRepository model) {
+    public MusicPlayViewModel(@NonNull Application application, MusicRepository model) {
         super(application, model);
+        model.bindMusicService();
         mMusicRepository = model;
-        mMusicRepository.bindMusicService();
     }
+
     @Override
     public void onDestroy() {
         mMusicRepository.unBindMusicService();

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:binding="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.artillery.musicmain.ui.fragment.list.MusicListFragmentViewModel" />
+
+        <import type="com.artillery.musicbase.binding.viewadapter.recyclerview.LayoutManagers" />
+
+        <import type="com.artillery.musicbase.binding.viewadapter.recyclerview.LineManagers" />
+
+        <variable
+            name="musicListModel"
+            type="com.artillery.musicmain.ui.fragment.list.MusicListFragmentViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/music_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            binding:itemBinding="@{musicListModel.musicListBinding}"
+            binding:items="@{musicListModel.musicListItem}"
+            binding:layoutManager="@{LayoutManagers.linear()}"
+            binding:lineManager="@{LineManagers.horizontal()}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

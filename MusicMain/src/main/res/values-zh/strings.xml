@@ -4,4 +4,8 @@
     <string name="music_play">播放</string>
     <string name="music_pause">暂停</string>
     <string name="music_next">下一首</string>
+
+    <string name="music_home_tab">音乐</string>
+    <string name="music_online_tab">在线</string>
+    <string name="music_mine_tab">我的</string>
 </resources>

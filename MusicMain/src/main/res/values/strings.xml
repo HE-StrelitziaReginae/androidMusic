@@ -4,4 +4,8 @@
     <string name="music_play">Play</string>
     <string name="music_pause">Pause</string>
     <string name="music_next">Next</string>
+
+    <string name="music_home_tab">Music</string>
+    <string name="music_online_tab">Online</string>
+    <string name="music_mine_tab">Mine</string>
 </resources>

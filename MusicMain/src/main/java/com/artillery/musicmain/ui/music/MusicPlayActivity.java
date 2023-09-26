@@ -1,5 +1,6 @@
 package com.artillery.musicmain.ui.music;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.SeekBar;
@@ -11,53 +12,70 @@ import androidx.lifecycle.ViewModelProviders;
 import com.artillery.musicbase.base.BaseActivity;
 import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
-import com.artillery.musicbase.utils.Utils;
+import com.artillery.musicbase.utils.KLog;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.app.AppViewModelFactory;
+import com.artillery.musicmain.data.MusicContext;
 import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
-import com.artillery.musicmain.databinding.ActivityMusicMainBinding;
-import com.artillery.musicservice.data.MusicLocalUtils;
+import com.artillery.musicmain.databinding.ActivityMusicPlayBinding;
+import com.artillery.musicmain.utils.TimeUtils;
 import com.artillery.musicservice.data.Song;
 import com.artillery.musicservice.service.MusicListener;
 import com.artillery.musicservice.service.MusicMode;
 import com.artillery.musicservice.service.MusicService;
 
-import java.util.ArrayList;
-
 /**
  * @author ArtilleryOrchid
  */
-public class MusicMainActivity extends BaseActivity<ActivityMusicMainBinding, MusicMainViewModel> implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
+public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, MusicPlayViewModel> implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
     private static final long UPDATE_PROGRESS_INTERVAL = 1000;
     private MusicListener mMusicListener;
+    private Song mSong;
     private Handler mHandler = new Handler();
     private Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
             if (mMusicListener.isPlaying()) {
-                mHandler.postDelayed(this, UPDATE_PROGRESS_INTERVAL);
+                int progress = (int) (binding.musicSeekbar.getMax()
+                        * ((float) mMusicListener.getProgress() / (float) getCurrentSongDuration()));
+                updateProgressTextWithDuration(mMusicListener.getProgress());
+                if (progress >= 0 && progress <= binding.musicSeekbar.getMax()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        binding.musicSeekbar.setProgress(progress, true);
+                    } else {
+                        binding.musicSeekbar.setProgress(progress);
+                    }
+                    mHandler.postDelayed(this, UPDATE_PROGRESS_INTERVAL);
+                }
             }
         }
     };
+
+    @Override
+    public void initParam() {
+        mSong = getIntent().getParcelableExtra(MusicContext.MUSIC_PLAY_SONG);
+    }
+
     @Override
     public int initContentView(Bundle savedInstanceState) {
-        return R.layout.activity_music_main;
+        return R.layout.activity_music_play;
     }
 
     @Override
     public int initVariableId() {
-        return BR.musicModel;
+        return BR.musicPlayModel;
     }
 
     @Override
-    public MusicMainViewModel initViewModel() {
+    public MusicPlayViewModel initViewModel() {
         AppViewModelFactory factory = AppViewModelFactory.getInstance(getApplication());
-        return ViewModelProviders.of(this,factory).get(MusicMainViewModel.class);
+        return ViewModelProviders.of(this, factory).get(MusicPlayViewModel.class);
     }
 
     @Override
     public void initData() {
+        updateMainUi(mSong);
     }
 
     @Override
@@ -70,20 +88,30 @@ public class MusicMainActivity extends BaseActivity<ActivityMusicMainBinding, Mu
                 if (mMusicListener == null) {
                     return;
                 }
-                MusicLocalUtils instance = MusicLocalUtils.getInstance();
-                ArrayList<Song> music = instance.getMusic(Utils.getContext());
-                mMusicListener.play(music.get(0));
-//                if (mMusicListener.isPlaying()) {
-//                    mMusicListener.pause();
-//                } else {
-//                    mMusicListener.play();
-//                }
+                if (mMusicListener.isPlaying()) {
+                    mMusicListener.pause();
+                } else {
+                    mMusicListener.play(mSong);
+                }
+                mHandler.post(mProgressCallback);
+            }
+        });
+        viewModel.next = new BindingCommand(new BindingAction() {
+            @Override
+            public void call() {
+                mMusicListener.playNext();
+            }
+        });
+        viewModel.pre = new BindingCommand(new BindingAction() {
+            @Override
+            public void call() {
+                mMusicListener.playLast();
             }
         });
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         if (mMusicListener != null && mMusicListener.isPlaying()) {
             mHandler.removeCallbacks(mProgressCallback);
@@ -100,17 +128,47 @@ public class MusicMainActivity extends BaseActivity<ActivityMusicMainBinding, Mu
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
+            updateProgressTextWithProgress(progress);
         }
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-
+        mHandler.removeCallbacks(mProgressCallback);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        seekTo(getDuration(seekBar.getProgress()));
+        if (mMusicListener.isPlaying()) {
+            mHandler.removeCallbacks(mProgressCallback);
+            mHandler.post(mProgressCallback);
+        }
+    }
 
+    private int getDuration(int progress) {
+        return (int) (getCurrentSongDuration() * ((float) progress / binding.musicSeekbar.getMax()));
+    }
+
+    private void updateProgressTextWithProgress(int progress) {
+        binding.musicTimeStart.setText(TimeUtils.formatDuration(getDuration(progress)));
+    }
+
+    private void updateProgressTextWithDuration(int duration) {
+        binding.musicTimeStart.setText(TimeUtils.formatDuration(duration));
+    }
+
+    private void seekTo(int duration) {
+        mMusicListener.seekTo(duration);
+    }
+
+    private long getCurrentSongDuration() {
+        Song currentSong = mMusicListener.getPlayingSong();
+        long duration = 0L;
+        if (currentSong != null) {
+            duration = currentSong.getDuration();
+        }
+        return duration;
     }
 
     @Override
@@ -130,12 +188,18 @@ public class MusicMainActivity extends BaseActivity<ActivityMusicMainBinding, Mu
 
     @Override
     public void onPlayStatusChanged(boolean isPlaying) {
-
+        updatePlayToggle(isPlaying);
+        if (isPlaying) {
+            mHandler.removeCallbacks(mProgressCallback);
+            mHandler.post(mProgressCallback);
+        } else {
+            mHandler.removeCallbacks(mProgressCallback);
+        }
     }
 
     @Override
     public void handleError(Throwable error) {
-
+        KLog.e("Error ================= > " + error);
     }
 
     @Override
@@ -161,10 +225,18 @@ public class MusicMainActivity extends BaseActivity<ActivityMusicMainBinding, Mu
             mHandler.removeCallbacks(mProgressCallback);
             return;
         }
+        //Music Duration
+        updateMainUi(song);
         mHandler.removeCallbacks(mProgressCallback);
         if (mMusicListener.isPlaying()) {
             mHandler.post(mProgressCallback);
         }
+    }
+
+    private void updateMainUi(Song song) {
+        binding.musicNamePlay.setText(song.getTitle());
+        binding.musicArtistPlay.setText(song.getArtist());
+        binding.musicTimeEnd.setText(TimeUtils.formatDuration(song.getDuration()));
     }
 
     @Override

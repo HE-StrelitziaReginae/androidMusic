@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:binding="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
-        <import type="com.artillery.musicmain.ui.music.MusicMainViewModel" />
+        <import type="com.artillery.musicmain.ui.main.MusicMainViewModel" />
 
         <variable
-            name="musicModel"
-            type="com.artillery.musicmain.ui.music.MusicMainViewModel" />
+            name="musicMain"
+            type="MusicMainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/music_action_liner"
+        <FrameLayout
+            android:id="@+id/music_frame"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_300"
-            android:gravity="center_horizontal|center_vertical"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/music_group"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toStartOf="parent">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/music_pre"
-                binding:onClickCommand="@{musicModel.pre}" />
+            <RadioButton
+                android:id="@+id/music_main"
+                style="@style/CustomRadioButton"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="match_parent"
+                android:text="@string/music_home_tab" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_50"
-                android:layout_marginEnd="@dimen/dp_50"
-                android:text="@string/music_play"
-                binding:onClickCommand="@{musicModel.play}" />
+            <RadioButton
+                android:id="@+id/music_online"
+                style="@style/CustomRadioButton"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="match_parent"
+                android:text="@string/music_online_tab" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/music_next"
-                binding:onClickCommand="@{musicModel.next}" />
-        </LinearLayout>
+            <RadioButton
+                android:id="@+id/music_mine"
+                style="@style/CustomRadioButton"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="match_parent"
+                android:text="@string/music_mine_tab" />
 
-        <SeekBar
-            android:id="@+id/music_seekbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/music_action_liner" />
+        </RadioGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
