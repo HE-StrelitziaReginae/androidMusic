@@ -1,6 +1,9 @@
 package com.artillery.musicservice.service;
 
 import android.media.MediaPlayer;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import com.artillery.musicbase.utils.KLog;
 import com.artillery.musicservice.data.PlayList;
@@ -15,6 +18,7 @@ import java.util.List;
 /**
  * @author ArtilleryOrchid
  */
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
     private static final String TAG = "Player";
 
@@ -63,7 +67,6 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         }
         if (mPlayList.prepare()) {
             Song song = mPlayList.getCurrentSong();
-            KLog.e(" ================>> " + song.getArtist());
             try {
                 mPlayer.reset();
                 mPlayer.setDataSource(song.getPath());
@@ -234,27 +237,29 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     }
 
     private void notifyPlayStatusChanged(boolean isPlaying) {
-        for (Callback callback : mCallbacks) {
+        mCallbacks.forEach(callback -> {
             callback.onPlayStatusChanged(isPlaying);
-        }
+        });
     }
 
     private void notifyPlayLast(Song song) {
-        for (Callback callback : mCallbacks) {
-            callback.onSwitchLast(song);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mCallbacks.forEach(callback -> {
+                callback.onSwitchLast(song);
+            });
         }
     }
 
     private void notifyPlayNext(Song song) {
-        for (Callback callback : mCallbacks) {
+        mCallbacks.forEach(callback -> {
             callback.onSwitchNext(song);
-        }
+        });
     }
 
     private void notifyComplete(Song song) {
-        for (Callback callback : mCallbacks) {
+        mCallbacks.forEach(callback -> {
             callback.onComplete(song);
-        }
+        });
     }
 
     @Override

@@ -20,10 +20,13 @@ import com.artillery.musicmain.data.MusicContext;
 import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
 import com.artillery.musicmain.databinding.ActivityMusicPlayBinding;
 import com.artillery.musicmain.utils.TimeUtils;
+import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
 import com.artillery.musicservice.service.MusicListener;
 import com.artillery.musicservice.service.MusicMode;
 import com.artillery.musicservice.service.MusicService;
+
+import java.util.ArrayList;
 
 /**
  * @author ArtilleryOrchid
@@ -31,6 +34,8 @@ import com.artillery.musicservice.service.MusicService;
 public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, MusicPlayViewModel> implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
     private static final long UPDATE_PROGRESS_INTERVAL = 1000;
     private MusicListener mMusicListener;
+    private PlayList mPlayList;
+    private int mStartIndex = 0;
     private Song mSong;
     private Handler mHandler = new Handler();
     private Runnable mProgressCallback = new Runnable() {
@@ -54,7 +59,13 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
 
     @Override
     public void initParam() {
+        mPlayList = new PlayList();
         mSong = getIntent().getParcelableExtra(MusicContext.MUSIC_PLAY_SONG);
+        ArrayList<Song> mSongList = getIntent().getParcelableArrayListExtra(MusicContext.MUSIC_PLAY_SONG_LIST);
+        mPlayList.setSongs(mSongList);
+        assert mSongList != null;
+        mPlayList.setNumOfSongs(mSongList.size());
+        mStartIndex = getIntent().getIntExtra(MusicContext.MUSIC_PLAY_SONG_START, 0);
     }
 
     @Override
@@ -91,7 +102,7 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
                 if (mMusicListener.isPlaying()) {
                     mMusicListener.pause();
                 } else {
-                    mMusicListener.play(mSong);
+                    mMusicListener.play(mPlayList, mStartIndex);
                 }
                 mHandler.post(mProgressCallback);
             }

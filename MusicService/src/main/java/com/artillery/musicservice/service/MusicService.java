@@ -5,9 +5,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.artillery.musicbase.utils.KLog;
 import com.artillery.musicservice.data.PlayList;
@@ -16,6 +18,7 @@ import com.artillery.musicservice.data.Song;
 /**
  * @author ArtilleryOrchid
  */
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class MusicService extends Service implements MusicListener, MusicListener.Callback {
     private static final int NOTIFICATION_ID = 1;
     private MusicPlayer mMusicPlayer;
