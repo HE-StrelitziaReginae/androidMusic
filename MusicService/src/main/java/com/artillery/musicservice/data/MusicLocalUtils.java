@@ -23,8 +23,6 @@ public class MusicLocalUtils {
     private static int size;
     private static String album;
     private static int id;
-    //获取专辑封面的Uri
-    private Uri albumArtUri;
 
     public static MusicLocalUtils getInstance() {
         if (mInstance == null) {
@@ -72,6 +70,7 @@ public class MusicLocalUtils {
                 }
             }
         }
+        assert cursor != null;
         cursor.close();
         return list;
     }
