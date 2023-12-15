@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="com.artillery.musicmain.ui.fragment.mine.MusicMineFragmentViewModel" />
+        <import type="com.artillery.musicmain.ui.mine.MusicMineFragmentViewModel" />
 
         <variable
             name="musicMineModel"
-            type="com.artillery.musicmain.ui.fragment.mine.MusicMineFragmentViewModel" />
+            type="com.artillery.musicmain.ui.mine.MusicMineFragmentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

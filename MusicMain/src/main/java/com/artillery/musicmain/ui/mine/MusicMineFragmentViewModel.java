@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.fragment.mine;
+package com.artillery.musicmain.ui.mine;
 
 import android.app.Application;
 

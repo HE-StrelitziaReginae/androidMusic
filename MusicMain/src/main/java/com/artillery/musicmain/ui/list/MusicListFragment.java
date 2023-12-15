@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.fragment.list;
+package com.artillery.musicmain.ui.list;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
-import com.artillery.musicmain.databinding.FragmentMusicListBinding;
 
 /**
  * @author ArtilleryOrchid

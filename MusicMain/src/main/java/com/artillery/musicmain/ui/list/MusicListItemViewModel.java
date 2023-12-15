@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.fragment.list;
+package com.artillery.musicmain.ui.list;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import com.artillery.musicbase.base.MultiItemViewModel;
 import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
 import com.artillery.musicmain.data.MusicContext;
-import com.artillery.musicmain.ui.music.MusicPlayActivity;
+import com.artillery.musicmain.ui.MusicPlayActivity;
 import com.artillery.musicmain.utils.AlbumUtils;
 import com.artillery.musicservice.data.Song;
 

@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.artillery.musicbase.base.ViewModelFactory;
 import com.artillery.musicmain.data.MusicRepository;
-import com.artillery.musicmain.ui.music.MusicPlayViewModel;
+import com.artillery.musicmain.viewmodel.MusicPlayViewModel;
 
 /**
  * @author ArtilleryOrchid

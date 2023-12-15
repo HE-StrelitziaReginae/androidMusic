@@ -60,12 +60,14 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public boolean play() {
+        KLog.e(" isPaused ================> " + isPaused);
         if (isPaused) {
             mPlayer.start();
             notifyPlayStatusChanged(true);
             return true;
         }
         if (mPlayList.prepare()) {
+            KLog.e(" prepare ================> " + mPlayList.prepare());
             Song song = mPlayList.getCurrentSong();
             try {
                 mPlayer.reset();

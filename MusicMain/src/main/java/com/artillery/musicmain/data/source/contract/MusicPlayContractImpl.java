@@ -4,7 +4,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
+
+import androidx.annotation.RequiresApi;
 
 import com.artillery.musicbase.utils.Utils;
 import com.artillery.musicmain.data.source.MusicPlaySource;
@@ -21,6 +24,7 @@ public class MusicPlayContractImpl implements MusicPlaySource {
     private MusicPlayView mMusicPlayView;
     private MusicService mMusicService;
     private ServiceConnection mConnection = new ServiceConnection() {
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMusicService = ((MusicService.LocalBinder) service).getService();

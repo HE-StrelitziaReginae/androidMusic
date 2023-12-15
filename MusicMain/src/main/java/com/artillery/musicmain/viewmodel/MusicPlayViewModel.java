@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.music;
+package com.artillery.musicmain.viewmodel;
 
 import android.app.Application;
 
@@ -21,12 +21,5 @@ public class MusicPlayViewModel extends BaseViewModel<MusicRepository> {
         super(application, model);
         model.bindMusicService();
         mMusicRepository = model;
-    }
-
-    @Override
-    public void onDestroy() {
-        mMusicRepository.unBindMusicService();
-        MusicRepository.destroyInstance();
-        onCleared();
     }
 }

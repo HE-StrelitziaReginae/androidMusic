@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.fragment.mine;
+package com.artillery.musicmain.ui.oline;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,19 +9,18 @@ import androidx.annotation.Nullable;
 import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
-import com.artillery.musicmain.databinding.FragmentMusicMineBinding;
 
 /**
  * @author ArtilleryOrchid
  */
-public class MusicMineFragment extends BaseFragment<FragmentMusicMineBinding, MusicMineFragmentViewModel> {
+public class MusicOnlineFragment extends BaseFragment<FragmentMusicOnlineBinding, MusicOnlineFragmentViewModel> {
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return R.layout.fragment_music_mine;
+        return R.layout.fragment_music_online;
     }
 
     @Override
     public int initVariableId() {
-        return BR.musicMineModel;
+        return BR.musicOnlineModel;
     }
 }

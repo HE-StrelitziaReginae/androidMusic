@@ -3,10 +3,10 @@
 
     <application>
         <activity
-            android:name=".ui.music.MusicPlayActivity"
+            android:name=".ui.MusicPlayActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.main.MusicMainActivity"
+            android:name=".ui.MusicMainActivity"
             android:exported="true" />
     </application>
 

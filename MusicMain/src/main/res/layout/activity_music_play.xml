@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="com.artillery.musicmain.ui.music.MusicPlayViewModel" />
+        <import type="com.artillery.musicmain.viewmodel.MusicPlayViewModel" />
 
         <variable
             name="musicPlayModel"
-            type="MusicPlayViewModel" />
+            type="com.artillery.musicmain.viewmodel.MusicPlayViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

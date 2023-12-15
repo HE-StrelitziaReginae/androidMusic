@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.main;
+package com.artillery.musicmain.ui;
 
 import android.os.Bundle;
 import android.widget.RadioGroup;
@@ -10,9 +10,10 @@ import com.artillery.musicbase.base.BaseActivity;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.databinding.ActivityMusicMainBinding;
-import com.artillery.musicmain.ui.fragment.list.MusicListFragment;
-import com.artillery.musicmain.ui.fragment.mine.MusicMineFragment;
-import com.artillery.musicmain.ui.fragment.oline.MusicOnlineFragment;
+import com.artillery.musicmain.ui.list.MusicListFragment;
+import com.artillery.musicmain.ui.mine.MusicMineFragment;
+import com.artillery.musicmain.ui.oline.MusicOnlineFragment;
+import com.artillery.musicmain.viewmodel.MusicMainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

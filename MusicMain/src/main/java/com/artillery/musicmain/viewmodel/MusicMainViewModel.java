@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.main;
+package com.artillery.musicmain.viewmodel;
 
 import android.app.Application;
 

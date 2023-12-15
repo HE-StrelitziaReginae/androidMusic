@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.fragment.list;
+package com.artillery.musicmain.ui.list;
 
 import android.app.Application;
 import android.os.Build;

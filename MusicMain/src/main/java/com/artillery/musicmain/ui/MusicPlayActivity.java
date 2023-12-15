@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.music;
+package com.artillery.musicmain.ui;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +22,7 @@ import com.artillery.musicmain.app.AppViewModelFactory;
 import com.artillery.musicmain.data.MusicContext;
 import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
 import com.artillery.musicmain.databinding.ActivityMusicPlayBinding;
+import com.artillery.musicmain.viewmodel.MusicPlayViewModel;
 import com.artillery.musicmain.utils.TimeUtils;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
@@ -49,10 +50,6 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
                         * ((float) mMusicListener.getProgress() / (float) getCurrentSongDuration()));
                 updateProgressTextWithDuration(mMusicListener.getProgress());
                 if (progress >= 0 && progress <= binding.musicSeekbar.getMax()) {
-                    KLog.e(" getMax ===========> " + binding.musicSeekbar.getMax());
-                    KLog.e(" mMusicListener ===========> " + mMusicListener.getProgress());
-                    KLog.e(" getCurrentSongDuration ===========> " + getCurrentSongDuration());
-                    KLog.e(" progress ===========> " + progress);
                     binding.musicSeekbar.setProgress(progress, true);
                 }
                 mHandler.postDelayed(mProgressCallback, DateUtils.SECOND_IN_MILLIS);
@@ -89,6 +86,7 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
 
     @Override
     public void initData() {
+        KLog.e(" initData ============>");
         updateMainUi(mSong);
     }
 
@@ -105,7 +103,7 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
                 if (mMusicListener.isPlaying()) {
                     mMusicListener.pause();
                 } else {
-                    mMusicListener.play(mPlayList, mStartIndex);
+                    mMusicListener.play();
                 }
                 mHandler.post(mProgressCallback);
             }
@@ -218,8 +216,17 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
 
     @Override
     public void onPlaybackServiceBound(MusicService service) {
+        KLog.e(" onPlaybackService ===========> " + service.toString());
         mMusicListener = service;
         mMusicListener.registerCallback(this);
+        startPlay();
+    }
+
+    private void startPlay() {
+        if (mMusicListener != null) {
+            mMusicListener.play(mPlayList, mStartIndex);
+            mHandler.post(mProgressCallback);
+        }
     }
 
     @Override
