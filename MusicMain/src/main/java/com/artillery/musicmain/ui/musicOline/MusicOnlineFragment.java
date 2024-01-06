@@ -10,11 +10,20 @@ import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.databinding.FragmentMusicOnlineBinding;
+import com.artillery.musicmain.viewmodel.MusicOnlineViewModel;
 
 /**
  * @author ArtilleryOrchid
  */
-public class MusicOnlineFragment extends BaseFragment<FragmentMusicOnlineBinding, MusicOnlineFragmentViewModel> {
+public class MusicOnlineFragment extends BaseFragment<FragmentMusicOnlineBinding, MusicOnlineViewModel> {
+    private static class Holder {
+        private static MusicOnlineFragment instance = new MusicOnlineFragment();
+    }
+
+    public static MusicOnlineFragment getInstance() {
+        return MusicOnlineFragment.Holder.instance;
+    }
+
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return R.layout.fragment_music_online;

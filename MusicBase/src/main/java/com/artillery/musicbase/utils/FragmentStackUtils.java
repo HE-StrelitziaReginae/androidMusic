@@ -36,7 +36,7 @@ public class FragmentStackUtils {
      * @param context 上下文
      * @param tag fragment对应的tag
      * @param bundle 传值用的bundle
-     * @param listener 创建一个frgmment实例的监听
+     * @param listener 创建一个fragment实例的监听
      * @return
      */
     public Fragment startFragment(int containerId, Context context, String tag, Bundle bundle, OnCreateFragmentListener listener) {

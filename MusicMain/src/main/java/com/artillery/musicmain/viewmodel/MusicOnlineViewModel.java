@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.musicOline;
+package com.artillery.musicmain.viewmodel;
 
 import android.app.Application;
 
@@ -9,8 +9,8 @@ import com.artillery.musicbase.base.BaseViewModel;
 /**
  * @author ArtilleryOrchid
  */
-public class MusicOnlineFragmentViewModel extends BaseViewModel {
-    public MusicOnlineFragmentViewModel(@NonNull Application application) {
+public class MusicOnlineViewModel extends BaseViewModel {
+    public MusicOnlineViewModel(@NonNull Application application) {
         super(application);
     }
 }

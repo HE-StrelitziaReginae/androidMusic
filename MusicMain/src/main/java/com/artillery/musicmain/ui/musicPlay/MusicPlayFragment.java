@@ -4,13 +4,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.format.DateUtils;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.artillery.musicbase.base.BaseActivity;
+import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
 import com.artillery.musicbase.utils.KLogUtils;
@@ -33,7 +35,7 @@ import java.util.ArrayList;
 /**
  * @author ArtilleryOrchid
  */
-public class MusicPlayFragment extends BaseActivity<ActivityMusicPlayBinding, MusicPlayViewModel> implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
+public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, MusicPlayViewModel> implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
     private MusicListener mMusicListener;
     private PlayList mPlayList;
     private int mStartIndex = 0;
@@ -46,7 +48,7 @@ public class MusicPlayFragment extends BaseActivity<ActivityMusicPlayBinding, Mu
                 int progress = (int) (mBinding.musicSeekbar.getMax()
                         * ((float) mMusicListener.getProgress() / (float) getCurrentSongDuration()));
                 updateProgressTextWithDuration(mMusicListener.getProgress());
-                if (progress >= 0 && progress <= mBinding.musicSeekbar.getMax()) {
+                if (progress > 0 && progress < mBinding.musicSeekbar.getMax()) {
                     mBinding.musicSeekbar.setProgress(progress);
                 }
                 mHandler.postDelayed(mProgressCallback, DateUtils.SECOND_IN_MILLIS);
@@ -57,16 +59,16 @@ public class MusicPlayFragment extends BaseActivity<ActivityMusicPlayBinding, Mu
     @Override
     public void initParam() {
         mPlayList = new PlayList();
-        mSong = getIntent().getParcelableExtra(MusicContext.MUSIC_PLAY_SONG);
-        ArrayList<Song> mSongList = getIntent().getParcelableArrayListExtra(MusicContext.MUSIC_PLAY_SONG_LIST);
+        mSong = requireArguments().getParcelable(MusicContext.MUSIC_PLAY_SONG);
+        ArrayList<Song> mSongList = requireArguments().getParcelableArrayList(MusicContext.MUSIC_PLAY_SONG_LIST);
         mPlayList.setSongs(mSongList);
         assert mSongList != null;
         mPlayList.setNumOfSongs(mSongList.size());
-        mStartIndex = getIntent().getIntExtra(MusicContext.MUSIC_PLAY_SONG_START, 0);
+        mStartIndex = requireArguments().getInt(MusicContext.MUSIC_PLAY_SONG_START, 0);
     }
 
     @Override
-    public int initContentView(Bundle savedInstanceState) {
+    public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return R.layout.activity_music_play;
     }
 
@@ -77,7 +79,7 @@ public class MusicPlayFragment extends BaseActivity<ActivityMusicPlayBinding, Mu
 
     @Override
     public MusicPlayViewModel initViewModel() {
-        AppViewModelFactory factory = AppViewModelFactory.getInstance(getApplication());
+        AppViewModelFactory factory = AppViewModelFactory.getInstance(requireActivity().getApplication());
         return ViewModelProviders.of(this, factory).get(MusicPlayViewModel.class);
     }
 
@@ -89,7 +91,6 @@ public class MusicPlayFragment extends BaseActivity<ActivityMusicPlayBinding, Mu
 
     @Override
     public void initViewObservable() {
-        mViewModel.mMusicRepository.bindMusicView(this);
         mBinding.musicSeekbar.setOnSeekBarChangeListener(this);
         mViewModel.play = new BindingCommand(new BindingAction() {
             @Override
@@ -213,13 +214,14 @@ public class MusicPlayFragment extends BaseActivity<ActivityMusicPlayBinding, Mu
 
     @Override
     public void onPlaybackServiceBound(MusicService service) {
-        KLogUtils.e(" onPlaybackService ===> " + service.toString());
+        KLogUtils.e(" onPlaybackServiceBound ");
         mMusicListener = service;
         mMusicListener.registerCallback(this);
         startPlay();
     }
 
     private void startPlay() {
+        KLogUtils.e(" startPlay ");
         if (mMusicListener != null) {
             mMusicListener.play(mPlayList, mStartIndex);
             mHandler.post(mProgressCallback);
@@ -228,17 +230,19 @@ public class MusicPlayFragment extends BaseActivity<ActivityMusicPlayBinding, Mu
 
     @Override
     public void onPlaybackServiceUnbound() {
+        KLogUtils.e(" onPlaybackServiceUnbound ");
         mMusicListener.unregisterCallback(this);
         mMusicListener = null;
     }
 
     @Override
     public void onSongSetAsFavorite(@NonNull Song song) {
-
+        KLogUtils.e(" onSongSetAsFavorite ");
     }
 
     @Override
     public void onSongUpdated(@Nullable Song song) {
+        KLogUtils.e(" onSongUpdated ");
         if (song == null) {
             mHandler.removeCallbacks(mProgressCallback);
             return;
@@ -252,6 +256,7 @@ public class MusicPlayFragment extends BaseActivity<ActivityMusicPlayBinding, Mu
     }
 
     private void updateMainUi(Song song) {
+        KLogUtils.e(" updateMainUi ");
         mBinding.musicNamePlay.setText(song.getTitle());
         mBinding.musicArtistPlay.setText(song.getArtist());
         mBinding.musicTimeEnd.setText(TimeUtils.formatDuration(song.getDuration()));
@@ -259,16 +264,16 @@ public class MusicPlayFragment extends BaseActivity<ActivityMusicPlayBinding, Mu
 
     @Override
     public void updatePlayMode(MusicMode playMode) {
-
+        KLogUtils.e(" updatePlayMode ");
     }
 
     @Override
     public void updatePlayToggle(boolean play) {
-
+        KLogUtils.e(" updatePlayToggle ");
     }
 
     @Override
     public void updateFavoriteToggle(boolean favorite) {
-
+        KLogUtils.e(" updateFavoriteToggle ");
     }
 }

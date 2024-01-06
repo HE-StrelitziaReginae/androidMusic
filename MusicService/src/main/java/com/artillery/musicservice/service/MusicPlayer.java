@@ -17,7 +17,6 @@ import java.util.List;
 /**
  * @author ArtilleryOrchid
  */
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
     private static final String TAG = "Player";
 
@@ -59,14 +58,14 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public boolean play() {
-        KLogUtils.e(" isPaused ================> " + isPaused);
+        KLogUtils.e(" isPaused ===> " + isPaused);
         if (isPaused) {
             mPlayer.start();
             notifyPlayStatusChanged(true);
             return true;
         }
         if (mPlayList.prepare()) {
-            KLogUtils.e(" prepare ================> " + mPlayList.prepare());
+            KLogUtils.e(" prepare ===> " + mPlayList.prepare());
             Song song = mPlayList.getCurrentSong();
             try {
                 mPlayer.reset();
@@ -118,6 +117,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public boolean playLast() {
+        KLogUtils.i(" playLast ===> ");
         isPaused = false;
         boolean hasLast = mPlayList.hasLast();
         if (hasLast) {
@@ -131,6 +131,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public boolean playNext() {
+        KLogUtils.i(" playNext ===> ");
         isPaused = false;
         boolean hasNext = mPlayList.hasNext(false);
         if (hasNext) {
@@ -144,6 +145,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public boolean pause() {
+        KLogUtils.i(" playLast ===> ");
         if (mPlayer.isPlaying()) {
             mPlayer.pause();
             isPaused = true;

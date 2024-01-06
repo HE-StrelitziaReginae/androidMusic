@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="com.artillery.musicmain.ui.musicOline.MusicOnlineFragmentViewModel" />
+        <import type="com.artillery.musicmain.viewmodel.MusicOnlineViewModel" />
 
         <variable
             name="musicOnlineModel"
-            type="com.artillery.musicmain.ui.musicOline.MusicOnlineFragmentViewModel" />
+            type="com.artillery.musicmain.viewmodel.MusicOnlineViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

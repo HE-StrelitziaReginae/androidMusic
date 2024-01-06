@@ -1,7 +1,6 @@
 package com.artillery.musicmain.viewmodel;
 
 import android.graphics.Bitmap;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -9,8 +8,7 @@ import androidx.databinding.ObservableField;
 import com.artillery.musicbase.base.MultiItemViewModel;
 import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
-import com.artillery.musicmain.data.MusicContext;
-import com.artillery.musicmain.ui.musicPlay.MusicPlayFragment;
+import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.utils.AlbumUtils;
 import com.artillery.musicservice.data.Song;
 
@@ -40,11 +38,7 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
     public BindingCommand musicPlay = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(MusicContext.MUSIC_PLAY_SONG, mSong);
-            bundle.putParcelableArrayList(MusicContext.MUSIC_PLAY_SONG_LIST, mSongList);
-            bundle.putInt(MusicContext.MUSIC_PLAY_SONG_START, mStartIndex);
-            mViewModel.startActivity(MusicPlayFragment.class, bundle);
+            MusicDaraListener.getInstance().putMusicData(mSongList, mStartIndex, mSong);
         }
     });
 }

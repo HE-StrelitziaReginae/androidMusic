@@ -27,7 +27,6 @@ ext {
             'support-fragment'        : "androidx.fragment:fragment:${versions["support-version"]}",
             'design'                  : "com.google.android.material:material:${versions["support-version"]}",
             'animated-vector-drawable': "androidx.vectordrawable:vectordrawable-animated:${versions["support-version"]}",
-            'junit'                   : "junit:junit:${versions["junit-version"]}",
     ]
     //依赖第三方配置
     dependencies = [

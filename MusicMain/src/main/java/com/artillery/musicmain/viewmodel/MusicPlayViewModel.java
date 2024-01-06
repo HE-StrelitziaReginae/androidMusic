@@ -15,11 +15,8 @@ public class MusicPlayViewModel extends BaseViewModel<MusicRepository> {
     public BindingCommand pre;
     public BindingCommand play;
     public BindingCommand next;
-    public MusicRepository mMusicRepository;
 
     public MusicPlayViewModel(@NonNull Application application, MusicRepository model) {
         super(application, model);
-        model.bindMusicService();
-        mMusicRepository = model;
     }
 }
