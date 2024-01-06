@@ -26,9 +26,6 @@ android {
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'junit:junit:4.12'
-    implementation 'androidx.test.ext:junit:1.1.5'
     api fileTree(include: ['*.jar'], dir: 'libs')
     //support
     api rootProject.ext.support["support-v4"]
@@ -83,4 +80,6 @@ dependencies {
     //room
     api rootProject.ext.dependencies["room-runtime"]
     annotationProcessor rootProject.ext.dependencies["room-compiler"]
+    //constraintlayout
+    api rootProject.ext.dependencies["constraintlayout"]
 }

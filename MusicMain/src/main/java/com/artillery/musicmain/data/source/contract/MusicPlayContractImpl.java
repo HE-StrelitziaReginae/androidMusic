@@ -24,7 +24,6 @@ public class MusicPlayContractImpl implements MusicPlaySource {
     private MusicPlayView mMusicPlayView;
     private MusicService mMusicService;
     private ServiceConnection mConnection = new ServiceConnection() {
-        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMusicService = ((MusicService.LocalBinder) service).getService();

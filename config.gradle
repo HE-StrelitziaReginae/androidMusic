@@ -8,7 +8,7 @@ ext {
             compileSdk       : 33,
             buildToolsVersion: "33.0.3",
             applicationId    : "com.artillery.music",
-            minSdk           : 21,
+            minSdk           : 24,
             targetSdk        : 33,
             versionCode      : 1,
             versionName      : "1.0",
@@ -62,6 +62,8 @@ ext {
             //room
             "room-runtime"                         : "androidx.room:room-runtime:2.2.5",
             "room-compiler"                        : "androidx.room:room-compiler:2.2.5",
+            //constraintlayout
+            constraintlayout                       : "androidx.constraintlayout:constraintlayout:2.1.4",
     ]
 }
 

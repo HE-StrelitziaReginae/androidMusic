@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.oline;
+package com.artillery.musicmain.ui.musicOline;
 
 import android.app.Application;
 

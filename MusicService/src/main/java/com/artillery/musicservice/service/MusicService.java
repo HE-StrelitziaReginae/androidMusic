@@ -5,20 +5,17 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Build;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
-import com.artillery.musicbase.utils.KLog;
+import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
 
 /**
  * @author ArtilleryOrchid
  */
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class MusicService extends Service implements MusicListener, MusicListener.Callback {
     private static final int NOTIFICATION_ID = 1;
     private MusicPlayer mMusicPlayer;
@@ -39,7 +36,7 @@ public class MusicService extends Service implements MusicListener, MusicListene
     @Override
     public void onCreate() {
         super.onCreate();
-        KLog.e("onCreate ============> startService");
+        KLogUtils.e("onCreate ===> startService");
         mMusicPlayer = MusicPlayer.getInstance();
         mMusicPlayer.registerCallback(this);
     }
@@ -48,7 +45,7 @@ public class MusicService extends Service implements MusicListener, MusicListene
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             String action = intent.getAction();
-            KLog.e("onStartCommand ============> action " + action);
+            KLogUtils.e("onStartCommand ===> action " + action);
             if (MusicContext.ACTION_PLAY.equals(action)) {
                 if (isPlaying()) {
                     pause();

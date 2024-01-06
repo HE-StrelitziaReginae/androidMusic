@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.mine;
+package com.artillery.musicmain.viewmodel;
 
 import android.app.Application;
 
@@ -9,8 +9,8 @@ import com.artillery.musicbase.base.BaseViewModel;
 /**
  * @author ArtilleryOrchid
  */
-public class MusicMineFragmentViewModel extends BaseViewModel {
-    public MusicMineFragmentViewModel(@NonNull Application application) {
+public class MusicMineViewModel extends BaseViewModel {
+    public MusicMineViewModel(@NonNull Application application) {
         super(application);
     }
 }

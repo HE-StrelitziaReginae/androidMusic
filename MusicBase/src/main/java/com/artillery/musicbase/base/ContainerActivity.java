@@ -16,6 +16,8 @@ import java.lang.ref.WeakReference;
 /**
  * 盛装Fragment的一个容器(代理)Activity
  * 普通界面只需要编写Fragment,使用此Activity盛装,这样就不需要每个界面都在AndroidManifest中注册一遍
+ *
+ * @author ArtilleryOrchid
  */
 public class ContainerActivity extends RxAppCompatActivity {
     private static final String FRAGMENT_TAG = "content_fragment_tag";
@@ -51,8 +53,7 @@ public class ContainerActivity extends RxAppCompatActivity {
 
     protected Fragment initFromIntent(Intent data) {
         if (data == null) {
-            throw new RuntimeException(
-                    "you must provide a page info to display");
+            throw new RuntimeException("you must provide a page info to display");
         }
         try {
             String fragmentName = data.getStringExtra(FRAGMENT);
@@ -66,11 +67,7 @@ public class ContainerActivity extends RxAppCompatActivity {
                 fragment.setArguments(args);
             }
             return fragment;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         throw new RuntimeException("fragment initialization failed!");

@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
@@ -28,10 +27,10 @@ import java.util.Map;
  * @author ArtilleryOrchid
  */
 public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseViewModel> extends RxAppCompatActivity implements IBaseView {
-    protected V binding;
-    protected VM viewModel;
-    private int viewModelId;
-    private MaterialDialog dialog;
+    protected V mBinding;
+    protected VM mViewModel;
+    private int mViewModelId;
+    private MaterialDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,19 +46,19 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
         //页面事件监听的方法，一般用于ViewModel层转到View层的事件注册
         initViewObservable();
         //注册RxBus
-        viewModel.registerRxBus();
+        mViewModel.registerRxBus();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         //解除Messenger注册
-        Messenger.getDefault().unregister(viewModel);
-        if (viewModel != null) {
-            viewModel.removeRxBus();
+        Messenger.getDefault().unregister(mViewModel);
+        if (mViewModel != null) {
+            mViewModel.removeRxBus();
         }
-        if (binding != null) {
-            binding.unbind();
+        if (mBinding != null) {
+            mBinding.unbind();
         }
     }
 
@@ -68,10 +67,10 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
      */
     private void initViewDataBinding(Bundle savedInstanceState) {
         //DataBindingUtil类需要在project的build中配置 dataBinding {enabled true }, 同步后会自动关联android.databinding包
-        binding = DataBindingUtil.setContentView(this, initContentView(savedInstanceState));
-        viewModelId = initVariableId();
-        viewModel = initViewModel();
-        if (viewModel == null) {
+        mBinding = DataBindingUtil.setContentView(this, initContentView(savedInstanceState));
+        mViewModelId = initVariableId();
+        mViewModel = initViewModel();
+        if (mViewModel == null) {
             Class modelClass;
             Type type = getClass().getGenericSuperclass();
             if (type instanceof ParameterizedType) {
@@ -80,43 +79,43 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
                 //如果没有指定泛型参数，则默认使用BaseViewModel
                 modelClass = BaseViewModel.class;
             }
-            viewModel = (VM) createViewModel(this, modelClass);
+            mViewModel = (VM) createViewModel(this, modelClass);
         }
         //关联ViewModel
-        binding.setVariable(viewModelId, viewModel);
+        mBinding.setVariable(mViewModelId, mViewModel);
         //支持LiveData绑定xml，数据改变，UI自动会更新
-        binding.setLifecycleOwner(this);
+        mBinding.setLifecycleOwner(this);
         //让ViewModel拥有View的生命周期感应
-        getLifecycle().addObserver(viewModel);
+        getLifecycle().addObserver(mViewModel);
         //注入RxLifecycle生命周期
-        viewModel.injectLifecycleProvider(this);
+        mViewModel.injectLifecycleProvider(this);
     }
 
     //刷新布局
     public void refreshLayout() {
-        if (viewModel != null) {
-            binding.setVariable(viewModelId, viewModel);
+        if (mViewModel != null) {
+            mBinding.setVariable(mViewModelId, mViewModel);
         }
     }
 
     //注册ViewModel与View的契约UI回调事件
     protected void registerUIChangeLiveDataCallBack() {
         //加载对话框显示
-        viewModel.getUC().getShowDialogEvent().observe(this, new Observer<String>() {
+        mViewModel.getUC().getShowDialogEvent().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String title) {
                 showDialog(title);
             }
         });
         //加载对话框消失
-        viewModel.getUC().getDismissDialogEvent().observe(this, new Observer<Void>() {
+        mViewModel.getUC().getDismissDialogEvent().observe(this, new Observer<Void>() {
             @Override
             public void onChanged(@Nullable Void v) {
                 dismissDialog();
             }
         });
         //跳入新页面
-        viewModel.getUC().getStartActivityEvent().observe(this, new Observer<Map<String, Object>>() {
+        mViewModel.getUC().getStartActivityEvent().observe(this, new Observer<Map<String, Object>>() {
             @Override
             public void onChanged(@Nullable Map<String, Object> params) {
                 Class<?> clz = (Class<?>) params.get(BaseViewModel.ParameterField.CLASS);
@@ -125,7 +124,7 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
             }
         });
         //跳入ContainerActivity
-        viewModel.getUC().getStartContainerActivityEvent().observe(this, new Observer<Map<String, Object>>() {
+        mViewModel.getUC().getStartContainerActivityEvent().observe(this, new Observer<Map<String, Object>>() {
             @Override
             public void onChanged(@Nullable Map<String, Object> params) {
                 String canonicalName = (String) params.get(BaseViewModel.ParameterField.CANONICAL_NAME);
@@ -134,14 +133,14 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
             }
         });
         //关闭界面
-        viewModel.getUC().getFinishEvent().observe(this, new Observer<Void>() {
+        mViewModel.getUC().getFinishEvent().observe(this, new Observer<Void>() {
             @Override
             public void onChanged(@Nullable Void v) {
                 finish();
             }
         });
         //关闭上一层
-        viewModel.getUC().getOnBackPressedEvent().observe(this, new Observer<Void>() {
+        mViewModel.getUC().getOnBackPressedEvent().observe(this, new Observer<Void>() {
             @Override
             public void onChanged(@Nullable Void v) {
                 onBackPressed();
@@ -150,18 +149,18 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
     }
 
     public void showDialog(String title) {
-        if (dialog != null) {
-            dialog = dialog.getBuilder().title(title).build();
-            dialog.show();
+        if (mDialog != null) {
+            mDialog = mDialog.getBuilder().title(title).build();
+            mDialog.show();
         } else {
             MaterialDialog.Builder builder = MaterialDialogUtils.showIndeterminateProgressDialog(this, title, true);
-            dialog = builder.show();
+            mDialog = builder.show();
         }
     }
 
     public void dismissDialog() {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog .dismiss();
         }
     }
 

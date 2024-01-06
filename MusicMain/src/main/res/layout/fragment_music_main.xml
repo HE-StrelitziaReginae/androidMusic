@@ -8,7 +8,7 @@
 
         <variable
             name="musicMain"
-            type="com.artillery.musicmain.viewmodel.MusicMainViewModel" />
+            type="MusicMainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

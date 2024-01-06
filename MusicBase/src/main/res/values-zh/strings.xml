@@ -10,4 +10,6 @@
     <string name="customactivityoncrash_error_activity_error_details_copy">复制日志</string>
     <string name="customactivityoncrash_error_activity_error_details_copied">复制日志</string>
     <string name="customactivityoncrash_error_activity_error_details_clipboard_label">错误信息</string>
+
+    <string name="base_dialog_label">请稍后…</string>
 </resources>

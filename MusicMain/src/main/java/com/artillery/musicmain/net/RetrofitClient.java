@@ -10,7 +10,7 @@ import com.artillery.musicbase.http.interceptor.BaseInterceptor;
 import com.artillery.musicbase.http.interceptor.CacheInterceptor;
 import com.artillery.musicbase.http.interceptor.logging.Level;
 import com.artillery.musicbase.http.interceptor.logging.LoggingInterceptor;
-import com.artillery.musicbase.utils.KLog;
+import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicbase.utils.Utils;
 
 import java.io.File;
@@ -76,7 +76,7 @@ public class RetrofitClient {
                 cache = new Cache(httpCacheDirectory, CACHE_TIMEOUT);
             }
         } catch (Exception e) {
-            KLog.e("Could not create http cache", e);
+            KLogUtils.e("Could not create http cache", e);
         }
         HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
         okHttpClient = new OkHttpClient.Builder()

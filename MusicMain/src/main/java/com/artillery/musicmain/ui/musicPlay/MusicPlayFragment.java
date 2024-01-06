@@ -1,6 +1,5 @@
-package com.artillery.musicmain.ui;
+package com.artillery.musicmain.ui.musicPlay;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,21 +8,20 @@ import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.artillery.musicbase.base.BaseActivity;
 import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
-import com.artillery.musicbase.utils.KLog;
+import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.app.AppViewModelFactory;
 import com.artillery.musicmain.data.MusicContext;
 import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
 import com.artillery.musicmain.databinding.ActivityMusicPlayBinding;
-import com.artillery.musicmain.viewmodel.MusicPlayViewModel;
 import com.artillery.musicmain.utils.TimeUtils;
+import com.artillery.musicmain.viewmodel.MusicPlayViewModel;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
 import com.artillery.musicservice.service.MusicListener;
@@ -35,22 +33,21 @@ import java.util.ArrayList;
 /**
  * @author ArtilleryOrchid
  */
-@RequiresApi(api = Build.VERSION_CODES.P)
-public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, MusicPlayViewModel> implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
+public class MusicPlayFragment extends BaseActivity<ActivityMusicPlayBinding, MusicPlayViewModel> implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
     private MusicListener mMusicListener;
     private PlayList mPlayList;
     private int mStartIndex = 0;
     private Song mSong;
-    private final Handler mHandler = Handler.createAsync(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
             if (mMusicListener.isPlaying()) {
-                int progress = (int) (binding.musicSeekbar.getMax()
+                int progress = (int) (mBinding.musicSeekbar.getMax()
                         * ((float) mMusicListener.getProgress() / (float) getCurrentSongDuration()));
                 updateProgressTextWithDuration(mMusicListener.getProgress());
-                if (progress >= 0 && progress <= binding.musicSeekbar.getMax()) {
-                    binding.musicSeekbar.setProgress(progress, true);
+                if (progress >= 0 && progress <= mBinding.musicSeekbar.getMax()) {
+                    mBinding.musicSeekbar.setProgress(progress);
                 }
                 mHandler.postDelayed(mProgressCallback, DateUtils.SECOND_IN_MILLIS);
             }
@@ -86,15 +83,15 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
 
     @Override
     public void initData() {
-        KLog.e(" initData ============>");
+        KLogUtils.e(" initData ");
         updateMainUi(mSong);
     }
 
     @Override
     public void initViewObservable() {
-        viewModel.mMusicRepository.bindMusicView(this);
-        binding.musicSeekbar.setOnSeekBarChangeListener(this);
-        viewModel.play = new BindingCommand(new BindingAction() {
+        mViewModel.mMusicRepository.bindMusicView(this);
+        mBinding.musicSeekbar.setOnSeekBarChangeListener(this);
+        mViewModel.play = new BindingCommand(new BindingAction() {
             @Override
             public void call() {
                 if (mMusicListener == null) {
@@ -108,13 +105,13 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
                 mHandler.post(mProgressCallback);
             }
         });
-        viewModel.next = new BindingCommand(new BindingAction() {
+        mViewModel.next = new BindingCommand(new BindingAction() {
             @Override
             public void call() {
                 mMusicListener.playNext();
             }
         });
-        viewModel.pre = new BindingCommand(new BindingAction() {
+        mViewModel.pre = new BindingCommand(new BindingAction() {
             @Override
             public void call() {
                 mMusicListener.playLast();
@@ -159,15 +156,15 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
     }
 
     private int getDuration(int progress) {
-        return (int) (getCurrentSongDuration() * ((float) progress / binding.musicSeekbar.getMax()));
+        return (int) (getCurrentSongDuration() * ((float) progress / mBinding.musicSeekbar.getMax()));
     }
 
     private void updateProgressTextWithProgress(int progress) {
-        binding.musicTimeStart.setText(TimeUtils.formatDuration(getDuration(progress)));
+        mBinding.musicTimeStart.setText(TimeUtils.formatDuration(getDuration(progress)));
     }
 
     private void updateProgressTextWithDuration(int duration) {
-        binding.musicTimeStart.setText(TimeUtils.formatDuration(duration));
+        mBinding.musicTimeStart.setText(TimeUtils.formatDuration(duration));
     }
 
     private void seekTo(int duration) {
@@ -211,12 +208,12 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
 
     @Override
     public void handleError(Throwable error) {
-        KLog.e("Error ================= > " + error);
+        KLogUtils.e("Error ===> " + error);
     }
 
     @Override
     public void onPlaybackServiceBound(MusicService service) {
-        KLog.e(" onPlaybackService ===========> " + service.toString());
+        KLogUtils.e(" onPlaybackService ===> " + service.toString());
         mMusicListener = service;
         mMusicListener.registerCallback(this);
         startPlay();
@@ -255,9 +252,9 @@ public class MusicPlayActivity extends BaseActivity<ActivityMusicPlayBinding, Mu
     }
 
     private void updateMainUi(Song song) {
-        binding.musicNamePlay.setText(song.getTitle());
-        binding.musicArtistPlay.setText(song.getArtist());
-        binding.musicTimeEnd.setText(TimeUtils.formatDuration(song.getDuration()));
+        mBinding.musicNamePlay.setText(song.getTitle());
+        mBinding.musicArtistPlay.setText(song.getArtist());
+        mBinding.musicTimeEnd.setText(TimeUtils.formatDuration(song.getDuration()));
     }
 
     @Override

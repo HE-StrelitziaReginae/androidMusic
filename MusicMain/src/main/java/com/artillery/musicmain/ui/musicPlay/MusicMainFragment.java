@@ -1,18 +1,21 @@
-package com.artillery.musicmain.ui;
+package com.artillery.musicmain.ui.musicPlay;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.artillery.musicbase.base.BaseActivity;
+import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
-import com.artillery.musicmain.databinding.ActivityMusicMainBinding;
-import com.artillery.musicmain.ui.list.MusicListFragment;
-import com.artillery.musicmain.ui.mine.MusicMineFragment;
-import com.artillery.musicmain.ui.oline.MusicOnlineFragment;
+import com.artillery.musicmain.databinding.FragmentMusicMainBinding;
+import com.artillery.musicmain.ui.musicList.MusicListFragment;
+import com.artillery.musicmain.ui.musicMine.MusicMineFragment;
+import com.artillery.musicmain.ui.musicOline.MusicOnlineFragment;
 import com.artillery.musicmain.viewmodel.MusicMainViewModel;
 
 import java.util.ArrayList;
@@ -21,12 +24,12 @@ import java.util.List;
 /**
  * @author ArtilleryOrchid
  */
-public class MusicMainActivity extends BaseActivity<ActivityMusicMainBinding, MusicMainViewModel> {
+public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, MusicMainViewModel> {
     private List<Fragment> mFragments;
 
     @Override
-    public int initContentView(Bundle savedInstanceState) {
-        return R.layout.activity_music_main;
+    public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return R.layout.fragment_music_main;
     }
 
     @Override
@@ -45,14 +48,14 @@ public class MusicMainActivity extends BaseActivity<ActivityMusicMainBinding, Mu
 
     @Override
     public void initViewObservable() {
-        binding.musicGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        mBinding.musicGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == binding.musicMain.getId()) {
+                if (checkedId == mBinding.musicMain.getId()) {
                     commitAllowingStateLoss(0);
-                } else if (checkedId == binding.musicOnline.getId()) {
+                } else if (checkedId == mBinding.musicOnline.getId()) {
                     commitAllowingStateLoss(1);
-                } else if (checkedId == binding.musicMine.getId()) {
+                } else if (checkedId == mBinding.musicMine.getId()) {
                     commitAllowingStateLoss(2);
                 }
             }
@@ -66,8 +69,8 @@ public class MusicMainActivity extends BaseActivity<ActivityMusicMainBinding, Mu
      */
     private void commitAllowingStateLoss(int position) {
         hideAllFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(position + "");
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        Fragment currentFragment = requireActivity().getSupportFragmentManager().findFragmentByTag(position + "");
         if (currentFragment != null) {
             transaction.show(currentFragment);
         } else {
@@ -81,9 +84,9 @@ public class MusicMainActivity extends BaseActivity<ActivityMusicMainBinding, Mu
      * hide fragment
      */
     private void hideAllFragment() {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         for (int i = 0; i < mFragments.size(); i++) {
-            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(i + "");
+            Fragment currentFragment = requireActivity().getSupportFragmentManager().findFragmentByTag(i + "");
             if (currentFragment != null) {
                 transaction.hide(currentFragment);
             }

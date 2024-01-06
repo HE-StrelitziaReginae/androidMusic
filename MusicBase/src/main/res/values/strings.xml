@@ -1,12 +1,14 @@
 <resources>
     <string name="app_base_name">musicbase</string>
-    <string name="customactivityoncrash_error_activity_error_occurred_explanation">发生意外错误。\n抱歉，给您带来不便。</string>
-    <string name="customactivityoncrash_error_activity_restart_app">重新启动</string>
-    <string name="customactivityoncrash_error_activity_close_app">关闭程序</string>
-    <string name="customactivityoncrash_error_activity_error_details">错误日志</string>
-    <string name="customactivityoncrash_error_activity_error_details_title">错误详情</string>
-    <string name="customactivityoncrash_error_activity_error_details_close">关闭</string>
-    <string name="customactivityoncrash_error_activity_error_details_copy">复制日志</string>
-    <string name="customactivityoncrash_error_activity_error_details_copied">复制日志</string>
-    <string name="customactivityoncrash_error_activity_error_details_clipboard_label">错误信息</string>
+    <string name="customactivityoncrash_error_activity_error_occurred_explanation">An unexpected error occurred.\nSorry for the inconvenience.</string>
+    <string name="customactivityoncrash_error_activity_restart_app">reboot</string>
+    <string name="customactivityoncrash_error_activity_close_app">closeTheProgram</string>
+    <string name="customactivityoncrash_error_activity_error_details">errorLogs</string>
+    <string name="customactivityoncrash_error_activity_error_details_title">errorDetails</string>
+    <string name="customactivityoncrash_error_activity_error_details_close">shutDown</string>
+    <string name="customactivityoncrash_error_activity_error_details_copy">copyTheLogs</string>
+    <string name="customactivityoncrash_error_activity_error_details_copied">copyTheLogs</string>
+    <string name="customactivityoncrash_error_activity_error_details_clipboard_label">errorMessage</string>
+
+    <string name="base_dialog_label">pleaseWait…</string>
 </resources>

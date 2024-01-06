@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.list;
+package com.artillery.musicmain.viewmodel;
 
 import android.app.Application;
 import android.os.Build;
@@ -23,10 +23,9 @@ import me.tatarka.bindingcollectionadapter2.ItemBinding;
 /**
  * @author ArtilleryOrchid
  */
-public class MusicListFragmentViewModel extends BaseViewModel {
+public class MusicListViewModel extends BaseViewModel {
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public MusicListFragmentViewModel(@NonNull Application application) {
+    public MusicListViewModel(@NonNull Application application) {
         super(application);
         MusicLocalUtils instance = MusicLocalUtils.getInstance();
         ArrayList<Song> music = instance.getMusic(Utils.getContext());

@@ -3,13 +3,12 @@ package com.artillery.musicservice.service;
 import android.media.MediaPlayer;
 import android.os.Build;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.artillery.musicbase.utils.KLog;
+import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,14 +59,14 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public boolean play() {
-        KLog.e(" isPaused ================> " + isPaused);
+        KLogUtils.e(" isPaused ================> " + isPaused);
         if (isPaused) {
             mPlayer.start();
             notifyPlayStatusChanged(true);
             return true;
         }
         if (mPlayList.prepare()) {
-            KLog.e(" prepare ================> " + mPlayList.prepare());
+            KLogUtils.e(" prepare ================> " + mPlayList.prepare());
             Song song = mPlayList.getCurrentSong();
             try {
                 mPlayer.reset();
@@ -76,7 +75,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
                 mPlayer.start();
                 notifyPlayStatusChanged(true);
             } catch (IOException e) {
-                KLog.e(TAG + e);
+                KLogUtils.e(TAG + e);
                 notifyPlayStatusChanged(false);
                 return false;
             }

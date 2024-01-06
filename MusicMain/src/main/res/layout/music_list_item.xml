@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="com.artillery.musicmain.ui.list.MusicListItemViewModel" />
+        <import type="com.artillery.musicmain.viewmodel.MusicListItemViewModel" />
 
         <variable
             name="musicListItemModel"
-            type="com.artillery.musicmain.ui.list.MusicListItemViewModel" />
+            type="com.artillery.musicmain.viewmodel.MusicListItemViewModel" />
 
     </data>
 

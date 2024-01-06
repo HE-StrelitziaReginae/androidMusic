@@ -47,19 +47,8 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             Constructor<?> cons = classViewModel.getConstructor(Application.class);
             ViewModel viewModel = (ViewModel) cons.newInstance(mApplication);
             return (T) viewModel;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
-        } catch (InvocationTargetException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
+                 NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
         }

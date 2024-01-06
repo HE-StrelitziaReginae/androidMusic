@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
+import com.artillery.musicbase.R;
 import com.artillery.musicbase.bus.event.SingleLiveEvent;
 import com.trello.rxlifecycle2.LifecycleProvider;
 
@@ -20,15 +21,16 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
-/**
- *
- */
 public class BaseViewModel<M extends BaseModel> extends AndroidViewModel implements IBaseViewModel, Consumer<Disposable> {
     protected M model;
     private UIChangeLiveData uc;
-    //弱引用持有
+    /**
+     * 弱引用持有
+     **/
     private WeakReference<LifecycleProvider> lifecycle;
-    //管理RxJava，主要针对RxJava异步操作造成的内存泄漏
+    /**
+     * 管理RxJava，主要针对RxJava异步操作造成的内存泄漏
+     **/
     private CompositeDisposable mCompositeDisposable;
 
     public BaseViewModel(@NonNull Application application) {
@@ -69,7 +71,7 @@ public class BaseViewModel<M extends BaseModel> extends AndroidViewModel impleme
     }
 
     public void showDialog() {
-        showDialog("请稍后...");
+        showDialog(getApplication().getString(R.string.base_dialog_label));
     }
 
     public void showDialog(String title) {
