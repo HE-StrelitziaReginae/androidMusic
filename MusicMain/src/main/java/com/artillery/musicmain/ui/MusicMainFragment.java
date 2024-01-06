@@ -1,4 +1,4 @@
-package com.artillery.musicmain.ui.musicPlay;
+package com.artillery.musicmain.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,13 +10,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.artillery.musicbase.base.BaseFragment;
-import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
-import com.artillery.musicmain.databinding.FragmentMusicMainBinding;
+import com.artillery.musicmain.databinding.FragmentMusicMineBinding;
 import com.artillery.musicmain.ui.musicList.MusicListFragment;
 import com.artillery.musicmain.ui.musicMine.MusicMineFragment;
 import com.artillery.musicmain.ui.musicOline.MusicOnlineFragment;
-import com.artillery.musicmain.viewmodel.MusicMainViewModel;
+import com.artillery.musicmain.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +23,12 @@ import java.util.List;
 /**
  * @author ArtilleryOrchid
  */
-public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, MusicMainViewModel> {
+public class MainFragment extends BaseFragment<FragmentMusicMineBinding, MainViewModel> {
     private List<Fragment> mFragments;
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return R.layout.fragment_music_main;
+        return R.layout.fragment_main;
     }
 
     @Override
@@ -69,8 +68,8 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
      */
     private void commitAllowingStateLoss(int position) {
         hideAllFragment();
-        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        Fragment currentFragment = requireActivity().getSupportFragmentManager().findFragmentByTag(position + "");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(position + "");
         if (currentFragment != null) {
             transaction.show(currentFragment);
         } else {
@@ -84,9 +83,9 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
      * hide fragment
      */
     private void hideAllFragment() {
-        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         for (int i = 0; i < mFragments.size(); i++) {
-            Fragment currentFragment = requireActivity().getSupportFragmentManager().findFragmentByTag(i + "");
+            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(i + "");
             if (currentFragment != null) {
                 transaction.hide(currentFragment);
             }

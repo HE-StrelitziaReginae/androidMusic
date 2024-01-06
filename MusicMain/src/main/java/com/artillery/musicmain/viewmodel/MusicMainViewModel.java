@@ -9,9 +9,8 @@ import com.artillery.musicbase.base.BaseViewModel;
 /**
  * @author ArtilleryOrchid
  */
-public class MusicMainViewModel extends BaseViewModel {
-
-    public MusicMainViewModel(@NonNull Application application) {
+public class MainViewModel extends BaseViewModel {
+    public MainViewModel(@NonNull Application application) {
         super(application);
     }
 }

@@ -1,60 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-    <data>
-
-        <import type="com.artillery.musicmain.viewmodel.MusicMainViewModel" />
-
-        <variable
-            name="musicMain"
-            type="MusicMainViewModel" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <FrameLayout
-            android:id="@+id/music_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <RadioGroup
-            android:id="@+id/music_group"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_50"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <RadioButton
-                android:id="@+id/music_main"
-                style="@style/CustomRadioButton"
-                android:layout_width="@dimen/dp_0"
-                android:layout_height="match_parent"
-                android:text="@string/music_home_tab" />
-
-            <RadioButton
-                android:id="@+id/music_online"
-                style="@style/CustomRadioButton"
-                android:layout_width="@dimen/dp_0"
-                android:layout_height="match_parent"
-                android:text="@string/music_online_tab" />
-
-            <RadioButton
-                android:id="@+id/music_mine"
-                style="@style/CustomRadioButton"
-                android:layout_width="@dimen/dp_0"
-                android:layout_height="match_parent"
-                android:text="@string/music_mine_tab" />
-
-        </RadioGroup>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>
