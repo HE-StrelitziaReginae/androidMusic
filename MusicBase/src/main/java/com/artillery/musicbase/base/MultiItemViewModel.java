@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 
 /**
  * Description：RecycleView多布局ItemViewModel是封装
+ * @author ArtilleryOrchid
  */
 
 public class MultiItemViewModel<VM extends BaseViewModel> extends ItemViewModel<VM> {

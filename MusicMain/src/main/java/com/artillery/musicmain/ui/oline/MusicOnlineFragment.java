@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
+import com.artillery.musicmain.databinding.FragmentMusicOnlineBinding;
 
 /**
  * @author ArtilleryOrchid
