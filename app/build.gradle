@@ -38,15 +38,6 @@ android {
             }
         }
 
-        preview.initWith(debug)
-        preview {
-            applicationIdSuffix ''
-            // 添加清单占位符
-            addManifestPlaceholders([
-                    'app_name': 'Android Preview 版'
-            ])
-        }
-
         release {
             // 调试模式开关
             debuggable false
@@ -70,6 +61,7 @@ android {
             }
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -80,10 +72,6 @@ android {
 
     viewBinding {
         enabled true
-    }
-    buildTypes {
-        preview {
-        }
     }
 }
 
