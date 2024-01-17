@@ -265,7 +265,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public void updatePlayToggle(boolean play) {
         KLogUtils.e(" updatePlayToggle " + play);
-        mBinding.musicPlayBtn.setText(play ? getString(R.string.music_play) : getString(R.string.music_pause));
+        mBinding.musicPlayBtn.setImageDrawable(play ? getResources().getDrawable(R.drawable.pause, null) : getResources().getDrawable(R.drawable.play, null));
     }
 
     @Override

@@ -9,4 +9,7 @@
     <string name="music_online_tab">Online</string>
     <string name="music_mine_tab">Mine</string>
     <string name="music_time">00:00</string>
+
+    <string name="music_not_play">Not Play</string>
+    <string name="music_unknown">Unknown</string>
 </resources>

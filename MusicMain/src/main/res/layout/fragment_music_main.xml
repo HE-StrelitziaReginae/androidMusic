@@ -28,25 +28,28 @@
             android:id="@+id/music_briefly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_20"
             app:layout_constraintBottom_toTopOf="@+id/music_action_liner"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/music_name_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_30"
+                android:text="@string/music_not_play"
                 android:textSize="@dimen/sp_20"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/music_artist_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"
+                android:text="@string/music_unknown"
                 android:textSize="@dimen/sp_10"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -58,33 +61,34 @@
             android:id="@+id/music_action_liner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
             android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/music_progress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_pre_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/music_pre"
+                android:src="@drawable/rewind"
                 binding:onClickCommand="@{musicMain.mPre}" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_play_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_50"
                 android:layout_marginEnd="@dimen/dp_50"
-                android:text="@string/music_pause"
+                android:src="@drawable/play"
                 binding:onClickCommand="@{musicMain.mPlay}" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_next_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/music_next"
+                android:src="@drawable/speed"
                 binding:onClickCommand="@{musicMain.mNext}" />
 
         </LinearLayout>
@@ -143,21 +147,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <RadioButton
+            <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/music_main"
                 style="@style/CustomRadioButton"
                 android:layout_width="@dimen/dp_0"
                 android:layout_height="match_parent"
                 android:text="@string/music_home_tab" />
 
-            <RadioButton
+            <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/music_online"
                 style="@style/CustomRadioButton"
                 android:layout_width="@dimen/dp_0"
                 android:layout_height="match_parent"
                 android:text="@string/music_online_tab" />
 
-            <RadioButton
+            <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/music_mine"
                 style="@style/CustomRadioButton"
                 android:layout_width="@dimen/dp_0"
