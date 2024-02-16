@@ -82,4 +82,6 @@ dependencies {
     annotationProcessor rootProject.ext.dependencies["room-compiler"]
     //constraintlayout
     api rootProject.ext.dependencies["constraintlayout"]
+    //permission
+    api rootProject.ext.dependencies["permission"]
 }
