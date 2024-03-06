@@ -1,6 +1,8 @@
 package com.artillery.androidmusic;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
@@ -19,6 +21,8 @@ import java.util.List;
  * @author ArtilleryOrchid
  */
 public class LauncherActivity extends BaseActivity<ActivityLauncherBinding, LauncherViewModel> {
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
+
     @Override
     public int initContentView(Bundle savedInstanceState) {
         return R.layout.activity_launcher;
@@ -39,8 +43,10 @@ public class LauncherActivity extends BaseActivity<ActivityLauncherBinding, Laun
                         if (!allGranted) {
                             return;
                         }
-                        startContainerActivity(MusicMainFragment.class.getCanonicalName());
-                        finish();
+                        mHandler.postDelayed(() -> {
+                            startContainerActivity(MusicMainFragment.class.getCanonicalName());
+                            finish();
+                        }, 2000);
                     }
                 });
     }
