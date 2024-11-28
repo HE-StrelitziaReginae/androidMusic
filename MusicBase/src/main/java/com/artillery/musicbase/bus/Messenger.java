@@ -10,9 +10,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * About : kelin的Messenger
- */
 public class Messenger {
 
     private static Messenger defaultInstance;

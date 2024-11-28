@@ -18,8 +18,8 @@ import okhttp3.ResponseBody;
 
 public abstract class ProgressCallBack<T> {
 
-    private String destFileDir; // 本地文件存放路径
-    private String destFileName; // 文件名
+    private final String destFileDir; // 本地文件存放路径
+    private final String destFileName; // 文件名
     private Disposable mSubscription;
 
     public ProgressCallBack(String destFileDir, String destFileName) {

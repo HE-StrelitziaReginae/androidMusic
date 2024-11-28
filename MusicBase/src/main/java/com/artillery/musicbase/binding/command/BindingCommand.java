@@ -2,7 +2,6 @@ package com.artillery.musicbase.binding.command;
 
 
 /**
- * About : kelvin的ReplyCommand
  * 执行的命令回调, 用于ViewModel与xml之间的数据绑定
  *
  * @author ArtilleryOrchid

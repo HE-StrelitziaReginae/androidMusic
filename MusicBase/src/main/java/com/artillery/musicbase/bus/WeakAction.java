@@ -1,14 +1,10 @@
 package com.artillery.musicbase.bus;
 
-import java.lang.ref.WeakReference;
-
 import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingConsumer;
 
+import java.lang.ref.WeakReference;
 
-/**
- * About : kelin的WeakBindingAction
- */
 public class WeakAction<T> {
     private BindingAction action;
     private BindingConsumer<T> consumer;

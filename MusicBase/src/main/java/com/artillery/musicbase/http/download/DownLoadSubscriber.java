@@ -3,7 +3,7 @@ package com.artillery.musicbase.http.download;
 import io.reactivex.observers.DisposableObserver;
 
 public class DownLoadSubscriber<T> extends DisposableObserver<T> {
-    private ProgressCallBack fileCallBack;
+    private final ProgressCallBack fileCallBack;
 
     public DownLoadSubscriber(ProgressCallBack fileCallBack) {
         this.fileCallBack = fileCallBack;
