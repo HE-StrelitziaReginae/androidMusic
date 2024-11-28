@@ -11,6 +11,7 @@ import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.artillery.musicbase.base.BaseFragment;
@@ -265,7 +266,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public void updatePlayToggle(boolean play) {
         KLogUtils.e(" updatePlayToggle " + play);
-        mBinding.musicPlayBtn.setImageDrawable(play ? getResources().getDrawable(R.drawable.pause, null) : getResources().getDrawable(R.drawable.play, null));
+        mBinding.musicPlayBtn.setImageDrawable(play ? ContextCompat.getDrawable(requireContext(), R.drawable.pause) : ContextCompat.getDrawable(requireContext(), R.drawable.play));
     }
 
     @Override
