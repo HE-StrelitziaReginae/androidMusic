@@ -23,8 +23,6 @@ public class BaseApplication extends Application {
 
     /**
      * 当主工程没有继承BaseApplication时，可以使用setApplication方法初始化BaseApplication
-     *
-     * @param application
      */
     public static synchronized void setApplication(@NonNull Application application) {
         sInstance = application;
@@ -34,32 +32,32 @@ public class BaseApplication extends Application {
         application.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
 
             @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            public void onActivityCreated(@NonNull Activity activity, Bundle savedInstanceState) {
                 AppManager.getAppManager().addActivity(activity);
             }
 
             @Override
-            public void onActivityStarted(Activity activity) {
+            public void onActivityStarted(@NonNull Activity activity) {
             }
 
             @Override
-            public void onActivityResumed(Activity activity) {
+            public void onActivityResumed(@NonNull Activity activity) {
             }
 
             @Override
-            public void onActivityPaused(Activity activity) {
+            public void onActivityPaused(@NonNull Activity activity) {
             }
 
             @Override
-            public void onActivityStopped(Activity activity) {
+            public void onActivityStopped(@NonNull Activity activity) {
             }
 
             @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+            public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
             }
 
             @Override
-            public void onActivityDestroyed(Activity activity) {
+            public void onActivityDestroyed(@NonNull Activity activity) {
                 AppManager.getAppManager().removeActivity(activity);
             }
         });
