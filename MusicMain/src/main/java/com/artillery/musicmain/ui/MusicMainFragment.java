@@ -3,7 +3,6 @@ package com.artillery.musicmain.ui;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.SystemClock;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.data.MusicDataListener;
 import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
 import com.artillery.musicmain.databinding.FragmentMusicMainBinding;
-import com.artillery.musicmain.ui.musicOline.MusicOnlineFragment;
 import com.artillery.musicmain.utils.TimeUtils;
 import com.artillery.musicmain.viewmodel.MusicMainViewModel;
 import com.artillery.musicservice.data.PlayList;
@@ -52,12 +50,10 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 int progress = (int) (mBinding.musicSeekbar.getMax()
                         * ((float) mMusicListener.getProgress() / (float) getCurrentSongDuration()));
                 updateProgressTextWithDuration(mMusicListener.getProgress());
-                if (progress >= 0 && progress <= mBinding.musicSeekbar.getMax()) {
+                if (progress > 0 && progress < mBinding.musicSeekbar.getMax()) {
                     mBinding.musicSeekbar.setProgress(progress);
                 }
-                // 减少累积误差，使用“当前时间”重新计算
-                long nextUpdateTime = SystemClock.uptimeMillis() + (mMusicListener.getProgress() % 1000);
-                mHandler.postAtTime(mProgressCallback, nextUpdateTime);
+                mHandler.postDelayed(mProgressCallback, DateUtils.SECOND_IN_MILLIS);
             }
         }
     };

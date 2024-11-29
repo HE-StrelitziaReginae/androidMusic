@@ -106,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:max="150"
+                android:max="100"
                 android:maxHeight="@dimen/dp_3"
                 android:progress="0"
                 android:progressDrawable="@drawable/music_seekbar_progress"

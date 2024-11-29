@@ -1,10 +1,8 @@
 package com.artillery.musicservice.service;
 
 import android.media.MediaPlayer;
-import android.os.Build;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicservice.data.PlayList;
@@ -18,17 +16,10 @@ import java.util.List;
  * @author ArtilleryOrchid
  */
 public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
-    private static final String TAG = "Player";
-
-    private static volatile MusicPlayer sInstance;
-
+    private static final String TAG = "MusicPlayer";
     private MediaPlayer mPlayer;
-
     private PlayList mPlayList;
-    // Default size 2: for service and UI
-    private List<Callback> mCallbacks = new ArrayList<>(2);
-
-    // Player status
+    private final List<Callback> mCallbacks = new ArrayList<>(2);
     private boolean isPaused;
 
     private MusicPlayer() {
@@ -37,15 +28,13 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         mPlayer.setOnCompletionListener(this);
     }
 
+    // 静态内部类，只有第一次使用时才会加载
+    private static class SingletonHelper {
+        private static final MusicPlayer INSTANCE = new MusicPlayer();
+    }
+
     public static MusicPlayer getInstance() {
-        if (sInstance == null) {
-            synchronized (MusicPlayer.class) {
-                if (sInstance == null) {
-                    sInstance = new MusicPlayer();
-                }
-            }
-        }
-        return sInstance;
+        return SingletonHelper.INSTANCE;
     }
 
     @Override
@@ -58,14 +47,12 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public boolean play() {
-        KLogUtils.e(" isPaused ===> " + isPaused);
         if (isPaused) {
             mPlayer.start();
             notifyPlayStatusChanged(true);
             return true;
         }
         if (mPlayList.prepare()) {
-            KLogUtils.e(" prepare ===> " + mPlayList.prepare());
             Song song = mPlayList.getCurrentSong();
             try {
                 mPlayer.reset();
@@ -106,6 +93,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public boolean play(Song song) {
+        KLogUtils.i("play: " + song);
         if (song == null) {
             return false;
         }
@@ -117,7 +105,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public boolean playLast() {
-        KLogUtils.i(" playLast ===> ");
+        KLogUtils.i("playLast: ");
         isPaused = false;
         boolean hasLast = mPlayList.hasLast();
         if (hasLast) {
@@ -131,7 +119,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public boolean playNext() {
-        KLogUtils.i(" playNext ===> ");
+        KLogUtils.i("playNext: ");
         isPaused = false;
         boolean hasNext = mPlayList.hasNext(false);
         if (hasNext) {
@@ -145,7 +133,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public boolean pause() {
-        KLogUtils.i(" playLast ===> ");
+        KLogUtils.i("pause: ");
         if (mPlayer.isPlaying()) {
             mPlayer.pause();
             isPaused = true;
@@ -197,10 +185,9 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     @Override
     public void onCompletion(MediaPlayer mp) {
         Song next = null;
-        // There is only one limited play mode which is list, player should be stopped when hitting the list end
         if (mPlayList.getPlayMode() == MusicMode.LIST && mPlayList.getPlayingIndex() == mPlayList.getNumOfSongs() - 1) {
-            // In the end of the list
-            // Do nothing, just deliver the callback
+            //TODO
+            KLogUtils.i("onCompletion: ");
         } else if (mPlayList.getPlayMode() == MusicMode.SINGLE) {
             next = mPlayList.getCurrentSong();
             play();
@@ -220,7 +207,6 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         mPlayer.reset();
         mPlayer.release();
         mPlayer = null;
-        sInstance = null;
     }
 
     // Callbacks
@@ -246,11 +232,9 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     }
 
     private void notifyPlayLast(Song song) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mCallbacks.forEach(callback -> {
-                callback.onSwitchLast(song);
-            });
-        }
+        mCallbacks.forEach(callback -> {
+            callback.onSwitchLast(song);
+        });
     }
 
     private void notifyPlayNext(Song song) {

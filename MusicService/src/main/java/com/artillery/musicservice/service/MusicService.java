@@ -36,7 +36,7 @@ public class MusicService extends Service implements MusicListener, MusicListene
     @Override
     public void onCreate() {
         super.onCreate();
-        KLogUtils.e("onCreate ===> startService");
+        KLogUtils.e("onCreate: StartService");
         mMusicPlayer = MusicPlayer.getInstance();
         mMusicPlayer.registerCallback(this);
     }
