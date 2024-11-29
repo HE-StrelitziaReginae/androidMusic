@@ -9,7 +9,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class BaseInterceptor implements Interceptor {
-    private Map<String, String> headers;
+    private final Map<String, String> headers;
 
     public BaseInterceptor(Map<String, String> headers) {
         this.headers = headers;
@@ -18,7 +18,7 @@ public class BaseInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request.Builder builder = chain.request().newBuilder();
-        if (headers != null && headers.size() > 0) {
+        if (headers != null && !headers.isEmpty()) {
             Set<String> keys = headers.keySet();
             for (String headerKey : keys) {
                 builder.addHeader(headerKey, headers.get(headerKey)).build();

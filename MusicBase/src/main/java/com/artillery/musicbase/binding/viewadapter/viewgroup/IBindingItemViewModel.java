@@ -6,5 +6,5 @@ import androidx.databinding.ViewDataBinding;
  * @author ArtilleryOrchid
  */
 public interface IBindingItemViewModel<V extends ViewDataBinding> {
-    void injecDataBinding(V binding);
+    void injectDataBinding(V binding);
 }

@@ -13,7 +13,6 @@ public class LineManagers {
         RecyclerView.ItemDecoration create(RecyclerView recyclerView);
     }
 
-
     public static LineManagerFactory both() {
         return new LineManagerFactory() {
             @Override

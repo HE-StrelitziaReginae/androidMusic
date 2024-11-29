@@ -14,11 +14,8 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 
-/**
- */
 public final class ViewAdapter {
 
-    @SuppressWarnings("unchecked")
     @BindingAdapter(value = {"onScrollChangeCommand", "onScrollStateChangedCommand"}, requireAll = false)
     public static void onScrollChangeCommand(final ListView listView,
                                              final BindingCommand<ListViewScrollDataWrapper> onScrollChangeCommand,

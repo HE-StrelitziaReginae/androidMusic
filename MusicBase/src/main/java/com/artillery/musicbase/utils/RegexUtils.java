@@ -21,10 +21,6 @@ public final class RegexUtils {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // If u want more please visit http://toutiao.com/i6231678548520731137
-    ///////////////////////////////////////////////////////////////////////////
-
     /**
      * Return whether input matches regex of simple mobile.
      *

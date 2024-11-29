@@ -15,7 +15,7 @@ public final class TimeConstants {
     /**
      * 毫秒与毫秒的倍数
      */
-    public static final int MSEC = 1;
+    public static final int MSE = 1;
     /**
      * 秒与毫秒的倍数
      */
@@ -33,7 +33,7 @@ public final class TimeConstants {
      */
     public static final int DAY = 86400000;
 
-    @IntDef({MSEC, SEC, MIN, HOUR, DAY})
+    @IntDef({MSE, SEC, MIN, HOUR, DAY})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Unit {
     }

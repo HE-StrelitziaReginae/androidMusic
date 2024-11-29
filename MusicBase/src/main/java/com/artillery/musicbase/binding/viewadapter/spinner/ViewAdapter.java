@@ -6,13 +6,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import androidx.databinding.BindingAdapter;
+
+import com.artillery.musicbase.binding.command.BindingCommand;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.databinding.BindingAdapter;
-import com.artillery.musicbase.binding.command.BindingCommand;
-
 /**
+ *
  */
 public class ViewAdapter {
     /**

@@ -15,7 +15,6 @@ public class ViewAdapter {
     /**
      * @param bindingCommand //绑定监听
      */
-    @SuppressWarnings("unchecked")
     @BindingAdapter(value = {"onCheckedChangedCommand"}, requireAll = false)
     public static void setCheckedChanged(final CheckBox checkBox, final BindingCommand<Boolean> bindingCommand) {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

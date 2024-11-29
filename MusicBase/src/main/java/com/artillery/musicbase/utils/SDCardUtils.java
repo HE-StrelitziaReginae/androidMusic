@@ -1,9 +1,9 @@
 package com.artillery.musicbase.utils;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+
+import androidx.annotation.NonNull;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -27,7 +27,7 @@ public final class SDCardUtils {
      * @return true : 可用<br>false : 不可用
      */
     public static boolean isSDCardEnable() {
-        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
+        return !Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
     /**
@@ -37,7 +37,7 @@ public final class SDCardUtils {
      * @return SD卡路径
      */
     public static String getSDCardPath() {
-        if (!isSDCardEnable()) {
+        if (isSDCardEnable()) {
             return null;
         }
         String cmd = "cat /proc/mounts";
@@ -72,7 +72,7 @@ public final class SDCardUtils {
      * @return SD卡data路径
      */
     public static String getDataPath() {
-        if (!isSDCardEnable()) {
+        if (isSDCardEnable()) {
             return null;
         }
         return Environment.getExternalStorageDirectory().getPath() + File.separator + "data" + File.separator;
@@ -83,9 +83,8 @@ public final class SDCardUtils {
      *
      * @return SD卡剩余空间
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public static String getFreeSpace() {
-        if (!isSDCardEnable()) {
+        if (isSDCardEnable()) {
             return null;
         }
         StatFs stat = new StatFs(getSDCardPath());
@@ -100,9 +99,8 @@ public final class SDCardUtils {
      *
      * @return SDCardInfo
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public static String getSDCardInfo() {
-        if (!isSDCardEnable()) {
+        if (isSDCardEnable()) {
             return null;
         }
         SDCardInfo sd = new SDCardInfo();
@@ -128,6 +126,7 @@ public final class SDCardUtils {
         long freeBytes;
         long availableBytes;
 
+        @NonNull
         @Override
         public String toString() {
             return "isExist=" + isExist +

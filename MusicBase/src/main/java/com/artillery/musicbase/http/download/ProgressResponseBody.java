@@ -13,7 +13,7 @@ import okio.Okio;
 import okio.Source;
 
 public class ProgressResponseBody extends ResponseBody {
-    private ResponseBody responseBody;
+    private final ResponseBody responseBody;
 
     private BufferedSource bufferedSource;
     private String tag;

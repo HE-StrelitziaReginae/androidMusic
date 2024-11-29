@@ -64,11 +64,10 @@ public class MaterialDialogUtils {
     /***
      * 获取一个耗时等待对话框
      *
-     * @param horizontal
      * @return MaterialDialog.Builder
      */
     public static MaterialDialog.Builder showIndeterminateProgressDialog(Context context, String content, boolean horizontal) {
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+        return new MaterialDialog.Builder(context)
                 .title(content)
                 .progress(true, 0)
                 .progressIndeterminateStyle(horizontal)
@@ -86,87 +85,57 @@ public class MaterialDialogUtils {
                         return false;//false允许按返回键取消对话框，true除了调用取消，其他情况下不会取消
                     }
                 });
-        return builder;
     }
 
 
     /***
      * 获取基本对话框
      *
-     * @param
      * @return MaterialDialog.Builder
      */
     public static MaterialDialog.Builder showBasicDialog(final Context context, String
             content) {
-
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+        return new MaterialDialog.Builder(context)
                 .title(content)
                 .positiveText("确定")
-                .negativeText("取消")
-//                .btnStackedGravity(GravityEnum.END)         //按钮排列位置
-//                .stackingBehavior(StackingBehavior.ALWAYS)  //按钮排列方式
-//                .iconRes(R.mipmap.ic_launcher)
-//                .limitIconToDefaultSize() // limits the displayed icon size to 48dp
-//                .onAny(new MaterialDialog.SingleButtonCallback() {
-//                    @Override
-//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction
-//                            which) {
-//                    }
-//                })
-//                .checkBoxPromptRes(R.string.app_name, false, null)
-                ;
-
-        return builder;
+                .negativeText("取消");
     }
 
     /***
      * 显示一个基础的对话框  只有内容没有标题
-     * @param
      * @return MaterialDialog.Builder
      */
     public static MaterialDialog.Builder showBasicDialogNoTitle(final Context context, String content) {
-
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+        return new MaterialDialog.Builder(context)
                 .content(content)
                 .positiveText("确定")
                 .negativeText("取消");
-
-        return builder;
     }
-
 
     /***
      * 显示一个基础的对话框  带标题 带内容
      * 没有取消按钮
-     * @param
      * @return MaterialDialog.Builder
      */
     public static MaterialDialog.Builder showBasicDialogNoCancel(final Context context, String
             title, String content) {
-
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+        return new MaterialDialog.Builder(context)
                 .title(title)
                 .content(content)
                 .positiveText("确定");
-
-        return builder;
     }
 
     /***
      * 显示一个基础的对话框  带标题 带内容
-     * @param
      * @return MaterialDialog.Builder
      */
     public static MaterialDialog.Builder showBasicDialog(final Context context, String
             title, String content) {
-
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+        return new MaterialDialog.Builder(context)
                 .title(title)
                 .content(content)
                 .positiveText("确定")
                 .negativeText("取消");
-
-        return builder;
     }
 
     /***
@@ -175,19 +144,15 @@ public class MaterialDialogUtils {
      */
     public static MaterialDialog.Builder showBasicDialogPositive(final Context context, String
             title, String content) {
-
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+        return new MaterialDialog.Builder(context)
                 .title(title)
                 .content(content)
                 .positiveText("复制")
                 .negativeText("取消");
-
-        return builder;
     }
 
     /***
      * 选择图片等Item的对话框  带标题
-     * @param
      * @return MaterialDialog.Builder
      */
     public static MaterialDialog.Builder getSelectDialog(Context context, String title, String[] arrays) {
@@ -204,13 +169,11 @@ public class MaterialDialogUtils {
     /***
      * 获取LIST对话框
      *
-     * @param
      * @return MaterialDialog.Builder
      */
     public static MaterialDialog.Builder showBasicListDialog(final Context context, String title, List
             content) {
-
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+        return new MaterialDialog.Builder(context)
                 .title(title)
                 .items(content)
                 .itemsCallback(new MaterialDialog.ListCallback() {
@@ -219,23 +182,17 @@ public class MaterialDialogUtils {
 
                     }
                 })
-                .negativeText("取消")
-//                .checkBoxPromptRes(R.string.app_name, false, null)
-                ;
-
-        return builder;
+                .negativeText("取消");
     }
 
     /***
      * 获取单选LIST对话框
      *
-     * @param
      * @return MaterialDialog.Builder
      */
     public static MaterialDialog.Builder showSingleListDialog(final Context context, String title, List
             content) {
-
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+        return new MaterialDialog.Builder(context)
                 .title(title)
                 .items(content)
                 .itemsCallbackSingleChoice(1, new MaterialDialog.ListCallbackSingleChoice() {
@@ -248,21 +205,17 @@ public class MaterialDialogUtils {
                     }
                 })
                 .positiveText("选择");
-
-        return builder;
     }
 
 
     /***
      * 获取多选LIST对话框
      *
-     * @param
      * @return MaterialDialog.Builder
      */
     public static MaterialDialog.Builder showMultiListDialog(final Context context, String title, List
             content) {
-
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+        return new MaterialDialog.Builder(context)
                 .title(title)
                 .items(content)
                 .itemsCallbackMultiChoice(new Integer[]{1, 3}, new MaterialDialog
@@ -284,40 +237,36 @@ public class MaterialDialogUtils {
                 .autoDismiss(false)
                 .neutralText("clear")
                 .itemsDisabledIndices(0, 1);
-
-        return builder;
     }
 
     /***
      * 获取自定义对话框
      *
-     * @param
      * @return MaterialDialog.Builder
      */
-    public static void showCustomDialog(final Context context, String title, int
+    public static MaterialDialog.Builder showCustomDialog(final Context context, String title, int
             content) {
-        MaterialDialog dialog = new MaterialDialog.Builder(context)
+        return new MaterialDialog.Builder(context)
                 .title(title)
                 .customView(content, true)
                 .positiveText("确定")
                 .negativeText(android.R.string.cancel)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    public void onClick(@NonNull MaterialDialog dialog1, @NonNull DialogAction which) {
 
                     }
-                }).build();
+                }).build().getBuilder();
     }
 
     /***
      * 获取输入对话框
      *
-     * @param
      * @return MaterialDialog.Builder
      */
     public static MaterialDialog.Builder showInputDialog(final Context context, String title, String
             content) {
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+        return new MaterialDialog.Builder(context)
                 .title(title)
                 .content(content)
                 .inputType(InputType.TYPE_CLASS_TEXT |
@@ -331,7 +280,6 @@ public class MaterialDialogUtils {
 
                     }
                 });
-        return builder;
     }
 
 }

@@ -13,7 +13,7 @@ import okhttp3.HttpUrl;
  */
 public class CookieJarImpl implements CookieJar {
 
-    private CookieStore cookieStore;
+    private final CookieStore cookieStore;
 
     public CookieJarImpl(CookieStore cookieStore) {
         if (cookieStore == null) {

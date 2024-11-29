@@ -44,6 +44,7 @@ public class SnackbarMessage extends SingleLiveEvent<Integer> {
     public interface SnackbarObserver {
         /**
          * Called when there is a new message to be shown.
+         *
          * @param snackbarMessageResourceId The new message, non-null.
          */
         void onNewMessage(@StringRes int snackbarMessageResourceId);

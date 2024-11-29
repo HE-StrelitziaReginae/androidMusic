@@ -18,7 +18,7 @@ import okhttp3.Response;
  */
 public class CacheInterceptor implements Interceptor {
 
-    private Context context;
+    private final Context context;
 
     public CacheInterceptor(Context context) {
         this.context = context;

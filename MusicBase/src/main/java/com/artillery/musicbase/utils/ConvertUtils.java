@@ -201,7 +201,7 @@ public final class ConvertUtils {
      * @param timeSpan 毫秒时间戳
      * @param unit     单位类型
      *                 <ul>
-     *                 <li>{@link TimeConstants#MSEC}: 毫秒</li>
+     *                 <li>{@link TimeConstants#MSE}: 毫秒</li>
      *                 <li>{@link TimeConstants#SEC }: 秒</li>
      *                 <li>{@link TimeConstants#MIN }: 分</li>
      *                 <li>{@link TimeConstants#HOUR}: 小时</li>
@@ -219,7 +219,7 @@ public final class ConvertUtils {
      * @param millis 毫秒时间戳
      * @param unit   单位类型
      *               <ul>
-     *               <li>{@link TimeConstants#MSEC}: 毫秒</li>
+     *               <li>{@link TimeConstants#MSE}: 毫秒</li>
      *               <li>{@link TimeConstants#SEC }: 秒</li>
      *               <li>{@link TimeConstants#MIN }: 分</li>
      *               <li>{@link TimeConstants#HOUR}: 小时</li>

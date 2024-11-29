@@ -1,9 +1,9 @@
 package com.artillery.musicbase.utils.constant;
 
+import androidx.annotation.IntDef;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import androidx.annotation.IntDef;
 
 /**
  * 存储相关常量

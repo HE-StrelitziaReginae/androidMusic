@@ -5,7 +5,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.artillery.musicbase.binding.command.BindingCommand;
 
-
 /**
  * @author ArtilleryOrchid
  */

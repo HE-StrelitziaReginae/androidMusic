@@ -22,7 +22,7 @@ public class FragmentStackUtils {
     }
 
     private static class Holder {
-        private static FragmentStackUtils instance = new FragmentStackUtils();
+        private static final FragmentStackUtils instance = new FragmentStackUtils();
     }
 
     public static FragmentStackUtils getInstance() {
@@ -37,7 +37,6 @@ public class FragmentStackUtils {
      * @param tag fragment对应的tag
      * @param bundle 传值用的bundle
      * @param listener 创建一个fragment实例的监听
-     * @return
      */
     public Fragment startFragment(int containerId, Context context, String tag, Bundle bundle, OnCreateFragmentListener listener) {
         if (StringUtils.isEmpty(tag)) {
@@ -75,16 +74,13 @@ public class FragmentStackUtils {
      */
     public void finish(Context context) {
         FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
-        if (fm != null) {
-            fm.popBackStack();
-        }
+        fm.popBackStack();
     }
 
     /***
      * 返回到指定已经打开的fragment,并关闭当前及当前与指定Fragment间的所有Fragment
      * @param tag 需要返回到指定Fragment的tag
      *            若你需要返回到FragmentOne,且FragmentOne的tag为“one”,则此处tag参数填“one”
-     * @param context
      */
     public void goBackToFragmentByTag(String tag, Context context) {
         if (StringUtils.isEmpty(tag)) {
@@ -108,9 +104,7 @@ public class FragmentStackUtils {
         String indexTag = tagList.get(index + 1);
         if (StringUtils.isTrimEmpty(indexTag)) {
             FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
-            if (fm != null) {
-                fm.popBackStackImmediate(indexTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            }
+            fm.popBackStackImmediate(indexTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
 
@@ -119,9 +113,7 @@ public class FragmentStackUtils {
      **/
     public void finishAllFragments(Context context) {
         FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
-        if (fm != null) {
-            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
+        fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     private int getFragmentTagIndex(String tag, Context context) {
@@ -146,9 +138,7 @@ public class FragmentStackUtils {
     public int getFragmentSize(Context context) {
         int size = 0;
         FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
-        if (fm != null) {
-            size = fm.getBackStackEntryCount();
-        }
+        size = fm.getBackStackEntryCount();
         return size;
     }
 
@@ -158,17 +148,13 @@ public class FragmentStackUtils {
     public List<String> getFragmentTags(Context context) {
         List<String> tagList = new ArrayList<>();
         FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
-        if (fm != null) {
-            int size = fm.getBackStackEntryCount();
-            if (size > 0) {
-                for (int i = 0; i < size; i++) {
-                    FragmentManager.BackStackEntry backStackEntry = fm.getBackStackEntryAt(i);
-                    if (backStackEntry != null) {
-                        //获取回退栈中Fragment对应的tag
-                        String tag = backStackEntry.getName();
-                        tagList.add(tag);
-                    }
-                }
+        int size = fm.getBackStackEntryCount();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                FragmentManager.BackStackEntry backStackEntry = fm.getBackStackEntryAt(i);
+                //获取回退栈中Fragment对应的tag
+                String tag = backStackEntry.getName();
+                tagList.add(tag);
             }
         }
         return tagList;

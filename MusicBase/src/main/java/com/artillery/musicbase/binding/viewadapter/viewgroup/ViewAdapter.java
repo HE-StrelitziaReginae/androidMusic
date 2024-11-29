@@ -23,7 +23,7 @@ public final class ViewAdapter {
                 ViewDataBinding binding = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()),
                         itemBinding.layoutRes(), viewGroup, true);
                 binding.setVariable(itemBinding.variableId(), viewModel);
-                viewModel.injecDataBinding(binding);
+                viewModel.injectDataBinding(binding);
             }
         }
     }

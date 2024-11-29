@@ -25,8 +25,8 @@
 
         <activity
             android:name="com.artillery.androidmusic.LauncherActivity"
-            android:launchMode="singleInstance"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

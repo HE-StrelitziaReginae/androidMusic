@@ -3,6 +3,7 @@ package com.artillery.musicbase.base;
 import android.annotation.SuppressLint;
 import android.app.Application;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -30,11 +31,11 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         return INSTANCE;
     }
 
-
     protected ViewModelFactory(Application application) {
         mApplication = application;
     }
 
+    @NonNull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
         if (modelClass.isAssignableFrom(BaseViewModel.class)) {
@@ -47,8 +48,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             Constructor<?> cons = classViewModel.getConstructor(Application.class);
             ViewModel viewModel = (ViewModel) cons.newInstance(mApplication);
             return (T) viewModel;
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
-                 NoSuchMethodException | InvocationTargetException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
         }

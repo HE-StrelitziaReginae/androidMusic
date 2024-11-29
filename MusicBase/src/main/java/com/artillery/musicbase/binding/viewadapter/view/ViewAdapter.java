@@ -1,21 +1,20 @@
 package com.artillery.musicbase.binding.viewadapter.view;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
+import androidx.databinding.BindingAdapter;
+
+import com.artillery.musicbase.binding.command.BindingCommand;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.concurrent.TimeUnit;
 
-import androidx.databinding.BindingAdapter;
-
 import io.reactivex.functions.Consumer;
-
-import com.artillery.musicbase.binding.command.BindingCommand;
 
 /**
  * @author ArtilleryOrchid
  */
-
 public class ViewAdapter {
     //防重复点击间隔(秒)
     public static final int CLICK_INTERVAL = 1;
@@ -26,6 +25,7 @@ public class ViewAdapter {
      * onClickCommand 绑定的命令,
      * isThrottleFirst 是否开启防止过快点击
      */
+    @SuppressLint("CheckResult")
     @BindingAdapter(value = {"onClickCommand", "isThrottleFirst"}, requireAll = false)
     public static void onClickCommand(View view, final BindingCommand clickCommand, final boolean isThrottleFirst) {
         if (isThrottleFirst) {
@@ -55,6 +55,7 @@ public class ViewAdapter {
     /**
      * view的onLongClick事件绑定
      */
+    @SuppressLint("CheckResult")
     @BindingAdapter(value = {"onLongClickCommand"}, requireAll = false)
     public static void onLongClickCommand(View view, final BindingCommand clickCommand) {
         RxView.longClicks(view)
@@ -70,9 +71,6 @@ public class ViewAdapter {
 
     /**
      * 回调控件本身
-     *
-     * @param currentView
-     * @param bindingCommand
      */
     @BindingAdapter(value = {"currentView"}, requireAll = false)
     public static void replyCurrentView(View currentView, BindingCommand bindingCommand) {
@@ -120,16 +118,4 @@ public class ViewAdapter {
             view.setVisibility(View.GONE);
         }
     }
-//    @BindingAdapter({"onTouchCommand"})
-//    public static void onTouchCommand(View view, final ResponseCommand<MotionEvent, Boolean> onTouchCommand) {
-//        view.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (onTouchCommand != null) {
-//                    return onTouchCommand.execute(event);
-//                }
-//                return false;
-//            }
-//        });
-//    }
 }

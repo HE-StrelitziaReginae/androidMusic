@@ -26,7 +26,7 @@ public final class StringUtils {
      * @return {@code true}: null或全空格<br> {@code false}: 不为null且不全空格
      */
     public static boolean isTrimEmpty(final String s) {
-        return (s == null || s.trim().length() == 0);
+        return (s == null || s.trim().isEmpty());
     }
 
     /**

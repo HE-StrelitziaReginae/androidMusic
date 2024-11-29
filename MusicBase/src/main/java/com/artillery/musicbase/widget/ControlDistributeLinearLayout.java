@@ -1,5 +1,6 @@
 package com.artillery.musicbase.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -17,6 +18,7 @@ public class ControlDistributeLinearLayout extends LinearLayout {
     //默认是不拦截事件,分发事件给子View
     private boolean isDistributeEvent = false;
 
+    @SuppressLint("Recycle")
     public ControlDistributeLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ControlDistributeLinearLayout);

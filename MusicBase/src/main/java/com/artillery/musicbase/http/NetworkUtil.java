@@ -16,18 +16,15 @@ import java.util.Enumeration;
 
 public class NetworkUtil {
     public static String url = "http://www.baidu.com";
-    public static int NET_CNNT_BAIDU_OK = 1; // NetworkAvailable
-    public static int NET_CNNT_BAIDU_TIMEOUT = 2; // no NetworkAvailable
+    public static int NET_CANT_BAIDU_OK = 1; // NetworkAvailable
+    public static int NET_CANT_BAIDU_TIMEOUT = 2; // no NetworkAvailable
     public static int NET_NOT_PREPARE = 3; // Net no ready
     public static int NET_ERROR = 4; //net error
-    private static int TIMEOUT = 3000; // TIMEOUT
+    private static final int TIMEOUT = 3000; // TIMEOUT
 
 
     /**
      * check NetworkAvailable
-     *
-     * @param context
-     * @return
      */
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getApplicationContext().getSystemService(
@@ -44,8 +41,6 @@ public class NetworkUtil {
 
     /**
      * getLocalIpAddress
-     *
-     * @return
      */
     public static String getLocalIpAddress() {
         String ret = "";
@@ -67,9 +62,6 @@ public class NetworkUtil {
 
     /**
      * 返回当前网络状态
-     *
-     * @param context
-     * @return
      */
     public static int getNetState(Context context) {
         try {
@@ -80,9 +72,9 @@ public class NetworkUtil {
                 if (networkinfo != null) {
                     if (networkinfo.isAvailable() && networkinfo.isConnected()) {
                         if (!connectionNetwork()) {
-                            return NET_CNNT_BAIDU_TIMEOUT;
+                            return NET_CANT_BAIDU_TIMEOUT;
                         } else {
-                            return NET_CNNT_BAIDU_OK;
+                            return NET_CANT_BAIDU_OK;
                         }
                     } else {
                         return NET_NOT_PREPARE;
@@ -96,9 +88,7 @@ public class NetworkUtil {
     }
 
     /**
-     * ping "http://www.baidu.com"
-     *
-     * @return
+     * ping "<a href="http://www.baidu.com">...</a>"
      */
     static private boolean connectionNetwork() {
         boolean result = false;
@@ -122,24 +112,19 @@ public class NetworkUtil {
     /**
      * check is3G
      *
-     * @param context
      * @return boolean
      */
     public static boolean is3G(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
-        if (activeNetInfo != null
-                && activeNetInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
-            return true;
-        }
-        return false;
+        return activeNetInfo != null
+                && activeNetInfo.getType() == ConnectivityManager.TYPE_MOBILE;
     }
 
     /**
      * isWifi
      *
-     * @param context
      * @return boolean
      */
     public static boolean isWifi(Context context) {
@@ -156,20 +141,16 @@ public class NetworkUtil {
     /**
      * is2G
      *
-     * @param context
      * @return boolean
      */
     public static boolean is2G(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
-        if (activeNetInfo != null
+        return activeNetInfo != null
                 && (activeNetInfo.getSubtype() == TelephonyManager.NETWORK_TYPE_EDGE
                 || activeNetInfo.getSubtype() == TelephonyManager.NETWORK_TYPE_GPRS || activeNetInfo
-                .getSubtype() == TelephonyManager.NETWORK_TYPE_CDMA)) {
-            return true;
-        }
-        return false;
+                .getSubtype() == TelephonyManager.NETWORK_TYPE_CDMA);
     }
 
     /**

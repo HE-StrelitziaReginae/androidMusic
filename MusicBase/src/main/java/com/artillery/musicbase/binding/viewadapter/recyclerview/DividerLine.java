@@ -1,5 +1,6 @@
 package com.artillery.musicbase.binding.viewadapter.recyclerview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -7,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -17,10 +19,10 @@ public class DividerLine extends RecyclerView.ItemDecoration {
     //默认分隔线厚度为2dp
     private static final int DEFAULT_DIVIDER_SIZE = 1;
     //控制分隔线的属性,值为一个drawable
-    private static final int ATTRS[] = {android.R.attr.listDivider};
+    private static final int[] ATTRS = {android.R.attr.listDivider};
     //divider对应的drawable
-    private Drawable dividerDrawable;
-    private Context mContext;
+    private final Drawable dividerDrawable;
+    private final Context mContext;
     private int dividerSize;
     //默认为null
     private LineDrawMode mMode = null;
@@ -32,6 +34,7 @@ public class DividerLine extends RecyclerView.ItemDecoration {
         HORIZONTAL, VERTICAL, BOTH
     }
 
+    @SuppressLint("ResourceType")
     public DividerLine(Context context) {
         mContext = context;
         //获取样式中对应的属性值
@@ -69,13 +72,9 @@ public class DividerLine extends RecyclerView.ItemDecoration {
     /**
      * Item绘制完毕之后绘制分隔线
      * 根据不同的模式绘制不同的分隔线
-     *
-     * @param c
-     * @param parent
-     * @param state
      */
     @Override
-    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    public void onDrawOver(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.onDrawOver(c, parent, state);
         if (getMode() == null) {
             throw new IllegalStateException("assign LineDrawMode,please!");
@@ -96,10 +95,6 @@ public class DividerLine extends RecyclerView.ItemDecoration {
 
     /**
      * 绘制垂直分隔线
-     *
-     * @param c
-     * @param parent
-     * @param state
      */
     private void drawVertical(Canvas c, RecyclerView parent, RecyclerView.State state) {
         final int childCount = parent.getChildCount();
@@ -118,10 +113,6 @@ public class DividerLine extends RecyclerView.ItemDecoration {
 
     /**
      * 绘制水平分隔线
-     *
-     * @param c
-     * @param parent
-     * @param state
      */
     private void drawHorizontal(Canvas c, RecyclerView parent, RecyclerView.State state) {
         int childCount = parent.getChildCount();
@@ -145,17 +136,14 @@ public class DividerLine extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-//        outRect.bottom = getDividerSize() == 0 ? dip2px(mContext, DEFAULT_DIVIDER_SIZE) : getDividerSize();
     }
 
     /**
      * 将dip或dp值转换为px值，保证尺寸大小不变
      *
-     * @param dipValue
      * @param context（DisplayMetrics类中属性density）
-     * @return
      */
     public static int dip2px(Context context, float dipValue) {
         float scale = context.getResources().getDisplayMetrics().density;

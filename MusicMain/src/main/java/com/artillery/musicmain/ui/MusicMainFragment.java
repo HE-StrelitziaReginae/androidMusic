@@ -25,6 +25,7 @@ import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.data.MusicDataListener;
 import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
 import com.artillery.musicmain.databinding.FragmentMusicMainBinding;
+import com.artillery.musicmain.ui.musicOline.MusicOnlineFragment;
 import com.artillery.musicmain.utils.TimeUtils;
 import com.artillery.musicmain.viewmodel.MusicMainViewModel;
 import com.artillery.musicservice.data.PlayList;
@@ -57,6 +58,14 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             }
         }
     };
+
+    private static class Holder {
+        private static final MusicMainFragment instance = new MusicMainFragment();
+    }
+
+    public static MusicMainFragment getInstance() {
+        return MusicMainFragment.Holder.instance;
+    }
 
     @Override
     public void initViewObservable() {

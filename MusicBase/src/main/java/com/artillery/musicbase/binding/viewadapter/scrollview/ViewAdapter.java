@@ -13,7 +13,6 @@ import com.artillery.musicbase.binding.command.BindingCommand;
  */
 public final class ViewAdapter {
 
-    @SuppressWarnings("unchecked")
     @BindingAdapter({"onScrollChangeCommand"})
     public static void onScrollChangeCommand(final NestedScrollView nestedScrollView, final BindingCommand<NestScrollDataWrapper> onScrollChangeCommand) {
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -26,7 +25,6 @@ public final class ViewAdapter {
         });
     }
 
-    @SuppressWarnings("unchecked")
     @BindingAdapter({"onScrollChangeCommand"})
     public static void onScrollChangeCommand(final ScrollView scrollView, final BindingCommand<ScrollDataWrapper> onScrollChangeCommand) {
         scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {

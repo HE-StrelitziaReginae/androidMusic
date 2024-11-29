@@ -1,5 +1,8 @@
 package com.artillery.musicbase.binding.viewadapter.recyclerview;
 
+import android.annotation.SuppressLint;
+
+import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,7 +37,7 @@ public class ViewAdapter {
             private int state;
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (onScrollChangeCommand != null) {
                     onScrollChangeCommand.execute(new ScrollDataWrapper(dx, dy, state));
@@ -42,7 +45,7 @@ public class ViewAdapter {
             }
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 state = newState;
                 if (onScrollStateChangedCommand != null) {
@@ -53,7 +56,6 @@ public class ViewAdapter {
 
     }
 
-    @SuppressWarnings("unchecked")
     @BindingAdapter({"onLoadMoreCommand"})
     public static void onLoadMoreCommand(final RecyclerView recyclerView, final BindingCommand<Integer> onLoadMoreCommand) {
         RecyclerView.OnScrollListener listener = new OnScrollListener(onLoadMoreCommand);
@@ -68,10 +70,11 @@ public class ViewAdapter {
 
     public static class OnScrollListener extends RecyclerView.OnScrollListener {
 
-        private PublishSubject<Integer> methodInvoke = PublishSubject.create();
+        private final PublishSubject<Integer> methodInvoke = PublishSubject.create();
 
-        private BindingCommand<Integer> onLoadMoreCommand;
+        private final BindingCommand<Integer> onLoadMoreCommand;
 
+        @SuppressLint("CheckResult")
         public OnScrollListener(final BindingCommand<Integer> onLoadMoreCommand) {
             this.onLoadMoreCommand = onLoadMoreCommand;
             methodInvoke.throttleFirst(1, TimeUnit.SECONDS)
@@ -86,10 +89,13 @@ public class ViewAdapter {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            if (layoutManager == null || recyclerView.getAdapter() == null) {
+                return;
+            }
             int visibleItemCount = layoutManager.getChildCount();
             int totalItemCount = layoutManager.getItemCount();
-            int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-            if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+            int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
+            if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                 if (onLoadMoreCommand != null) {
                     methodInvoke.onNext(recyclerView.getAdapter().getItemCount());
                 }
@@ -97,11 +103,9 @@ public class ViewAdapter {
         }
 
         @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
         }
-
-
     }
 
     public static class ScrollDataWrapper {

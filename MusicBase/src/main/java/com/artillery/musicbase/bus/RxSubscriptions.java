@@ -7,7 +7,7 @@ import io.reactivex.disposables.Disposable;
  * 管理 CompositeSubscription
  */
 public class RxSubscriptions {
-    private static final CompositeDisposable mSubscriptions = new CompositeDisposable ();
+    private static final CompositeDisposable mSubscriptions = new CompositeDisposable();
 
     public static boolean isDisposed() {
         return mSubscriptions.isDisposed();
