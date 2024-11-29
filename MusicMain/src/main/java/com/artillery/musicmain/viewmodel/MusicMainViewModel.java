@@ -28,9 +28,9 @@ public class MusicMainViewModel extends BaseViewModel {
     public BindingCommand mNext;
     public MusicRepository mMusicRepository;
     private List<Fragment> mFragments;
-    private Fragment mMusicList;
-    private Fragment mMusicOnline;
-    private Fragment mMusicMine;
+    private final Fragment mMusicList;
+    private final Fragment mMusicOnline;
+    private final Fragment mMusicMine;
 
     public MusicMainViewModel(@NonNull Application application, MusicRepository mode) {
         super(application);
@@ -55,9 +55,6 @@ public class MusicMainViewModel extends BaseViewModel {
 
     /**
      * show fragment
-     *
-     * @param fragmentActivity
-     * @param position
      */
     public void showFragment(FragmentActivity fragmentActivity, int position) {
         hideAllFragment(fragmentActivity);

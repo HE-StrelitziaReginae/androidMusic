@@ -30,7 +30,7 @@ public class FragmentStackUtils {
     }
 
     /***
-     * 跳转fragmnet并添加到回退栈
+     * 跳转fragment并添加到回退栈
      *
      * @param containerId 装fragment的控件id，一般是FrameLayout的id
      * @param context 上下文
