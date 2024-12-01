@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class MusicDaraListener {
     private static class Holder {
-        private static MusicDaraListener instance = new MusicDaraListener();
+        private static final MusicDaraListener instance = new MusicDaraListener();
     }
 
     public static MusicDaraListener getInstance() {
