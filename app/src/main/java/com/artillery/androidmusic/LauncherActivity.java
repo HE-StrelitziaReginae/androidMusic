@@ -10,7 +10,6 @@ import com.artillery.music.BR;
 import com.artillery.music.R;
 import com.artillery.music.databinding.ActivityLauncherBinding;
 import com.artillery.musicbase.base.BaseActivity;
-import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicmain.ui.MusicMainFragment;
 import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
@@ -41,7 +40,6 @@ public class LauncherActivity extends BaseActivity<ActivityLauncherBinding, Laun
                 .request(new OnPermissionCallback() {
                     @Override
                     public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
-                        KLogUtils.i("onGranted: " + allGranted);
                         mHandler.postDelayed(() -> {
                             startContainerActivity(MusicMainFragment.class.getCanonicalName());
                             finish();

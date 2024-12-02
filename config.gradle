@@ -64,6 +64,6 @@ ext {
             //constraintlayout
             "constraintlayout"                     : "androidx.constraintlayout:constraintlayout:2.1.4",
             //Permission
-            "permission"                           : "com.github.getActivity:XXPermissions:18.6",
+            "permission"                           : "com.github.getActivity:XXPermissions:20.0",
     ]
 }
