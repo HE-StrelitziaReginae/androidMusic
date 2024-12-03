@@ -10,6 +10,7 @@
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name="com.artillery.musicmain.MusicApplication"
@@ -27,7 +28,7 @@
         <activity
             android:name="com.artillery.androidmusic.LauncherActivity"
             android:exported="true"
-            android:launchMode="singleInstance">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

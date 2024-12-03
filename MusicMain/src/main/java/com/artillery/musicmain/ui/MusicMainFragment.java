@@ -81,6 +81,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             }
         });
 
+        activateMarquee(true);
         mViewModel.binMusicView(this);
         mBinding.musicSeekbar.setOnSeekBarChangeListener(this);
         mViewModel.mPlay = new BindingCommand(new BindingAction() {
@@ -107,10 +108,10 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             }
         });
 
-        mPlayList = new PlayList();
         MusicDaraListener.getInstance().setMusicDataListener(new MusicDataListener() {
             @Override
             public void sendMusicList(ArrayList<Song> songArrayList, int index) {
+                mPlayList = new PlayList();
                 mPlayList.setSongs(songArrayList);
                 mPlayList.setNumOfSongs(songArrayList.size());
                 mStartIndex = index;
@@ -122,6 +123,12 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 updateMainUi(song);
             }
         });
+    }
+
+    private void activateMarquee(boolean activate) {
+        mBinding.musicNamePlay.setFocusable(activate);
+        mBinding.musicNamePlay.setFocusableInTouchMode(activate);
+        mBinding.musicNamePlay.setSelected(activate);
     }
 
     @Override
@@ -136,6 +143,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public void onStop() {
         super.onStop();
+        activateMarquee(false);
         mHandler.removeCallbacks(mProgressCallback);
     }
 
