@@ -22,8 +22,8 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
     public ObservableField<String> musicName = new ObservableField<>();
     public ObservableField<String> musicArtist = new ObservableField<>();
     private final ArrayList<Song> mSongList = new ArrayList<>();
-    private Song mSong;
-    private int mStartIndex = 0;
+    private final Song mSong;
+    private final int mStartIndex;
 
     public MusicListItemViewModel(@NonNull MusicListViewModel viewModel, Song song, ArrayList<Song> music, int start) {
         super(viewModel);
