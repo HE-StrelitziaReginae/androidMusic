@@ -13,7 +13,7 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50">
 
@@ -21,42 +21,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_10"
-            android:background="@color/aliceblue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             binding:onClickCommand="@{musicListItemModel.musicPlay}">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_album"
                 android:layout_width="@dimen/dp_35"
                 android:layout_height="@dimen/dp_35"
                 android:src="@drawable/customactivityoncrash_error_image"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/music_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{musicListItemModel.musicName}"
                 android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/music_artist"
                 app:layout_constraintLeft_toRightOf="@id/music_album"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/music_artist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{musicListItemModel.musicArtist}"
                 android:textSize="@dimen/sp_10"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/music_album" />
+                app:layout_constraintLeft_toRightOf="@id/music_album"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </layout>
