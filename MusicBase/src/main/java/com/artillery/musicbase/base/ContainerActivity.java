@@ -1,6 +1,7 @@
 package com.artillery.musicbase.base;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowManager;
 
@@ -11,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.artillery.musicbase.R;
 import com.artillery.musicbase.utils.KLogUtils;
+import com.artillery.musicbase.utils.ScreenAdaptUtils;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.lang.ref.WeakReference;
@@ -30,6 +32,7 @@ public class ContainerActivity extends RxAppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
+        ScreenAdaptUtils.enableImmersiveMode(this);
         KLogUtils.i("onCreate: ");
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = null;

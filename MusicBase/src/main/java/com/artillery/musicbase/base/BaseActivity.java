@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.artillery.musicbase.bus.Messenger;
 import com.artillery.musicbase.utils.MaterialDialogUtils;
+import com.artillery.musicbase.utils.ScreenAdaptUtils;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.lang.reflect.ParameterizedType;
@@ -35,6 +36,7 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ScreenAdaptUtils.enableImmersiveMode(this);
         //页面接受的参数方法
         initParam();
         //私有的初始化DataBinding和ViewModel方法

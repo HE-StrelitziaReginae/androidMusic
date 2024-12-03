@@ -20,7 +20,7 @@ public class MusicPlayContractImpl implements MusicPlaySource {
     private boolean mIsServiceBound;
     private MusicPlayView mMusicPlayView;
     private MusicService mMusicService;
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMusicService = ((MusicService.LocalBinder) service).getService();
@@ -71,7 +71,7 @@ public class MusicPlayContractImpl implements MusicPlaySource {
 
     @Override
     public void unBindMusicService() {
-        if (mIsServiceBound){
+        if (mIsServiceBound) {
             Utils.getContext().unbindService(mConnection);
             mIsServiceBound = false;
         }
