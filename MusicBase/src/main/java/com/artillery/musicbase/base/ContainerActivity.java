@@ -1,9 +1,9 @@
 package com.artillery.musicbase.base;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -32,8 +32,17 @@ public class ContainerActivity extends RxAppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
-        ScreenAdaptUtils.enableImmersiveMode(this);
-        KLogUtils.i("onCreate: ");
+        if (!ScreenAdaptUtils.hasCutout(this)) {
+            FrameLayout frameLayout = findViewById(android.R.id.content);
+            ScreenAdaptUtils.observeWindowInsets(frameLayout, safeArea -> {
+                KLogUtils.d("SafeArea", "Updated Safe Area: " + safeArea);
+                // 动态调整布局
+                frameLayout.setPadding(safeArea.left,
+                        safeArea.top,
+                        safeArea.right,
+                        safeArea.bottom);
+            });
+        }
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = null;
         if (savedInstanceState != null) {
