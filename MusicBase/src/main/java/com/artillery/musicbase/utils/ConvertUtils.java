@@ -44,7 +44,7 @@ public final class ConvertUtils {
             return null;
         }
         int len = bytes.length;
-        if (len <= 0) {
+        if (len == 0) {
             return null;
         }
         char[] ret = new char[len << 1];
