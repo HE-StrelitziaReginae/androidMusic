@@ -45,7 +45,7 @@ public class MusicService extends Service implements MusicListener, MusicListene
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             String action = intent.getAction();
-            KLogUtils.e("onStartCommand ===> action " + action);
+            KLogUtils.e("onStartCommand action: " + action);
             if (MusicContext.ACTION_PLAY.equals(action)) {
                 if (isPlaying()) {
                     pause();

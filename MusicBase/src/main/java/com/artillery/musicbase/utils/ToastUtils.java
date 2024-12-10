@@ -406,6 +406,9 @@ public final class ToastUtils {
             }
         }
         View view = sToast.getView();
+        if (view == null) {
+            return;
+        }
         if (bgResource != -1) {
             view.setBackgroundResource(bgResource);
         } else if (backgroundColor != DEFAULT_COLOR) {

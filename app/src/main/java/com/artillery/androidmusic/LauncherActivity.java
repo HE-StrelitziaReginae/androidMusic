@@ -36,7 +36,7 @@ public class LauncherActivity extends BaseActivity<ActivityLauncherBinding, Laun
     @Override
     public void initData() {
         XXPermissions.with(this)
-                .permission(Permission.READ_MEDIA_AUDIO)
+                .permission(Permission.READ_MEDIA_AUDIO, Permission.POST_NOTIFICATIONS)
                 .request(new OnPermissionCallback() {
                     @Override
                     public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
