@@ -1,4 +1,4 @@
-package com.artillery.musicmain;
+package com.artillery.musicmain.app;
 
 import com.artillery.musicbase.base.BaseApplication;
 

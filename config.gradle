@@ -65,5 +65,7 @@ ext {
             "constraintlayout"                     : "androidx.constraintlayout:constraintlayout:2.1.4",
             //Permission
             "permission"                           : "com.github.getActivity:XXPermissions:20.0",
+            //leakcanary
+            "leakcanary"                           : "com.squareup.leakcanary:leakcanary-android:2.14"
     ]
 }

@@ -84,4 +84,6 @@ dependencies {
     api rootProject.ext.dependencies["constraintlayout"]
     //permission
     api rootProject.ext.dependencies["permission"]
+    //leakcanary
+    debugApi rootProject.ext.dependencies["leakcanary"]
 }
