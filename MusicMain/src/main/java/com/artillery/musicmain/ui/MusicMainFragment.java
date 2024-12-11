@@ -3,7 +3,6 @@ package com.artillery.musicmain.ui;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
@@ -38,9 +37,13 @@ import java.util.ArrayList;
 /**
  * @author ArtilleryOrchid
  */
-public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, MusicMainViewModel> implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
+public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, MusicMainViewModel> implements MusicPlayView,
+        MusicListener.Callback,
+        SeekBar.OnSeekBarChangeListener {
+    private static final int MUSIC_PROGRESS_POSITION = 1;
     private MusicListener mMusicListener;
     private PlayList mPlayList;
+    private int mLastPosition = -1;
     private int mStartIndex = 0;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Runnable mProgressCallback = new Runnable() {
@@ -50,10 +53,12 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 int progress = (int) (mBinding.musicSeekbar.getMax()
                         * ((float) mMusicListener.getProgress() / (float) getCurrentSongDuration()));
                 updateProgressTextWithDuration(mMusicListener.getProgress());
-                if (progress > 0 && progress < mBinding.musicSeekbar.getMax()) {
+                if (progress > 0 && progress < mBinding.musicSeekbar.getMax() && mLastPosition != progress) {
+                    KLogUtils.i("progress: " + progress);
                     mBinding.musicSeekbar.setProgress(progress);
+                    mLastPosition = progress;
                 }
-                mHandler.postDelayed(mProgressCallback, DateUtils.SECOND_IN_MILLIS);
+                mHandler.postDelayed(mProgressCallback, 500);
             }
         }
     };
@@ -149,6 +154,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        KLogUtils.i("onProgressChanged: " + progress);
         if (fromUser) {
             updateProgressTextWithProgress(progress);
         }

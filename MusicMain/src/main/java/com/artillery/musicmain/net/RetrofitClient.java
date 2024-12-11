@@ -1,6 +1,5 @@
 package com.artillery.musicmain.net;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.DebugUtils;
 
@@ -37,20 +36,15 @@ public class RetrofitClient {
     private static final int DEFAULT_TIMEOUT = 20;
     //缓存时间
     private static final int CACHE_TIMEOUT = 10 * 1024 * 1024;
-    public static String developUrl = "";
+    private static final String developUrl = "";
     public static String testUrl = "";
     //服务端根路径
-    public static String baseUrl = developUrl;
-    private static Context mContext = Utils.getContext();
-
-    private static OkHttpClient okHttpClient;
+    private static final String baseUrl = developUrl;
     private static Retrofit retrofit;
-
-    private Cache cache = null;
     private File httpCacheDirectory;
 
     private static class SingletonHolder {
-        private static RetrofitClient INSTANCE = new RetrofitClient();
+        private static final RetrofitClient INSTANCE = new RetrofitClient();
     }
 
     public static RetrofitClient getInstance() {
@@ -68,22 +62,29 @@ public class RetrofitClient {
         }
 
         if (httpCacheDirectory == null) {
-            httpCacheDirectory = new File(mContext.getCacheDir(), "http_cache");
+            httpCacheDirectory = new File(Utils.getContext().getCacheDir(), "http_cache");
         }
 
+        Cache cache = null;
         try {
-            if (cache == null) {
-                cache = new Cache(httpCacheDirectory, CACHE_TIMEOUT);
-            }
+            cache = new Cache(httpCacheDirectory, CACHE_TIMEOUT);
         } catch (Exception e) {
             KLogUtils.e("Could not create http cache", e);
         }
         HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
-        okHttpClient = new OkHttpClient.Builder()
-                .cookieJar(new CookieJarImpl(new PersistentCookieStore(mContext)))
+        // 构建者模式
+        // 是否开启日志打印
+        // 打印的等级
+        // 打印类型
+        // request的Tag
+        // Response的Tag
+        // 添加打印头, 注意 key 和 value 都不能是中文
+        // 这里你可以根据自己的机型设置同时连接的个数和时间，我这里8个，和每个保持时间为10s
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .cookieJar(new CookieJarImpl(new PersistentCookieStore(Utils.getContext())))
                 .cache(cache)
                 .addInterceptor(new BaseInterceptor(headers))
-                .addInterceptor(new CacheInterceptor(mContext))
+                .addInterceptor(new CacheInterceptor(Utils.getContext()))
                 .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
                 .addInterceptor(new LoggingInterceptor
                         .Builder()//构建者模式
@@ -127,16 +128,14 @@ public class RetrofitClient {
      * RetrofitClient.getInstance(MainActivity.this).create(MyApiService.class);
      * <p>
      * RetrofitClient.getInstance(MainActivity.this)
-     * .execute(service.lgon("name", "password"), subscriber)
+     * .execute(service.logon("name", "password"), subscriber)
      * * @param subscriber
      */
-
     public static <T> T execute(Observable<T> observable, Observer<T> subscriber) {
         observable.subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
-
         return null;
     }
 }

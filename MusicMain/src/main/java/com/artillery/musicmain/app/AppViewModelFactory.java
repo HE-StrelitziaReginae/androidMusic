@@ -16,7 +16,6 @@ import com.artillery.musicmain.viewmodel.MusicPlayViewModel;
  * @author ArtilleryOrchid
  */
 public class AppViewModelFactory extends ViewModelFactory {
-    @SuppressLint("StaticFieldLeak")
     private static volatile AppViewModelFactory INSTANCE;
     private final Application mApplication;
     private final MusicRepository mRepository;
@@ -43,6 +42,7 @@ public class AppViewModelFactory extends ViewModelFactory {
         mRepository = repository;
     }
 
+    @SuppressWarnings({"unchecked"})
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
