@@ -16,19 +16,13 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/music_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/music_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            binding:itemBinding="@{musicListModel.musicListBinding}"
-            binding:items="@{musicListModel.musicListItem}"
-            binding:layoutManager="@{LayoutManagers.linear()}"
-            binding:lineManager="@{LineManagers.horizontal()}" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent"
+        binding:itemBinding="@{musicListModel.musicListBinding}"
+        binding:items="@{musicListModel.musicListItem}"
+        binding:layoutManager="@{LayoutManagers.linear()}"
+        binding:lineManager="@{LineManagers.horizontal()}" />
 
 </layout>

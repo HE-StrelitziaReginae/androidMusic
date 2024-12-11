@@ -61,8 +61,10 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
         mPlayList = new PlayList();
         mSong = requireArguments().getParcelable(MusicContext.MUSIC_PLAY_SONG);
         ArrayList<Song> mSongList = requireArguments().getParcelableArrayList(MusicContext.MUSIC_PLAY_SONG_LIST);
+        if (mSongList == null) {
+            return;
+        }
         mPlayList.setSongs(mSongList);
-        assert mSongList != null;
         mPlayList.setNumOfSongs(mSongList.size());
         mStartIndex = requireArguments().getInt(MusicContext.MUSIC_PLAY_SONG_START, 0);
     }
@@ -85,7 +87,7 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
 
     @Override
     public void initData() {
-        KLogUtils.e(" initData ");
+        KLogUtils.e("initData: ");
         updateMainUi(mSong);
     }
 
@@ -209,19 +211,19 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
 
     @Override
     public void handleError(Throwable error) {
-        KLogUtils.e("Error ===> " + error);
+        KLogUtils.e("error: " + error);
     }
 
     @Override
     public void onPlaybackServiceBound(MusicService service) {
-        KLogUtils.e(" onPlaybackServiceBound ");
+        KLogUtils.e("onPlaybackServiceBound: ");
         mMusicListener = service;
         mMusicListener.registerCallback(this);
         startPlay();
     }
 
     private void startPlay() {
-        KLogUtils.e(" startPlay ");
+        KLogUtils.e("startPlay: ");
         if (mMusicListener != null) {
             mMusicListener.play(mPlayList, mStartIndex);
             mHandler.post(mProgressCallback);
@@ -230,19 +232,19 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
 
     @Override
     public void onPlaybackServiceUnbound() {
-        KLogUtils.e(" onPlaybackServiceUnbound ");
+        KLogUtils.e("onPlaybackServiceUnbound: ");
         mMusicListener.unregisterCallback(this);
         mMusicListener = null;
     }
 
     @Override
     public void onSongSetAsFavorite(@NonNull Song song) {
-        KLogUtils.e(" onSongSetAsFavorite ");
+        KLogUtils.e("onSongSetAsFavorite: ");
     }
 
     @Override
     public void onSongUpdated(@Nullable Song song) {
-        KLogUtils.e(" onSongUpdated ");
+        KLogUtils.e("onSongUpdated: ");
         if (song == null) {
             mHandler.removeCallbacks(mProgressCallback);
             return;
@@ -256,7 +258,7 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
     }
 
     private void updateMainUi(Song song) {
-        KLogUtils.e(" updateMainUi ");
+        KLogUtils.e("updateMainUi: ");
         mBinding.musicNamePlay.setText(song.getTitle());
         mBinding.musicArtistPlay.setText(song.getArtist());
         mBinding.musicTimeEnd.setText(TimeUtils.formatDuration(song.getDuration()));
@@ -264,16 +266,16 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
 
     @Override
     public void updatePlayMode(MusicMode playMode) {
-        KLogUtils.e(" updatePlayMode ");
+        KLogUtils.e("updatePlayMode: ");
     }
 
     @Override
     public void updatePlayToggle(boolean play) {
-        KLogUtils.e(" updatePlayToggle ");
+        KLogUtils.e("updatePlayToggle: ");
     }
 
     @Override
     public void updateFavoriteToggle(boolean favorite) {
-        KLogUtils.e(" updateFavoriteToggle ");
+        KLogUtils.e("updateFavoriteToggle: ");
     }
 }
