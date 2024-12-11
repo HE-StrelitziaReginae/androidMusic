@@ -1,6 +1,5 @@
 package com.artillery.musicmain.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,10 +15,8 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.artillery.musicbase.base.BaseFragment;
-import com.artillery.musicbase.base.ContainerActivity;
 import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
-import com.artillery.musicbase.helper.NotificationManagerHelper;
 import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
@@ -275,10 +272,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         mBinding.musicNamePlay.setText(song.getTitle());
         mBinding.musicArtistPlay.setText(song.getArtist());
         mBinding.musicTimeEnd.setText(TimeUtils.formatDuration(song.getDuration()));
-        NotificationManagerHelper.getInstance(requireContext()).showNotificationWithChannel(111, "111",
-                song.getTitle(),
-                song.getArtist(),
-                new Intent(requireContext(), ContainerActivity.class));
     }
 
     @Override

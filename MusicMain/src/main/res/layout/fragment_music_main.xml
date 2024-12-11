@@ -115,16 +115,16 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_pre_btn"
-                android:layout_width="@dimen/dp_30"
-                android:layout_height="@dimen/dp_30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:scaleType="fitXY"
-                android:src="@drawable/rewind"
+                android:src="@drawable/previous"
                 binding:onClickCommand="@{musicMain.mPre}" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_play_btn"
-                android:layout_width="@dimen/dp_30"
-                android:layout_height="@dimen/dp_30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_50"
                 android:layout_marginEnd="@dimen/dp_50"
                 android:scaleType="fitXY"
@@ -133,10 +133,10 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_next_btn"
-                android:layout_width="@dimen/dp_30"
-                android:layout_height="@dimen/dp_30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:scaleType="fitXY"
-                android:src="@drawable/speed"
+                android:src="@drawable/next"
                 binding:onClickCommand="@{musicMain.mNext}" />
 
         </LinearLayout>
