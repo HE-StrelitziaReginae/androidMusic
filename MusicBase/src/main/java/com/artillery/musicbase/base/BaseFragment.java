@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
@@ -26,6 +27,7 @@ import java.util.Map;
 /**
  * @author ArtilleryOrchid
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseViewModel> extends RxFragment implements IBaseView {
     protected V mBinding;
     protected VM mViewModel;
@@ -45,7 +47,7 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, initContentView(inflater, container, savedInstanceState), container, false);
         return mBinding.getRoot();
     }
@@ -97,7 +99,7 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
         }
         mBinding.setVariable(mViewModelId, mViewModel);
         //支持LiveData绑定xml，数据改变，UI自动会更新
-        mBinding.setLifecycleOwner(this);
+        mBinding.setLifecycleOwner(getViewLifecycleOwner());
         //让ViewModel拥有View的生命周期感应
         getLifecycle().addObserver(mViewModel);
         //注入RxLifecycle生命周期
@@ -107,6 +109,7 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     /**
      * 注册ViewModel与View的契约UI回调事件
      **/
+    @SuppressWarnings("unchecked")
     protected void registerUIChangeLiveDataCallBack() {
         //加载对话框显示
         mViewModel.getUC().getShowDialogEvent().observe(this, new Observer<String>() {
@@ -126,6 +129,9 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
         mViewModel.getUC().getStartActivityEvent().observe(this, new Observer<Map<String, Object>>() {
             @Override
             public void onChanged(@Nullable Map<String, Object> params) {
+                if (params == null) {
+                    return;
+                }
                 Class<?> clz = (Class<?>) params.get(BaseViewModel.ParameterField.CLASS);
                 Bundle bundle = (Bundle) params.get(BaseViewModel.ParameterField.BUNDLE);
                 startActivity(clz, bundle);
@@ -135,6 +141,9 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
         mViewModel.getUC().getStartContainerActivityEvent().observe(this, new Observer<Map<String, Object>>() {
             @Override
             public void onChanged(@Nullable Map<String, Object> params) {
+                if (params == null) {
+                    return;
+                }
                 String canonicalName = (String) params.get(BaseViewModel.ParameterField.CANONICAL_NAME);
                 Bundle bundle = (Bundle) params.get(BaseViewModel.ParameterField.BUNDLE);
                 startContainerActivity(canonicalName, bundle);
@@ -144,14 +153,14 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
         mViewModel.getUC().getFinishEvent().observe(this, new Observer<Void>() {
             @Override
             public void onChanged(@Nullable Void v) {
-                getActivity().finish();
+                requireActivity().finish();
             }
         });
         //关闭上一层
         mViewModel.getUC().getOnBackPressedEvent().observe(this, new Observer<Void>() {
             @Override
             public void onChanged(@Nullable Void v) {
-                getActivity().onBackPressed();
+                requireActivity().onBackPressed();
             }
         });
     }
@@ -178,7 +187,7 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
      * @param clz 所跳转的目的Activity类
      */
     public void startActivity(Class<?> clz) {
-        startActivity(new Intent(getContext(), clz));
+        startActivity(new Intent(requireContext(), clz));
     }
 
     /**
@@ -188,7 +197,7 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
      * @param bundle 跳转所携带的信息
      */
     public void startActivity(Class<?> clz, Bundle bundle) {
-        Intent intent = new Intent(getContext(), clz);
+        Intent intent = new Intent(requireContext(), clz);
         if (bundle != null) {
             intent.putExtras(bundle);
         }
@@ -211,17 +220,13 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
      * @param bundle        跳转所携带的信息
      */
     public void startContainerActivity(String canonicalName, Bundle bundle) {
-        Intent intent = new Intent(getContext(), ContainerActivity.class);
+        Intent intent = new Intent(requireContext(), ContainerActivity.class);
         intent.putExtra(ContainerActivity.FRAGMENT, canonicalName);
         if (bundle != null) {
             intent.putExtra(ContainerActivity.BUNDLE, bundle);
         }
         startActivity(intent);
     }
-
-    /**
-     * =====================================================================
-     **/
 
     //刷新布局
     public void refreshLayout() {
@@ -274,10 +279,6 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
 
     /**
      * 创建ViewModel
-     *
-     * @param cls
-     * @param <T>
-     * @return
      */
     public <T extends ViewModel> T createViewModel(Fragment fragment, Class<T> cls) {
         return ViewModelProviders.of(fragment).get(cls);

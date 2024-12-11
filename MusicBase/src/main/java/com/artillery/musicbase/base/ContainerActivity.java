@@ -57,7 +57,7 @@ public class ContainerActivity extends RxAppCompatActivity {
         }
         try {
             String fragmentName = data.getStringExtra(FRAGMENT);
-            if (fragmentName == null || "".equals(fragmentName)) {
+            if (fragmentName == null || fragmentName.isEmpty()) {
                 throw new IllegalArgumentException("can not find page fragmentName");
             }
             Class<?> fragmentClass = Class.forName(fragmentName);
@@ -67,11 +67,7 @@ public class ContainerActivity extends RxAppCompatActivity {
                 fragment.setArguments(args);
             }
             return fragment;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         throw new RuntimeException("fragment initialization failed!");
@@ -81,7 +77,7 @@ public class ContainerActivity extends RxAppCompatActivity {
     public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content);
         if (fragment instanceof BaseFragment) {
-            if (!((BaseFragment) fragment).isBackPressed()) {
+            if (!((BaseFragment<?, ?>) fragment).isBackPressed()) {
                 super.onBackPressed();
             }
         } else {

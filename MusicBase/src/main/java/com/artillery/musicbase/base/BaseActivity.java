@@ -26,6 +26,7 @@ import java.util.Map;
  *
  * @author ArtilleryOrchid
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseViewModel> extends RxAppCompatActivity implements IBaseView {
     protected V mBinding;
     protected VM mViewModel;
@@ -118,6 +119,9 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
         mViewModel.getUC().getStartActivityEvent().observe(this, new Observer<Map<String, Object>>() {
             @Override
             public void onChanged(@Nullable Map<String, Object> params) {
+                if (params == null) {
+                    return;
+                }
                 Class<?> clz = (Class<?>) params.get(BaseViewModel.ParameterField.CLASS);
                 Bundle bundle = (Bundle) params.get(BaseViewModel.ParameterField.BUNDLE);
                 startActivity(clz, bundle);
@@ -127,6 +131,9 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
         mViewModel.getUC().getStartContainerActivityEvent().observe(this, new Observer<Map<String, Object>>() {
             @Override
             public void onChanged(@Nullable Map<String, Object> params) {
+                if (params == null) {
+                    return;
+                }
                 String canonicalName = (String) params.get(BaseViewModel.ParameterField.CANONICAL_NAME);
                 Bundle bundle = (Bundle) params.get(BaseViewModel.ParameterField.BUNDLE);
                 startContainerActivity(canonicalName, bundle);
@@ -254,10 +261,6 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
 
     /**
      * 创建ViewModel
-     *
-     * @param cls
-     * @param <T>
-     * @return
      */
     public <T extends ViewModel> T createViewModel(FragmentActivity activity, Class<T> cls) {
         return ViewModelProviders.of(activity).get(cls);

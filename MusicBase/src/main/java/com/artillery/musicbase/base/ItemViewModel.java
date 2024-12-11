@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
  *
  * @author ArtilleryOrchid
  */
-
 public class ItemViewModel<VM extends BaseViewModel> {
     protected VM mViewModel;
 

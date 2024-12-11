@@ -24,6 +24,7 @@ import io.reactivex.functions.Consumer;
 /**
  * @author ArtilleryOrchid
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class BaseViewModel<M extends BaseModel> extends AndroidViewModel implements IBaseViewModel, Consumer<Disposable> {
     protected M model;
     private UIChangeLiveData uc;
@@ -55,8 +56,6 @@ public class BaseViewModel<M extends BaseModel> extends AndroidViewModel impleme
 
     /**
      * 注入RxLifecycle生命周期
-     *
-     * @param lifecycle
      */
     public void injectLifecycleProvider(LifecycleProvider lifecycle) {
         this.lifecycle = new WeakReference<>(lifecycle);
@@ -200,7 +199,7 @@ public class BaseViewModel<M extends BaseModel> extends AndroidViewModel impleme
         addSubscribe(disposable);
     }
 
-    public final class UIChangeLiveData extends SingleLiveEvent {
+    public static final class UIChangeLiveData extends SingleLiveEvent {
         private SingleLiveEvent<String> showDialogEvent;
         private SingleLiveEvent<Void> dismissDialogEvent;
         private SingleLiveEvent<Map<String, Object>> startActivityEvent;
@@ -240,7 +239,7 @@ public class BaseViewModel<M extends BaseModel> extends AndroidViewModel impleme
         }
 
         @Override
-        public void observe(LifecycleOwner owner, Observer observer) {
+        public void observe(@NonNull LifecycleOwner owner, @NonNull Observer observer) {
             super.observe(owner, observer);
         }
     }
