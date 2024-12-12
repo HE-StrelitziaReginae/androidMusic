@@ -35,7 +35,8 @@ import java.util.ArrayList;
 /**
  * @author ArtilleryOrchid
  */
-public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, MusicPlayViewModel> implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
+public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, MusicPlayViewModel>
+        implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
     private MusicListener mMusicListener;
     private PlayList mPlayList;
     private int mStartIndex = 0;

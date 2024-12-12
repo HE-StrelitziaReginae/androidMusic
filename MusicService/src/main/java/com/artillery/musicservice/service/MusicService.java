@@ -123,6 +123,11 @@ public class MusicService extends Service implements MusicListener, MusicListene
     }
 
     @Override
+    public long currentPosition() {
+        return mMusicPlayer.currentPosition();
+    }
+
+    @Override
     public boolean seekTo(int progress) {
         return mMusicPlayer.seekTo(progress);
     }

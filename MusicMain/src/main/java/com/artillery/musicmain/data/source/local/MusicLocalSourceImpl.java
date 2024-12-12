@@ -1,12 +1,10 @@
 package com.artillery.musicmain.data.source.local;
 
-
 import android.database.Observable;
 
 import com.artillery.musicmain.data.source.MusicLocalSource;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
-import com.artillery.musicservice.db.MusicDBHelper;
 import com.artillery.musicservice.db.MusicDataBase;
 
 import java.util.ArrayList;
@@ -38,7 +36,7 @@ public class MusicLocalSourceImpl implements MusicLocalSource {
 
     private MusicLocalSourceImpl() {
         //数据库Helper构建
-//        mMusicDataBase = MusicDBHelper.getInstance().getMusicDataBase();
+        //mMusicDataBase = MusicDBHelper.getInstance().getMusicDataBase();
     }
 
     @Override

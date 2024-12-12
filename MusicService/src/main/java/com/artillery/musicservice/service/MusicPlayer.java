@@ -160,6 +160,11 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     }
 
     @Override
+    public long currentPosition() {
+        return mPlayer.getCurrentPosition();
+    }
+
+    @Override
     public boolean seekTo(int progress) {
         if (mPlayList.getSongs().isEmpty()) {
             return false;

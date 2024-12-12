@@ -12,12 +12,18 @@ import com.artillery.musicservice.service.MusicService;
  */
 public abstract interface MusicPlayView {
     void handleError(Throwable error);
+
     void onPlaybackServiceBound(MusicService service);
 
     void onPlaybackServiceUnbound();
+
     void onSongSetAsFavorite(@NonNull Song song);
+
     void onSongUpdated(@Nullable Song song);
+
     void updatePlayMode(MusicMode playMode);
+
     void updatePlayToggle(boolean play);
+
     void updateFavoriteToggle(boolean favorite);
 }

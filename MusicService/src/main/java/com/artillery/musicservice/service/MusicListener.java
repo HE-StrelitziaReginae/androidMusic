@@ -32,6 +32,8 @@ public interface MusicListener {
 
     Song getPlayingSong();
 
+    long currentPosition();
+
     boolean seekTo(int progress);
 
     void setPlayMode(MusicMode playMode);
