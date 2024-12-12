@@ -1,9 +1,6 @@
 package com.artillery.musicmain.ui.musicPlay;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
@@ -15,7 +12,9 @@ import androidx.lifecycle.ViewModelProviders;
 import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
+import com.artillery.musicbase.utils.BackgroundThreadUtils;
 import com.artillery.musicbase.utils.KLogUtils;
+import com.artillery.musicbase.utils.constant.TimeConstants;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.app.AppViewModelFactory;
@@ -41,7 +40,6 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
     private PlayList mPlayList;
     private int mStartIndex = 0;
     private Song mSong;
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
@@ -51,8 +49,8 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
                 updateProgressTextWithDuration(mMusicListener.getProgress());
                 if (progress > 0 && progress < mBinding.musicSeekbar.getMax()) {
                     mBinding.musicSeekbar.setProgress(progress);
+                    BackgroundThreadUtils.getInstance().postDelayed(this, TimeConstants.SEC);
                 }
-                mHandler.postDelayed(mProgressCallback, DateUtils.SECOND_IN_MILLIS);
             }
         }
     };
@@ -106,7 +104,7 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
                 } else {
                     mMusicListener.play();
                 }
-                mHandler.post(mProgressCallback);
+                BackgroundThreadUtils.getInstance().post(mProgressCallback);
             }
         });
         mViewModel.next = new BindingCommand(new BindingAction() {
@@ -127,15 +125,15 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
     public void onStart() {
         super.onStart();
         if (mMusicListener != null && mMusicListener.isPlaying()) {
-            mHandler.removeCallbacks(mProgressCallback);
-            mHandler.post(mProgressCallback);
+            BackgroundThreadUtils.getInstance().removeCallbacks(mProgressCallback);
+            BackgroundThreadUtils.getInstance().post(mProgressCallback);
         }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mHandler.removeCallbacks(mProgressCallback);
+        BackgroundThreadUtils.getInstance().removeCallbacks(mProgressCallback);
     }
 
     @Override
@@ -147,15 +145,15 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        mHandler.removeCallbacks(mProgressCallback);
+        BackgroundThreadUtils.getInstance().removeCallbacks(mProgressCallback);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         seekTo(getDuration(seekBar.getProgress()));
         if (mMusicListener.isPlaying()) {
-            mHandler.removeCallbacks(mProgressCallback);
-            mHandler.post(mProgressCallback);
+            BackgroundThreadUtils.getInstance().removeCallbacks(mProgressCallback);
+            BackgroundThreadUtils.getInstance().post(mProgressCallback);
         }
     }
 
@@ -203,10 +201,10 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
     public void onPlayStatusChanged(boolean isPlaying) {
         updatePlayToggle(isPlaying);
         if (isPlaying) {
-            mHandler.removeCallbacks(mProgressCallback);
-            mHandler.post(mProgressCallback);
+            BackgroundThreadUtils.getInstance().removeCallbacks(mProgressCallback);
+            BackgroundThreadUtils.getInstance().post(mProgressCallback);
         } else {
-            mHandler.removeCallbacks(mProgressCallback);
+            BackgroundThreadUtils.getInstance().removeCallbacks(mProgressCallback);
         }
     }
 
@@ -227,7 +225,7 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
         KLogUtils.e("startPlay: ");
         if (mMusicListener != null) {
             mMusicListener.play(mPlayList, mStartIndex);
-            mHandler.post(mProgressCallback);
+            BackgroundThreadUtils.getInstance().post(mProgressCallback);
         }
     }
 
@@ -247,14 +245,14 @@ public class MusicPlayFragment extends BaseFragment<ActivityMusicPlayBinding, Mu
     public void onSongUpdated(@Nullable Song song) {
         KLogUtils.e("onSongUpdated: ");
         if (song == null) {
-            mHandler.removeCallbacks(mProgressCallback);
+            BackgroundThreadUtils.getInstance().removeCallbacks(mProgressCallback);
             return;
         }
         //Music Duration
         updateMainUi(song);
-        mHandler.removeCallbacks(mProgressCallback);
+        BackgroundThreadUtils.getInstance().removeCallbacks(mProgressCallback);
         if (mMusicListener.isPlaying()) {
-            mHandler.post(mProgressCallback);
+            BackgroundThreadUtils.getInstance().post(mProgressCallback);
         }
     }
 
