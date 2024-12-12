@@ -7,4 +7,9 @@
         <item name="android:layout_weight">1</item>
     </style>
 
+    <style name="CustomButtonRipple">
+        <item name="android:foreground">@drawable/music_ripple_circle</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
 </resources>

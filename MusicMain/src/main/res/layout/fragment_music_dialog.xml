@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="com.artillery.musicmain.viewmodel.MusicMainViewModel" />
+        <import type="com.artillery.musicmain.viewmodel.MusicDialogViewModel" />
 
         <variable
-            name="musicMain"
-            type="MusicMainViewModel" />
+            name="musicDialog"
+            type="MusicDialogViewModel" />
     </data>
 
     <LinearLayout
@@ -107,68 +107,39 @@
         <LinearLayout
             android:id="@+id/music_action_liner"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_35"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_10"
             android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_pre_btn"
                 style="@style/CustomButtonRipple"
-                android:layout_width="@dimen/dp_35"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_60"
                 android:src="@drawable/previous"
-                binding:onClickCommand="@{musicMain.mPre}" />
+                binding:onClickCommand="" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_play_btn"
                 style="@style/CustomButtonRipple"
-                android:layout_width="@dimen/dp_35"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_60"
                 android:layout_marginStart="@dimen/dp_50"
                 android:layout_marginEnd="@dimen/dp_50"
                 android:src="@drawable/play"
-                binding:onClickCommand="@{musicMain.mPlay}" />
+                binding:onClickCommand="" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_next_btn"
                 style="@style/CustomButtonRipple"
-                android:layout_width="@dimen/dp_35"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_60"
                 android:src="@drawable/next"
-                binding:onClickCommand="@{musicMain.mNext}" />
+                binding:onClickCommand="" />
 
         </LinearLayout>
-
-        <RadioGroup
-            android:id="@+id/music_group"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_50"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/music_main"
-                style="@style/CustomRadioButton"
-                android:layout_width="@dimen/dp_0"
-                android:layout_height="match_parent"
-                android:text="@string/music_home_tab" />
-
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/music_online"
-                style="@style/CustomRadioButton"
-                android:layout_width="@dimen/dp_0"
-                android:layout_height="match_parent"
-                android:text="@string/music_online_tab" />
-
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/music_mine"
-                style="@style/CustomRadioButton"
-                android:layout_width="@dimen/dp_0"
-                android:layout_height="match_parent"
-                android:text="@string/music_mine_tab" />
-
-        </RadioGroup>
 
     </LinearLayout>
 

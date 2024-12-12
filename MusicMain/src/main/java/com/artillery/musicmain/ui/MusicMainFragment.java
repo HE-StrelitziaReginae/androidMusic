@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.artillery.musicbase.base.AppManager;
 import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
@@ -83,7 +84,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             }
         });
 
-        activateMarquee(true);
         mViewModel.binMusicView(this);
         mBinding.musicSeekbar.setOnSeekBarChangeListener(this);
         mViewModel.mPlay = new BindingCommand(new BindingAction() {
@@ -118,6 +118,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 mPlayList.setNumOfSongs(songArrayList.size());
                 mStartIndex = index;
                 startPlay();
+                activateMarquee(true);
             }
 
             @Override
@@ -285,7 +286,8 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public void updatePlayToggle(boolean play) {
         KLogUtils.e("updatePlayToggle: " + play);
-        mBinding.musicPlayBtn.setImageDrawable(play ? ContextCompat.getDrawable(requireContext(), R.drawable.pause) : ContextCompat.getDrawable(requireContext(), R.drawable.play));
+        mBinding.musicPlayBtn.setImageDrawable(play ? ContextCompat.getDrawable(requireContext(), R.drawable.pause)
+                : ContextCompat.getDrawable(requireContext(), R.drawable.play));
     }
 
     @Override
@@ -311,6 +313,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
 
     @Override
     public void initData() {
+        AppManager.getAppManager().addFragment(this);
         mViewModel.showFragment(requireActivity(), 0);
     }
 

@@ -5,10 +5,12 @@ import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
+import com.artillery.musicbase.base.AppManager;
 import com.artillery.musicbase.base.MultiItemViewModel;
 import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
 import com.artillery.musicmain.data.MusicDaraListener;
+import com.artillery.musicmain.ui.musicDialog.MusicDialogFragment;
 import com.artillery.musicmain.utils.AlbumUtils;
 import com.artillery.musicservice.data.Song;
 
@@ -39,6 +41,7 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
         @Override
         public void call() {
             MusicDaraListener.getInstance().putMusicData(mSongList, mStartIndex, mSong);
+            MusicDialogFragment.getInstance().show(AppManager.getAppManager().currentFragment().requireFragmentManager(), this.toString());
         }
     });
 }

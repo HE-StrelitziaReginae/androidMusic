@@ -1,6 +1,5 @@
 package com.artillery.musicmain.app;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
@@ -9,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.artillery.musicbase.base.ViewModelFactory;
 import com.artillery.musicmain.data.MusicRepository;
+import com.artillery.musicmain.viewmodel.MusicDialogViewModel;
 import com.artillery.musicmain.viewmodel.MusicMainViewModel;
 import com.artillery.musicmain.viewmodel.MusicPlayViewModel;
 
@@ -50,6 +50,8 @@ public class AppViewModelFactory extends ViewModelFactory {
             return (T) new MusicPlayViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(MusicMainViewModel.class)) {
             return (T) new MusicMainViewModel(mApplication, mRepository);
+        } else if (modelClass.isAssignableFrom(MusicDialogViewModel.class)) {
+            return (T) new MusicDialogViewModel(mApplication);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
