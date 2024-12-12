@@ -41,7 +41,7 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
         @Override
         public void call() {
             MusicDaraListener.getInstance().putMusicData(mSongList, mStartIndex, mSong);
-            MusicDialogFragment.getInstance().show(AppManager.getAppManager().currentFragment().requireFragmentManager(), this.toString());
+            MusicDialogFragment.getInstance().show(AppManager.getAppManager().currentFragment().requireFragmentManager(), toString());
         }
     });
 }
