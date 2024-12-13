@@ -111,14 +111,14 @@ public abstract class BaseDialogFragment<V extends ViewDataBinding, VM extends B
      **/
     protected void registerUIChangeLiveDataCallBack() {
         //关闭界面
-        mViewModel.getUC().getFinishEvent().observe(this, new Observer<Void>() {
+        mViewModel.getUC().getFinishEvent().observe(getViewLifecycleOwner(), new Observer<Void>() {
             @Override
             public void onChanged(@Nullable Void v) {
                 requireActivity().finish();
             }
         });
         //关闭上一层
-        mViewModel.getUC().getOnBackPressedEvent().observe(this, new Observer<Void>() {
+        mViewModel.getUC().getOnBackPressedEvent().observe(getViewLifecycleOwner(), new Observer<Void>() {
             @Override
             public void onChanged(@Nullable Void v) {
                 requireActivity().onBackPressed();
