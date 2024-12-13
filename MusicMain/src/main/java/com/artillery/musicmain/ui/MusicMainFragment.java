@@ -1,13 +1,9 @@
 package com.artillery.musicmain.ui;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
-import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +22,6 @@ import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.data.MusicDataListener;
 import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
 import com.artillery.musicmain.databinding.FragmentMusicMainBinding;
-import com.artillery.musicmain.utils.TimeUtils;
 import com.artillery.musicmain.viewmodel.MusicMainViewModel;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
@@ -40,34 +35,10 @@ import java.util.ArrayList;
  * @author ArtilleryOrchid
  */
 public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, MusicMainViewModel>
-        implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
+        implements MusicPlayView, MusicListener.Callback {
     private MusicListener mMusicListener;
     private PlayList mPlayList;
     private int mStartIndex = 0;
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
-    private final Runnable mProgressCallback = new Runnable() {
-        @Override
-        public void run() {
-            if (isDetached()) {
-                return;
-            }
-            int progress = (int) (mBinding.musicSeekbar.getMax()
-                    * ((float) mMusicListener.getProgress() / (float) getCurrentSongDuration()));
-            updateProgressTextWithDuration(mMusicListener.getProgress());
-            if (progress >= 0 && progress <= mBinding.musicSeekbar.getMax()) {
-                mBinding.musicSeekbar.setProgress((int) mMusicListener.currentPosition() / 1000);
-                mHandler.postDelayed(mProgressCallback, DateUtils.SECOND_IN_MILLIS);
-            }
-        }
-    };
-
-    private static class Holder {
-        private static final MusicMainFragment instance = new MusicMainFragment();
-    }
-
-    public static MusicMainFragment getInstance() {
-        return MusicMainFragment.Holder.instance;
-    }
 
     @Override
     public void initViewObservable() {
@@ -85,7 +56,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         });
 
         mViewModel.binMusicView(this);
-        mBinding.musicSeekbar.setOnSeekBarChangeListener(this);
         mViewModel.mPlay = new BindingCommand(new BindingAction() {
             @Override
             public void call() {
@@ -94,7 +64,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 } else {
                     mMusicListener.play();
                 }
-                mHandler.post(mProgressCallback);
             }
         });
         mViewModel.mNext = new BindingCommand(new BindingAction() {
@@ -135,65 +104,9 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (mMusicListener != null && mMusicListener.isPlaying()) {
-            mHandler.removeCallbacks(mProgressCallback);
-            mHandler.post(mProgressCallback);
-        }
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         activateMarquee(false);
-        mHandler.removeCallbacks(mProgressCallback);
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser) {
-            updateProgressTextWithProgress(progress);
-        }
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-        mHandler.removeCallbacks(mProgressCallback);
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        seekTo(getDuration(seekBar.getProgress()));
-        if (mMusicListener.isPlaying()) {
-            mHandler.removeCallbacks(mProgressCallback);
-            mHandler.post(mProgressCallback);
-        }
-    }
-
-    private int getDuration(int progress) {
-        return (int) (getCurrentSongDuration() * ((float) progress / mBinding.musicSeekbar.getMax()));
-    }
-
-    private void updateProgressTextWithProgress(int progress) {
-        mBinding.musicTimeStart.setText(TimeUtils.formatDuration(getDuration(progress)));
-    }
-
-    private void updateProgressTextWithDuration(int duration) {
-        mBinding.musicTimeStart.setText(TimeUtils.formatDuration(duration));
-    }
-
-    private void seekTo(int duration) {
-        mMusicListener.seekTo(duration);
-    }
-
-    private long getCurrentSongDuration() {
-        Song currentSong = mMusicListener.getPlayingSong();
-        int duration = 0;
-        if (currentSong != null) {
-            duration = currentSong.getDuration();
-        }
-        return duration;
     }
 
     @Override
@@ -214,12 +127,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public void onPlayStatusChanged(boolean isPlaying) {
         updatePlayToggle(isPlaying);
-        if (isPlaying) {
-            mHandler.removeCallbacks(mProgressCallback);
-            mHandler.post(mProgressCallback);
-        } else {
-            mHandler.removeCallbacks(mProgressCallback);
-        }
     }
 
     @Override
@@ -238,7 +145,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         KLogUtils.e("startPlay: ");
         if (mMusicListener != null) {
             mMusicListener.play(mPlayList, mStartIndex);
-            mHandler.post(mProgressCallback);
         }
     }
 
@@ -258,24 +164,16 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     public void onSongUpdated(@Nullable Song song) {
         KLogUtils.e("onSongUpdated: ");
         if (song == null) {
-            mHandler.removeCallbacks(mProgressCallback);
             return;
         }
         //Music Duration
         updateMainUi(song);
-        mHandler.removeCallbacks(mProgressCallback);
-        if (mMusicListener.isPlaying()) {
-            mHandler.post(mProgressCallback);
-        }
     }
 
     private void updateMainUi(Song song) {
         KLogUtils.e("updateMainUi: ");
-        mBinding.musicSeekbar.setProgress(0);
-        mBinding.musicSeekbar.setMax((int) (getCurrentSongDuration() / 1000));
         mBinding.musicNamePlay.setText(song.getTitle());
         mBinding.musicArtistPlay.setText(song.getArtist());
-        mBinding.musicTimeEnd.setText(TimeUtils.formatDuration(song.getDuration()));
     }
 
     @Override

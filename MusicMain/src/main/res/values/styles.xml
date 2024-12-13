@@ -12,4 +12,14 @@
         <item name="android:scaleType">centerInside</item>
     </style>
 
+    <style name="CustomFullDialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@style/MusicDialogAnimation</item>
+    </style>
+
+    <style name="MusicDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/music_dialog_slide_show</item>
+        <item name="android:windowExitAnimation">@anim/music_dialog_slide_hide</item>
+    </style>
 </resources>

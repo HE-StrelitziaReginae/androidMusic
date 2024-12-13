@@ -67,7 +67,6 @@
         <attr name="textChanged" format="reference" />
     </declare-styleable>
 
-
     <declare-styleable name="ImageView">
         <!--  load bitmap from uri(string type) -->
         <attr name="url" />
