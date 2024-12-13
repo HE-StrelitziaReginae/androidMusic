@@ -28,17 +28,11 @@ public class MusicMainViewModel extends BaseViewModel {
     public BindingCommand mNext;
     public MusicRepository mMusicRepository;
     private List<Fragment> mFragments;
-    private final Fragment mMusicList;
-    private final Fragment mMusicOnline;
-    private final Fragment mMusicMine;
 
     public MusicMainViewModel(@NonNull Application application, MusicRepository mode) {
         super(application);
         mMusicRepository = mode;
         mMusicRepository.bindMusicService();
-        mMusicList = MusicListFragment.getInstance();
-        mMusicOnline = MusicOnlineFragment.getInstance();
-        mMusicMine = MusicMineFragment.getInstance();
         initFragment();
     }
 
@@ -48,9 +42,9 @@ public class MusicMainViewModel extends BaseViewModel {
 
     private void initFragment() {
         mFragments = new ArrayList<>();
-        mFragments.add(mMusicList);
-        mFragments.add(mMusicOnline);
-        mFragments.add(mMusicMine);
+        mFragments.add(new MusicListFragment());
+        mFragments.add(new MusicOnlineFragment());
+        mFragments.add(new MusicMineFragment());
     }
 
     /**

@@ -16,14 +16,6 @@ import com.artillery.musicmain.viewmodel.MusicListViewModel;
  * @author ArtilleryOrchid
  */
 public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, MusicListViewModel> {
-    private static class Holder {
-        private static final MusicListFragment instance = new MusicListFragment();
-    }
-
-    public static MusicListFragment getInstance() {
-        return MusicListFragment.Holder.instance;
-    }
-
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return R.layout.fragment_music_list;

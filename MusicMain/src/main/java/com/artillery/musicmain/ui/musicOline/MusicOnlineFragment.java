@@ -16,14 +16,6 @@ import com.artillery.musicmain.viewmodel.MusicOnlineViewModel;
  * @author ArtilleryOrchid
  */
 public class MusicOnlineFragment extends BaseFragment<FragmentMusicOnlineBinding, MusicOnlineViewModel> {
-    private static class Holder {
-        private static final MusicOnlineFragment instance = new MusicOnlineFragment();
-    }
-
-    public static MusicOnlineFragment getInstance() {
-        return MusicOnlineFragment.Holder.instance;
-    }
-
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return R.layout.fragment_music_online;

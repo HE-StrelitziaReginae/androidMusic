@@ -23,13 +23,6 @@ import com.artillery.musicservice.service.MusicService;
 
 public class MusicDialogFragment extends BaseDialogFragment<FragmentMusicDialogBinding, MusicDialogViewModel>
         implements MusicPlayView, MusicListener.Callback, SeekBar.OnSeekBarChangeListener {
-    private static class Holder {
-        private static final MusicDialogFragment instance = new MusicDialogFragment();
-    }
-
-    public static MusicDialogFragment getInstance() {
-        return MusicDialogFragment.Holder.instance;
-    }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

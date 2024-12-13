@@ -17,14 +17,6 @@ import com.artillery.musicmain.viewmodel.MusicMineViewModel;
  * @author ArtilleryOrchid
  */
 public class MusicMineFragment extends BaseFragment<FragmentMusicMineBinding, MusicMineViewModel> {
-    private static class Holder {
-        private static final MusicMineFragment instance = new MusicMineFragment();
-    }
-
-    public static MusicMineFragment getInstance() {
-        return MusicMineFragment.Holder.instance;
-    }
-
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return R.layout.fragment_music_mine;
