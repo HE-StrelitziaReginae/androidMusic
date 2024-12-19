@@ -41,7 +41,30 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     private int mStartIndex = 0;
 
     @Override
+    public void initData() {
+        AppManager.getAppManager().addFragment(this);
+        mViewModel.showFragment(requireActivity(), 0);
+        MusicDaraListener.getInstance().setMusicDataListener(new MusicDataListener() {
+            @Override
+            public void sendMusicList(ArrayList<Song> songArrayList, int index) {
+                mPlayList = new PlayList();
+                mPlayList.setSongs(songArrayList);
+                mPlayList.setNumOfSongs(songArrayList.size());
+                mStartIndex = index;
+                startPlay();
+                activateMarquee(true);
+            }
+
+            @Override
+            public void sendMusicSong(Song song) {
+                updateMainUi(song);
+            }
+        });
+    }
+
+    @Override
     public void initViewObservable() {
+        mViewModel.binMusicView(this);
         mBinding.musicGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -54,8 +77,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 }
             }
         });
-
-        mViewModel.binMusicView(this);
         mViewModel.mPlay = new BindingCommand(new BindingAction() {
             @Override
             public void call() {
@@ -78,23 +99,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 mMusicListener.playLast();
             }
         });
-
-        MusicDaraListener.getInstance().setMusicDataListener(new MusicDataListener() {
-            @Override
-            public void sendMusicList(ArrayList<Song> songArrayList, int index) {
-                mPlayList = new PlayList();
-                mPlayList.setSongs(songArrayList);
-                mPlayList.setNumOfSongs(songArrayList.size());
-                mStartIndex = index;
-                startPlay();
-                activateMarquee(true);
-            }
-
-            @Override
-            public void sendMusicSong(Song song) {
-                updateMainUi(song);
-            }
-        });
     }
 
     private void activateMarquee(boolean activate) {
@@ -111,12 +115,12 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
 
     @Override
     public void onSwitchLast(@Nullable Song last) {
-        onSongUpdated(last);
+
     }
 
     @Override
     public void onSwitchNext(@Nullable Song next) {
-        onSongUpdated(next);
+
     }
 
     @Override
@@ -207,12 +211,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public int initVariableId() {
         return BR.musicMain;
-    }
-
-    @Override
-    public void initData() {
-        AppManager.getAppManager().addFragment(this);
-        mViewModel.showFragment(requireActivity(), 0);
     }
 
     @Override
