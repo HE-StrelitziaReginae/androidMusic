@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:binding="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
-        <import type="com.artillery.musicmain.viewmodel.MusicDialogViewModel" />
-
-        <variable
-            name="musicDialog"
-            type="MusicDialogViewModel" />
     </data>
 
     <LinearLayout
@@ -118,8 +112,7 @@
                 style="@style/CustomButtonRipple"
                 android:layout_width="@dimen/dp_60"
                 android:layout_height="@dimen/dp_60"
-                android:src="@drawable/previous"
-                binding:onClickCommand="@{musicDialog.mPre}" />
+                android:src="@drawable/previous" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_play_btn"
@@ -128,16 +121,14 @@
                 android:layout_height="@dimen/dp_60"
                 android:layout_marginStart="@dimen/dp_50"
                 android:layout_marginEnd="@dimen/dp_50"
-                android:src="@drawable/play"
-                binding:onClickCommand="@{musicDialog.mPlay}" />
+                android:src="@drawable/play" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_next_btn"
                 style="@style/CustomButtonRipple"
                 android:layout_width="@dimen/dp_60"
                 android:layout_height="@dimen/dp_60"
-                android:src="@drawable/next"
-                binding:onClickCommand="@{musicDialog.mNext}" />
+                android:src="@drawable/next" />
 
         </LinearLayout>
 
