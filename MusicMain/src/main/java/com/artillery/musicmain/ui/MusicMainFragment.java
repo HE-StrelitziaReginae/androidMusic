@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.artillery.musicbase.base.AppManager;
 import com.artillery.musicbase.base.BaseFragment;
-import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
+import com.artillery.musicbase.utils.BackgroundThreadUtils;
 import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
  */
 public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, MusicMainViewModel>
         implements MusicPlayView, MusicListener.Callback {
-    private MusicListener mMusicListener;
+    protected MusicListener mMusicListener;
     private PlayList mPlayList;
     private int mStartIndex = 0;
 
@@ -46,18 +46,15 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         mViewModel.showFragment(requireActivity(), 0);
         MusicDaraListener.getInstance().setMusicDataListener(new MusicDataListener() {
             @Override
-            public void sendMusicList(ArrayList<Song> songArrayList, int index) {
+            public void sendMusicSong(ArrayList<Song> songArrayList, int index, Song song) {
+                KLogUtils.i("sendMusicSong: ");
                 mPlayList = new PlayList();
                 mPlayList.setSongs(songArrayList);
                 mPlayList.setNumOfSongs(songArrayList.size());
                 mStartIndex = index;
+                updateMainUi(song);
                 startPlay();
                 activateMarquee(true);
-            }
-
-            @Override
-            public void sendMusicSong(Song song) {
-                updateMainUi(song);
             }
         });
     }
@@ -77,26 +74,16 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 }
             }
         });
-        mViewModel.mPlay = new BindingCommand(new BindingAction() {
-            @Override
-            public void call() {
-                if (mMusicListener.isPlaying()) {
-                    mMusicListener.pause();
-                } else {
-                    mMusicListener.play();
-                }
+        mViewModel.mPlay = new BindingCommand(() -> {
+            if (mMusicListener.isPlaying()) {
+                mMusicListener.pause();
+            } else {
+                mMusicListener.play();
             }
         });
-        mViewModel.mNext = new BindingCommand(new BindingAction() {
-            @Override
-            public void call() {
-                mMusicListener.playNext();
-            }
-        });
-        mViewModel.mPre = new BindingCommand(new BindingAction() {
-            @Override
-            public void call() {
-                mMusicListener.playLast();
+        mViewModel.mShow = new BindingCommand(() -> {
+            if (!MusicMainDialog.getInstance().isShowing()) {
+                MusicMainDialog.getInstance().show();
             }
         });
     }
@@ -115,12 +102,12 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
 
     @Override
     public void onSwitchLast(@Nullable Song last) {
-
+        onSongUpdated(last);
     }
 
     @Override
     public void onSwitchNext(@Nullable Song next) {
-
+        onSongUpdated(next);
     }
 
     @Override
@@ -149,6 +136,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         KLogUtils.e("startPlay: ");
         if (mMusicListener != null) {
             mMusicListener.play(mPlayList, mStartIndex);
+            BackgroundThreadUtils.getInstance().post(MusicMainDialog.getInstance().mProgressCallback);
         }
     }
 
@@ -176,6 +164,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
 
     private void updateMainUi(Song song) {
         KLogUtils.e("updateMainUi: ");
+        MusicDaraListener.getInstance().setUpdate(song);
         mBinding.musicNamePlay.setText(song.getTitle());
         mBinding.musicArtistPlay.setText(song.getArtist());
     }
@@ -188,6 +177,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public void updatePlayToggle(boolean play) {
         KLogUtils.e("updatePlayToggle: " + play);
+        MusicDaraListener.getInstance().setUpdateUi(play);
         mBinding.musicPlayBtn.setImageDrawable(play ? ContextCompat.getDrawable(requireContext(), R.drawable.pause)
                 : ContextCompat.getDrawable(requireContext(), R.drawable.play));
     }

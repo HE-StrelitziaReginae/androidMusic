@@ -8,7 +8,5 @@ import java.util.ArrayList;
  * @author ArtilleryOrchid
  */
 public interface MusicDataListener {
-    void sendMusicList(ArrayList<Song> songArrayList, int index);
-
-    void sendMusicSong(Song song);
+    void sendMusicSong(ArrayList<Song> songArrayList, int index, Song song);
 }

@@ -24,8 +24,10 @@
             android:layout_weight="1" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/music_show_dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            binding:onClickCommand="@{musicMain.mShow}"
             android:layout_gravity="center_vertical">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -40,7 +42,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/music_name_play"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/dp_80"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/dp_10"
                 android:ellipsize="marquee"

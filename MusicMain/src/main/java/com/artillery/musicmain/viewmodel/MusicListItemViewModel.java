@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
-import com.artillery.musicbase.base.AppManager;
 import com.artillery.musicbase.base.MultiItemViewModel;
 import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
@@ -40,10 +39,8 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
     public BindingCommand musicPlay = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            MusicDaraListener.getInstance().putMusicData(mSongList, mStartIndex, mSong);
-            MusicMainDialog dialog = new MusicMainDialog(AppManager.getAppManager().currentActivity());
-            dialog.obServerMusicData(mSongList, mStartIndex, mSong);
-            dialog.show();
+            MusicMainDialog.getInstance().show();
+            MusicDaraListener.getInstance().observerMusicData(mSongList, mStartIndex, mSong);
         }
     });
 }

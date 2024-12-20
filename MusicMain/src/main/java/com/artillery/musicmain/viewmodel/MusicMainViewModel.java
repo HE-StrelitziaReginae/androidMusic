@@ -23,9 +23,8 @@ import java.util.List;
  * @author ArtilleryOrchid
  */
 public class MusicMainViewModel extends BaseViewModel {
-    public BindingCommand mPre;
+    public BindingCommand mShow;
     public BindingCommand mPlay;
-    public BindingCommand mNext;
     public MusicRepository mMusicRepository;
     private List<Fragment> mFragments;
 
