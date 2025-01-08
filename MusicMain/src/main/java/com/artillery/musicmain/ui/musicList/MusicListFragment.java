@@ -26,12 +26,4 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
         return BR.musicListModel;
     }
 
-    @Override
-    public void initData() {
-
-    }
-
-    @Override
-    public void initViewObservable() {
-    }
 }

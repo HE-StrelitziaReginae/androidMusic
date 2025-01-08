@@ -47,18 +47,27 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public boolean play() {
+        KLogUtils.i("play: " + isPaused);
         if (isPaused) {
             mPlayer.start();
             notifyPlayStatusChanged(true);
             return true;
         }
+        KLogUtils.i("prepare: " + mPlayList.prepare());
         if (mPlayList.prepare()) {
             Song song = mPlayList.getCurrentSong();
             try {
                 mPlayer.reset();
                 mPlayer.setDataSource(song.getPath());
                 mPlayer.prepare();
-                mPlayer.start();
+                mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        KLogUtils.i("onPrepared: " + mp.toString());
+                        // 文件准备好后开始播放
+                        mPlayer.start();
+                    }
+                });
                 notifyPlayStatusChanged(true);
             } catch (IOException e) {
                 KLogUtils.e(TAG + e);

@@ -265,7 +265,7 @@ public class PlayList implements Parcelable {
     }
 
     public boolean hasLast() {
-        return songs != null && songs.size() != 0;
+        return songs != null && !songs.isEmpty();
     }
 
     public Song last() {
@@ -303,9 +303,7 @@ public class PlayList implements Parcelable {
             return false;
         }
         if (fromComplete) {
-            if (playMode == MusicMode.LIST && playingIndex + 1 >= songs.size()) {
-                return false;
-            }
+            return playMode != MusicMode.LIST || playingIndex + 1 < songs.size();
         }
         return true;
     }
@@ -341,12 +339,4 @@ public class PlayList implements Parcelable {
         }
         return randomIndex;
     }
-
-//    public static PlayList fromFolder(@NonNull Folder folder) {
-//        PlayList playList = new PlayList();
-//        playList.setName(folder.getName());
-//        playList.setSongs(folder.getSongs());
-//        playList.setNumOfSongs(folder.getNumOfSongs());
-//        return playList;
-//    }
 }
