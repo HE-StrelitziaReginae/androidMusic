@@ -14,8 +14,6 @@ import java.util.List;
  * @author ArtilleryOrchid
  */
 public interface MusicLocalSource {
-
-    // Play List
     Observable<List<PlayList>> playLists();
 
     List<PlayList> cachedPlayLists();
@@ -25,8 +23,6 @@ public interface MusicLocalSource {
     Observable<PlayList> update(PlayList playList);
 
     Observable<PlayList> delete(PlayList playList);
-
-    // Song
 
     Observable<ArrayList<Song>> insert(ArrayList<Song> songs);
 

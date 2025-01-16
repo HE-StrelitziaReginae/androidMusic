@@ -8,6 +8,7 @@ import com.artillery.musicservice.data.Song;
  */
 public interface MusicPlaySource {
     void bindMusicView(MusicPlayView musicPlayView);
+
     void retrieveLastPlayMode();
 
     void setSongAsFavorite(Song song, boolean favorite);

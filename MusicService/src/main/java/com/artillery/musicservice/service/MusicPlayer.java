@@ -63,7 +63,6 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
                 mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
-                        KLogUtils.i("onPrepared: " + mp.toString());
                         // 文件准备好后开始播放
                         mPlayer.start();
                     }
