@@ -206,6 +206,9 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (MusicMainDialog.getInstance().isShowing()) {
+            MusicMainDialog.getInstance().dismiss();
+        }
         mViewModel.mMusicRepository.unBindMusicService();
     }
 }
