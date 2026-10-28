@@ -4,6 +4,7 @@
     <string name="music_play">播放</string>
     <string name="music_pause">暂停</string>
     <string name="music_next">下一首</string>
+    <string name="music_dialog_close">关闭播放器</string>
 
     <string name="music_home_tab">音乐</string>
     <string name="music_online_tab">在线</string>
@@ -17,15 +18,16 @@
     <string name="music_profile_avatar">用户头像</string>
     <string name="music_profile_name">音乐爱好者</string>
     <string name="music_profile_subtitle">你的本地音乐空间</string>
+    <string name="music_profile_hint">点击头像更换</string>
     <string name="music_section_library">音乐库</string>
     <string name="music_section_player">播放器</string>
     <string name="music_refresh_library">刷新音乐库</string>
     <string name="music_play_mode">播放模式</string>
-    <string name="music_skin">换肤</string>
-    <string name="music_skin_title">选择主题</string>
-    <string name="music_skin_light">浅色</string>
-    <string name="music_skin_dark">深色</string>
-    <string name="music_skin_ocean">海洋蓝</string>
+    <string name="music_mine_favorites">收藏</string>
+    <string name="music_mine_local_tracks">本地歌曲</string>
+    <string name="music_mine_playlists">歌单</string>
+    <string name="music_mine_empty_title">你的收藏正在等待</string>
+    <string name="music_mine_empty_message">播放一首歌，开始建立你的专属歌单。</string>
     <string name="music_about">关于应用</string>
     <string name="music_about_message">一个简洁的本地音乐播放器。</string>
     <string name="music_play_mode_title">播放模式</string>
@@ -62,9 +64,4 @@
         <item>@string/music_mode_shuffle</item>
     </string-array>
 
-    <string-array name="music_skins">
-        <item>@string/music_skin_light</item>
-        <item>@string/music_skin_dark</item>
-        <item>@string/music_skin_ocean</item>
-    </string-array>
 </resources>

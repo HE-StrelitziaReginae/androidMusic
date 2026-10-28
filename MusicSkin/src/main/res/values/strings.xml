@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="music_skin">Appearance</string>
+    <string name="music_skin_title">Choose appearance</string>
+    <string name="music_skin_light">Light</string>
+    <string name="music_skin_dark">Dark</string>
+    <string name="music_skin_ocean">Ocean</string>
+    <string name="music_skin_sakura">Sakura Fantasy</string>
+    <string name="music_character_name">HOSHINO RURI</string>
+    <string name="music_character_badge">MIDNIGHT CHERRY / MUSIC SELECTOR</string>
+    <string name="music_character_hint">ORIGINAL CHARACTER THEME</string>
+    <string name="music_character_music_eyebrow">NOW PLAYING / LOCAL LIBRARY</string>
+    <string name="music_character_music_title">RURI MUSIC ROOM</string>
+    <string name="music_character_music_subtitle">A quiet playlist under the cherry moon</string>
+    <string name="music_character_online_eyebrow">DISCOVER NEW FREQUENCIES</string>
+    <string name="music_character_online_title">RURI DISCOVERY BOARD</string>
+    <string name="music_character_online_subtitle">Find the next song for tonight</string>
+    <string name="music_character_mine_eyebrow">MY COLLECTION / HOSHINO RURI</string>
+    <string name="music_character_mine_title">KEEP YOUR FAVORITES CLOSE</string>
+    <string name="music_character_mine_subtitle">Your private little music universe</string>
+    <string-array name="music_skins">
+        <item>@string/music_skin_light</item>
+        <item>@string/music_skin_dark</item>
+        <item>@string/music_skin_ocean</item>
+        <item>@string/music_skin_sakura</item>
+    </string-array>
+</resources>

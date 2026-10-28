@@ -36,4 +36,6 @@ dependencies {
     implementation project(':MusicService')
     //Music Base
     implementation project(':MusicBase')
+    //Music Skin
+    implementation project(':MusicSkin')
 }

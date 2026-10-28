@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="music_skin">换肤</string>
+    <string name="music_skin_title">选择主题</string>
+    <string name="music_skin_light">浅色</string>
+    <string name="music_skin_dark">深色</string>
+    <string name="music_skin_ocean">海洋蓝</string>
+    <string name="music_skin_sakura">樱花幻想</string>
+    <string name="music_character_name">星野琉璃</string>
+    <string name="music_character_badge">午夜樱花 · 音乐选择者</string>
+    <string name="music_character_hint">原创角色主题</string>
+    <string name="music_character_music_eyebrow">正在播放 · 本地音乐</string>
+    <string name="music_character_music_title">琉璃的音乐房间</string>
+    <string name="music_character_music_subtitle">樱花月下，收藏每一首心动</string>
+    <string name="music_character_online_eyebrow">探索新的频率</string>
+    <string name="music_character_online_title">琉璃的发现清单</string>
+    <string name="music_character_online_subtitle">为今晚找到下一首歌</string>
+    <string name="music_character_mine_eyebrow">我的收藏 · 星野琉璃</string>
+    <string name="music_character_mine_title">把喜欢的歌留在身边</string>
+    <string name="music_character_mine_subtitle">属于你的私人音乐宇宙</string>
+    <string-array name="music_skins">
+        <item>@string/music_skin_light</item>
+        <item>@string/music_skin_dark</item>
+        <item>@string/music_skin_ocean</item>
+        <item>@string/music_skin_sakura</item>
+    </string-array>
+</resources>

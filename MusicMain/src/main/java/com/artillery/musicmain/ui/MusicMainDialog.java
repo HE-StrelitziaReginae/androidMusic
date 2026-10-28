@@ -19,7 +19,7 @@ import com.artillery.musicmain.R;
 import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.databinding.MusicMianDialogBinding;
 import com.artillery.musicmain.observer.MusicObserver;
-import com.artillery.musicmain.theme.MusicSkin;
+import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.utils.TimeUtils;
 import com.artillery.musicservice.data.Song;
 
@@ -132,6 +132,17 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicPreBtn.setColorFilter(skin.icon(getContext()));
         mBinding.musicPlayBtn.setColorFilter(skin.icon(getContext()));
         mBinding.musicNextBtn.setColorFilter(skin.icon(getContext()));
+        mBinding.musicDialogClose.setColorFilter(skin.icon(getContext()));
+        mBinding.musicSeekbar.setProgressDrawable(skin.seekBarDrawable(getContext()));
+        boolean characterSkin = skin.isCharacterSkin();
+        mBinding.musicCharacterBackground.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
+        mBinding.musicCharacterScrim.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
+        mBinding.musicCharacterBadge.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
+        mBinding.musicCharacterName.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
+        mBinding.musicCharacterBadge.setTextColor(skin.accent(getContext()));
+        mBinding.musicCharacterName.setTextColor(primaryText);
+        mBinding.musicAlbumImage.setImageResource(characterSkin
+                ? com.os.sys.musicskin.R.drawable.skin_sakura_avatar : R.drawable.ellipse);
         if (getWindow() != null) {
             SystemBarUtils.setLightSystemBars(getWindow(), skin.usesLightSystemBars());
         }
@@ -157,6 +168,7 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
             mSong = null;
             mBinding.musicNamePlay.setText(R.string.music_not_play);
             mBinding.musicArtistPlay.setText(R.string.music_unknown);
+            applyAlbumSkin();
             mBinding.musicTimeStart.setText(R.string.music_time);
             mBinding.musicTimeEnd.setText(R.string.music_time);
             mBinding.musicSeekbar.setMax(0);
@@ -172,6 +184,7 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         KLogUtils.e("updatePlayToggle: " + isPlaying);
         mBinding.musicPlayBtn.setImageDrawable(isPlaying ? ContextCompat.getDrawable(getContext(), R.drawable.pause)
                 : ContextCompat.getDrawable(getContext(), R.drawable.play));
+        mBinding.musicPlayBtn.setColorFilter(MusicSkin.load(getContext()).icon(getContext()));
     }
 
     @Override
@@ -198,7 +211,13 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicSeekbar.setMax((int) (getCurrentSongDuration() / 1000));
         mBinding.musicNamePlay.setText(song.getTitle());
         mBinding.musicArtistPlay.setText(song.getArtist());
+        applyAlbumSkin();
         mBinding.musicTimeEnd.setText(TimeUtils.formatDuration(song.getDuration()));
+    }
+
+    private void applyAlbumSkin() {
+        mBinding.musicAlbumImage.setImageResource(MusicSkin.load(getContext()).isCharacterSkin()
+                ? com.os.sys.musicskin.R.drawable.skin_sakura_avatar : R.drawable.ellipse);
     }
 
     private void activateMarquee(boolean activate) {
@@ -265,6 +284,7 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     public void initViewObservable() {
         KLogUtils.i("initViewObservable: ");
         mBinding.musicSeekbar.setOnSeekBarChangeListener(this);
+        mBinding.musicDialogClose.setOnClickListener(view -> dismiss());
         mBinding.musicPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

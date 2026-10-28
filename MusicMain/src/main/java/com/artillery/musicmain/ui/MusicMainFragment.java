@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.ClipData;
 import android.os.Bundle;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.widget.TextViewCompat;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
@@ -38,7 +41,7 @@ import com.artillery.musicmain.data.MusicDataListener;
 import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
 import com.artillery.musicmain.databinding.FragmentMusicMainBinding;
 import com.artillery.musicmain.viewmodel.MusicMainViewModel;
-import com.artillery.musicmain.theme.MusicSkin;
+import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
 import com.artillery.musicservice.service.MusicListener;
@@ -144,7 +147,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                     mBinding.musicToolbar.getPaddingBottom());
 
             ViewGroup.LayoutParams groupParams = mBinding.musicGroup.getLayoutParams();
-            groupParams.height = getResources().getDimensionPixelSize(com.artillery.musicbase.R.dimen.dp_50) + bottomInset;
+            groupParams.height = getResources().getDimensionPixelSize(com.artillery.musicbase.R.dimen.dp_60) + bottomInset;
             mBinding.musicGroup.setLayoutParams(groupParams);
             mBinding.musicGroup.setPadding(
                     mBinding.musicGroup.getPaddingLeft(),
@@ -228,6 +231,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     }
 
     private void loadProfileImage() {
+        mBinding.drawerAvatar.setImageResource(R.drawable.ellipse);
         String uri = requireContext().getSharedPreferences(PROFILE_PREFERENCES, Context.MODE_PRIVATE)
                 .getString(PROFILE_IMAGE_URI, null);
         if (!TextUtils.isEmpty(uri)) {
@@ -269,8 +273,8 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         MusicSkin[] skins = MusicSkin.values();
         int selectedIndex = mMusicSkin == null ? MusicSkin.LIGHT.ordinal() : mMusicSkin.ordinal();
         new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.music_skin_title)
-                .setSingleChoiceItems(R.array.music_skins, selectedIndex, (dialog, which) -> {
+                .setTitle(com.os.sys.musicskin.R.string.music_skin_title)
+                .setSingleChoiceItems(com.os.sys.musicskin.R.array.music_skins, selectedIndex, (dialog, which) -> {
                     applySkin(skins[which]);
                     dialog.dismiss();
                     mBinding.musicDrawerLayout.closeDrawer(mBinding.musicDrawerPanel);
@@ -282,16 +286,34 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     private void applySkin(MusicSkin skin) {
         mMusicSkin = skin;
         skin.save(requireContext());
-        mBinding.musicDrawerLayout.setBackgroundColor(skin.background(requireContext()));
-        mBinding.musicToolbar.setBackgroundColor(skin.surface(requireContext()));
+        int background = skin.background(requireContext());
+        int surface = skin.surface(requireContext());
+        int icon = skin.icon(requireContext());
+        mBinding.musicDrawerLayout.setBackgroundColor(background);
+        mBinding.musicToolbar.setBackgroundColor(surface);
         mBinding.musicToolbarTitle.setTextColor(skin.primaryText(requireContext()));
-        mBinding.musicShowDialog.setBackgroundColor(skin.surface(requireContext()));
+        mBinding.musicMenuBtn.setColorFilter(icon);
+        mBinding.musicShowDialog.setBackgroundColor(surface);
         mBinding.musicNamePlay.setTextColor(skin.primaryText(requireContext()));
         mBinding.musicArtistPlay.setTextColor(skin.secondaryText(requireContext()));
+        mBinding.musicLine.setBackgroundColor(skin.secondaryText(requireContext()));
+        mBinding.musicPlayBtn.setColorFilter(icon);
         mBinding.musicDrawerPanel.setBackgroundColor(skin.drawer(requireContext()));
-        mBinding.drawerProfile.setBackgroundColor(skin.header(requireContext()));
+        mBinding.drawerProfile.setBackground(skin.drawerHeaderBackground(requireContext()));
+        mBinding.drawerCharacterArt.setVisibility(skin.isCharacterSkin() ? View.VISIBLE : View.GONE);
+        mBinding.drawerCharacterScrim.setVisibility(skin.isCharacterSkin() ? View.VISIBLE : View.GONE);
+        mBinding.drawerProfileName.setText(skin.isCharacterSkin()
+                ? com.os.sys.musicskin.R.string.music_character_name : R.string.music_profile_name);
+        mBinding.drawerProfileSubtitle.setText(skin.isCharacterSkin()
+                ? com.os.sys.musicskin.R.string.music_character_badge : R.string.music_profile_subtitle);
+        mBinding.drawerProfileHint.setText(skin.isCharacterSkin()
+                ? com.os.sys.musicskin.R.string.music_character_hint : R.string.music_profile_hint);
         mBinding.drawerProfileName.setTextColor(skin.headerPrimaryText(requireContext()));
         mBinding.drawerProfileSubtitle.setTextColor(skin.headerSecondaryText(requireContext()));
+        mBinding.drawerProfileHint.setTextColor(skin.headerSecondaryText(requireContext()));
+        applyProfileAvatar(skin);
+        mBinding.musicAlbumImg.setImageResource(skin.isCharacterSkin()
+                ? com.os.sys.musicskin.R.drawable.skin_sakura_avatar : R.drawable.ellipse);
         mBinding.drawerLibrarySection.setTextColor(skin.secondaryText(requireContext()));
         mBinding.drawerPlayerSection.setTextColor(skin.secondaryText(requireContext()));
         mBinding.drawerRefreshText.setTextColor(skin.primaryText(requireContext()));
@@ -299,13 +321,78 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         mBinding.drawerPlayModeValue.setTextColor(skin.secondaryText(requireContext()));
         mBinding.drawerSkinText.setTextColor(skin.primaryText(requireContext()));
         mBinding.drawerAboutText.setTextColor(skin.primaryText(requireContext()));
-        mBinding.musicGroup.setBackgroundColor(skin.surface(requireContext()));
-        mBinding.musicMain.setTextColor(skin.primaryText(requireContext()));
-        mBinding.musicOnline.setTextColor(skin.primaryText(requireContext()));
-        mBinding.musicMine.setTextColor(skin.primaryText(requireContext()));
+        applyDrawerItemSkin(skin);
+        mBinding.musicGroup.setBackground(skin.tabContainerBackground(requireContext()));
+        mBinding.musicMain.setTextColor(skin.tabTextColors(requireContext()));
+        mBinding.musicOnline.setTextColor(skin.tabTextColors(requireContext()));
+        mBinding.musicMine.setTextColor(skin.tabTextColors(requireContext()));
+        applyTabVisual(mBinding.musicMain, skin, com.os.sys.musicskin.R.drawable.music_tab_home,
+                com.os.sys.musicskin.R.drawable.skin_sakura_tab_music);
+        applyTabVisual(mBinding.musicOnline, skin, com.os.sys.musicskin.R.drawable.music_tab_online,
+                com.os.sys.musicskin.R.drawable.skin_sakura_tab_online);
+        applyTabVisual(mBinding.musicMine, skin, com.os.sys.musicskin.R.drawable.music_tab_mine,
+                com.os.sys.musicskin.R.drawable.skin_sakura_tab_mine);
+        mBinding.musicMain.setBackground(skin.tabBackground(requireContext()));
+        mBinding.musicOnline.setBackground(skin.tabBackground(requireContext()));
+        mBinding.musicMine.setBackground(skin.tabBackground(requireContext()));
+        tintDrawerIcons(icon);
         mViewModel.applySkin(requireActivity(), skin);
         MusicMainDialog.applySkinCurrent(skin);
         SystemBarUtils.setLightSystemBars(requireActivity().getWindow(), skin.usesLightSystemBars());
+    }
+
+    private void applyTabVisual(android.widget.TextView tab, MusicSkin skin,
+                                int standardIcon, int characterIcon) {
+        Drawable drawable = ContextCompat.getDrawable(requireContext(),
+                skin.isCharacterSkin() ? characterIcon : standardIcon);
+        if (drawable == null) {
+            return;
+        }
+        int size = getResources().getDimensionPixelSize(skin.isCharacterSkin()
+                ? com.artillery.musicbase.R.dimen.dp_34
+                : com.artillery.musicbase.R.dimen.dp_20);
+        drawable.setBounds(0, 0, size, size);
+        tab.setCompoundDrawables(null, drawable, null, null);
+        tab.setCompoundDrawablePadding(getResources().getDimensionPixelSize(
+                com.artillery.musicbase.R.dimen.dp_2));
+        TextViewCompat.setCompoundDrawableTintList(tab,
+                skin.isCharacterSkin() ? null : skin.tabIconTint(requireContext()));
+    }
+
+    private void applyProfileAvatar(MusicSkin skin) {
+        String uri = requireContext().getSharedPreferences(PROFILE_PREFERENCES, Context.MODE_PRIVATE)
+                .getString(PROFILE_IMAGE_URI, null);
+        if (skin.isCharacterSkin() && TextUtils.isEmpty(uri)) {
+            mBinding.drawerAvatar.setImageResource(com.os.sys.musicskin.R.drawable.skin_sakura_avatar);
+            return;
+        }
+        loadProfileImage();
+    }
+
+    private void tintDrawerIcons(int color) {
+        for (ViewGroup row : new ViewGroup[]{mBinding.drawerRefresh, mBinding.drawerPlayMode,
+                mBinding.drawerSkin, mBinding.drawerAbout}) {
+            for (int index = 0; index < row.getChildCount(); index++) {
+                View child = row.getChildAt(index);
+                if (child instanceof androidx.appcompat.widget.AppCompatImageView) {
+                    ((androidx.appcompat.widget.AppCompatImageView) child).setColorFilter(color);
+                }
+            }
+        }
+    }
+
+    private void applyDrawerItemSkin(MusicSkin skin) {
+        int elevation = getResources().getDimensionPixelSize(com.artillery.musicbase.R.dimen.dp_2);
+        View[] drawerItems = new View[]{
+                mBinding.drawerRefresh,
+                mBinding.drawerPlayMode,
+                mBinding.drawerSkin,
+                mBinding.drawerAbout
+        };
+        for (View drawerItem : drawerItems) {
+            drawerItem.setBackground(skin.cardBackground(requireContext(), false));
+            drawerItem.setElevation(elevation);
+        }
     }
 
     private void showProfileDialog() {
@@ -465,6 +552,8 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         MusicDaraListener.getInstance().setUpdateUi(play);
         mBinding.musicPlayBtn.setImageDrawable(play ? ContextCompat.getDrawable(requireContext(), R.drawable.pause)
                 : ContextCompat.getDrawable(requireContext(), R.drawable.play));
+        mBinding.musicPlayBtn.setColorFilter((mMusicSkin == null ? MusicSkin.load(requireContext()) : mMusicSkin)
+                .icon(requireContext()));
     }
 
     @Override

@@ -15,4 +15,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "AndroidMusic"
-include ':app', ':MusicMain', ':MusicService', ':MusicBase'
+include ':app', ':MusicMain', ':MusicService', ':MusicBase', ':MusicSkin'

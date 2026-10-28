@@ -80,4 +80,6 @@ dependencies {
     implementation project(':MusicMain')
     //Music Base
     implementation project(':MusicBase')
+    //Music Skin resources used by MusicMain layouts
+    implementation project(':MusicSkin')
 }

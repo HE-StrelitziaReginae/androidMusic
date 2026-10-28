@@ -10,7 +10,7 @@ import com.artillery.musicbase.base.BaseViewModel;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.data.MusicRepository;
-import com.artillery.musicmain.theme.MusicSkin;
+import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.utils.LambadaTools;
 import com.artillery.musicservice.data.MusicLocalUtils;
 import com.artillery.musicservice.data.Song;

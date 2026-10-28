@@ -4,6 +4,7 @@
     <string name="music_play">Play</string>
     <string name="music_pause">Pause</string>
     <string name="music_next">Next</string>
+    <string name="music_dialog_close">Close player</string>
 
     <string name="music_home_tab">Music</string>
     <string name="music_online_tab">Online</string>
@@ -18,15 +19,16 @@
     <string name="music_profile_avatar">Profile avatar</string>
     <string name="music_profile_name">Music listener</string>
     <string name="music_profile_subtitle">Your local music space</string>
+    <string name="music_profile_hint">Tap avatar to change</string>
     <string name="music_section_library">LIBRARY</string>
     <string name="music_section_player">PLAYER</string>
     <string name="music_refresh_library">Refresh library</string>
     <string name="music_play_mode">Playback mode</string>
-    <string name="music_skin">Appearance</string>
-    <string name="music_skin_title">Choose appearance</string>
-    <string name="music_skin_light">Light</string>
-    <string name="music_skin_dark">Dark</string>
-    <string name="music_skin_ocean">Ocean</string>
+    <string name="music_mine_favorites">Favorites</string>
+    <string name="music_mine_local_tracks">Local tracks</string>
+    <string name="music_mine_playlists">Playlists</string>
+    <string name="music_mine_empty_title">Your collection is waiting</string>
+    <string name="music_mine_empty_message">Play a song to start building your own setlist.</string>
     <string name="music_about">About this app</string>
     <string name="music_about_message">A simple local music player for your device.</string>
     <string name="music_play_mode_title">Playback mode</string>
@@ -63,9 +65,4 @@
         <item>@string/music_mode_shuffle</item>
     </string-array>
 
-    <string-array name="music_skins">
-        <item>@string/music_skin_light</item>
-        <item>@string/music_skin_dark</item>
-        <item>@string/music_skin_ocean</item>
-    </string-array>
 </resources>

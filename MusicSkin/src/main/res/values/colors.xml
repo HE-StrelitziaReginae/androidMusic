@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFFFF</color>
+    <color name="snow">#FFFAFA</color>
+    <color name="gray">#FF808080</color>
+    <color name="lightgray">#FFD3D3D3</color>
+    <color name="lightblue">#FFADD8E6</color>
+    <color name="aliceblue">#FFF0F8FF</color>
+    <color name="azure">#FFF0FFFF</color>
+    <color name="lightcyan">#FFE0FFFF</color>
+    <color name="cadetblue">#FF5F9EA0</color>
+    <color name="darkslategray">#FF2F4F4F</color>
+    <color name="darkslategrey">#FF2F4F4F</color>
+    <color name="deepskyblue">#FF00BFFF</color>
+    <color name="darkcyan">#FF008B8B</color>
+    <color name="teal">#FF008080</color>
+    <color name="navy">#FF000080</color>
+    <color name="blue">#FF0000FF</color>
+    <color name="black">#FF000000</color>
+    <color name="music_skin_icon">#FF5F6368</color>
+    <color name="music_sakura_background">#FFFFF8FC</color>
+    <color name="music_sakura_surface">#FFFFFFFF</color>
+    <color name="music_sakura_drawer">#FFFFF0F7</color>
+    <color name="music_sakura_header">#FF765B8D</color>
+    <color name="music_sakura_primary">#FF342B42</color>
+    <color name="music_sakura_secondary">#FF8A7188</color>
+    <color name="music_sakura_header_secondary">#FFF4DCEB</color>
+    <color name="music_sakura_header_primary">#FFFFFFFF</color>
+    <color name="music_sakura_icon">#FF9A5F82</color>
+    <color name="music_sakura_accent">#FFE77EAA</color>
+</resources>

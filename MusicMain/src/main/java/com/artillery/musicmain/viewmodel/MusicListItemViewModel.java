@@ -10,7 +10,7 @@ import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
 import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.ui.MusicMainDialog;
-import com.artillery.musicmain.theme.MusicSkin;
+import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.utils.TimeUtils;
 import com.artillery.musicservice.data.Song;
 

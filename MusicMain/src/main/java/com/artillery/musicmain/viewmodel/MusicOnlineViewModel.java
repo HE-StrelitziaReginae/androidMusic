@@ -11,7 +11,7 @@ import com.artillery.musicmain.data.source.http.model.MetingTrack;
 import com.artillery.musicmain.data.source.http.service.MetingApiService;
 import com.artillery.musicmain.net.RetrofitClient;
 import com.artillery.musicmain.R;
-import com.artillery.musicmain.theme.MusicSkin;
+import com.os.sys.musicskin.MusicSkin;
 
 import com.artillery.musicbase.base.BaseViewModel;
 

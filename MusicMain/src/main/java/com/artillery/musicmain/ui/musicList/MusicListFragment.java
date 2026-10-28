@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.os.Handler;
 
@@ -16,7 +17,7 @@ import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.databinding.FragmentMusicListBinding;
-import com.artillery.musicmain.theme.MusicSkin;
+import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.viewmodel.MusicListViewModel;
 import com.artillery.musicservice.data.Song;
 
@@ -98,7 +99,15 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
             return;
         }
         mViewModel.applySkin(skin);
-        mBinding.musicList.setBackgroundColor(skin.background(requireContext()));
+        mBinding.musicListRoot.setBackgroundColor(skin.background(requireContext()));
+        boolean characterSkin = skin.isCharacterSkin();
+        mBinding.musicSkinBanner.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
+        if (characterSkin) {
+            mBinding.musicSkinBanner.setBackground(skin.featureBackground(requireContext()));
+            mBinding.musicSkinBannerEyebrow.setTextColor(skin.headerSecondaryText(requireContext()));
+            mBinding.musicSkinBannerTitle.setTextColor(skin.headerPrimaryText(requireContext()));
+            mBinding.musicSkinBannerSubtitle.setTextColor(skin.headerSecondaryText(requireContext()));
+        }
         mBinding.musicList.post(() -> {
             for (int index = 0; index < mBinding.musicList.getChildCount(); index++) {
                 android.view.View item = mBinding.musicList.getChildAt(index);

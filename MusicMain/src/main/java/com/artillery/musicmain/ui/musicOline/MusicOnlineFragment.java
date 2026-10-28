@@ -16,7 +16,7 @@ import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.databinding.FragmentMusicOnlineBinding;
-import com.artillery.musicmain.theme.MusicSkin;
+import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.viewmodel.MusicOnlineViewModel;
 
 /**
@@ -39,6 +39,14 @@ public class MusicOnlineFragment extends BaseFragment<FragmentMusicOnlineBinding
         mViewModel.applySkin(skin);
         mBinding.onlineRoot.setBackgroundColor(skin.background(requireContext()));
         mBinding.onlineList.setBackgroundColor(skin.background(requireContext()));
+        boolean characterSkin = skin.isCharacterSkin();
+        mBinding.onlineSkinBanner.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
+        if (characterSkin) {
+            mBinding.onlineSkinBanner.setBackground(skin.featureBackground(requireContext()));
+            mBinding.onlineSkinBannerEyebrow.setTextColor(skin.headerSecondaryText(requireContext()));
+            mBinding.onlineSkinBannerTitle.setTextColor(skin.headerPrimaryText(requireContext()));
+            mBinding.onlineSkinBannerSubtitle.setTextColor(skin.headerSecondaryText(requireContext()));
+        }
         mBinding.onlineEmpty.setTextColor(skin.secondaryText(requireContext()));
         mBinding.onlineSearchInput.setTextColor(skin.primaryText(requireContext()));
         mBinding.onlineSearchInput.setHintTextColor(skin.secondaryText(requireContext()));
