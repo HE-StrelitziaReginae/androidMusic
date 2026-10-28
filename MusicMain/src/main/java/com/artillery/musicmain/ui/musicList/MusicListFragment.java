@@ -15,6 +15,7 @@ import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.databinding.FragmentMusicListBinding;
+import com.artillery.musicmain.theme.MusicSkin;
 import com.artillery.musicmain.viewmodel.MusicListViewModel;
 
 /**
@@ -45,6 +46,7 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
     public void onStart() {
         super.onStart();
         refreshMusicList();
+        applySkin(MusicSkin.load(requireContext()));
         if (!mObserverRegistered) {
             requireContext().getContentResolver().registerContentObserver(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, mMusicObserver);
@@ -66,6 +68,33 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
             return;
         }
         MusicDaraListener.getInstance().updateMusicList(mViewModel.refreshMusicList());
+        if (mMusicSkin != null) {
+            applySkin(mMusicSkin);
+        }
+    }
+
+    private MusicSkin mMusicSkin;
+
+    public void applySkin(MusicSkin skin) {
+        mMusicSkin = skin;
+        if (mBinding == null) {
+            return;
+        }
+        mBinding.musicList.setBackgroundColor(skin.background());
+        mBinding.musicList.post(() -> {
+            for (int index = 0; index < mBinding.musicList.getChildCount(); index++) {
+                android.view.View item = mBinding.musicList.getChildAt(index);
+                item.setBackgroundColor(skin.surface());
+                android.widget.TextView title = item.findViewById(R.id.music_name);
+                android.widget.TextView artist = item.findViewById(R.id.music_artist);
+                if (title != null) {
+                    title.setTextColor(skin.primaryText());
+                }
+                if (artist != null) {
+                    artist.setTextColor(skin.secondaryText());
+                }
+            }
+        });
     }
 
 }

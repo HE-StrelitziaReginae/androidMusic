@@ -11,6 +11,7 @@ import com.artillery.musicbase.base.BaseViewModel;
 import com.artillery.musicbase.binding.command.BindingCommand;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.data.MusicRepository;
+import com.artillery.musicmain.theme.MusicSkin;
 import com.artillery.musicmain.ui.MusicMainFragment;
 import com.artillery.musicmain.ui.musicList.MusicListFragment;
 import com.artillery.musicmain.ui.musicMine.MusicMineFragment;
@@ -43,6 +44,13 @@ public class MusicMainViewModel extends BaseViewModel {
         Fragment fragment = fragmentActivity.getSupportFragmentManager().findFragmentByTag("0");
         if (fragment instanceof MusicListFragment) {
             ((MusicListFragment) fragment).refreshMusicList();
+        }
+    }
+
+    public void applySkin(FragmentActivity fragmentActivity, MusicSkin skin) {
+        Fragment fragment = fragmentActivity.getSupportFragmentManager().findFragmentByTag("0");
+        if (fragment instanceof MusicListFragment) {
+            ((MusicListFragment) fragment).applySkin(skin);
         }
     }
 

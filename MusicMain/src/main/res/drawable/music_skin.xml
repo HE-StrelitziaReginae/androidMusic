@@ -1,0 +1,9 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@color/music_drawer_icon"
+        android:pathData="M12,3C7.03,3 3,6.58 3,11c0,3.31 2.69,6 6,6h1.65c0.74,0 1.35,0.61 1.35,1.35 0,0.36 -0.14,0.69 -0.37,0.93 -0.23,0.24 -0.37,0.57 -0.37,0.94 0,0.99 0.81,1.78 1.8,1.78C18.55,22 21,17.96 21,12.5 21,7.25 17.08,3 12,3zM7.5,11A1.5,1.5 0,1 1,7.5 8a1.5,1.5 0,0 1,0 3zM11,7.5A1.5,1.5 0,1 1,11 4.5a1.5,1.5 0,0 1 0,3zM15,7.5A1.5,1.5 0,1 1,15 4.5a1.5,1.5 0,0 1 0,3zM18.5,11A1.5,1.5 0,1 1,18.5 8a1.5,1.5 0,0 1 0,3z" />
+</vector>

@@ -15,6 +15,7 @@ import com.artillery.musicmain.R;
 import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.databinding.MusicMianDialogBinding;
 import com.artillery.musicmain.observer.MusicObserver;
+import com.artillery.musicmain.theme.MusicSkin;
 import com.artillery.musicmain.utils.TimeUtils;
 import com.artillery.musicservice.data.Song;
 
@@ -58,6 +59,21 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         KLogUtils.i("initData: ");
         mFragment = (MusicMainFragment) AppManager.getAppManager().currentFragment();
         MusicDaraListener.getInstance().setMusicObserver(this);
+        applySkin(MusicSkin.load(getContext()));
+    }
+
+    public void applySkin(MusicSkin skin) {
+        if (mBinding == null) {
+            return;
+        }
+        mBinding.getRoot().setBackgroundColor(skin.background());
+        mBinding.musicNamePlay.setTextColor(skin.primaryText());
+        mBinding.musicArtistPlay.setTextColor(skin.secondaryText());
+        mBinding.musicTimeStart.setTextColor(skin.secondaryText());
+        mBinding.musicTimeEnd.setTextColor(skin.secondaryText());
+        mBinding.musicBriefly.setBackgroundColor(skin.surface());
+        mBinding.musicProgress.setBackgroundColor(skin.surface());
+        mBinding.musicActionLiner.setBackgroundColor(skin.surface());
     }
 
     @Override

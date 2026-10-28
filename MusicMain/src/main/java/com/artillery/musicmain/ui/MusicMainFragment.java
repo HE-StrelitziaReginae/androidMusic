@@ -19,6 +19,7 @@ import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicbase.binding.command.BindingCommand;
 import com.artillery.musicbase.utils.BackgroundThreadUtils;
 import com.artillery.musicbase.utils.KLogUtils;
+import com.artillery.musicbase.utils.SystemBarUtils;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.app.AppViewModelFactory;
@@ -27,6 +28,7 @@ import com.artillery.musicmain.data.MusicDataListener;
 import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
 import com.artillery.musicmain.databinding.FragmentMusicMainBinding;
 import com.artillery.musicmain.viewmodel.MusicMainViewModel;
+import com.artillery.musicmain.theme.MusicSkin;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
 import com.artillery.musicservice.service.MusicListener;
@@ -45,6 +47,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     private ArrayList<Song> mMusicList = new ArrayList<>();
     private boolean mMusicListLoaded;
     private int mStartIndex = 0;
+    private MusicSkin mMusicSkin;
 
     @Override
     public void initData() {
@@ -103,6 +106,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             }
         });
         initDrawer();
+        applySkin(MusicSkin.load(requireContext()));
     }
 
     private void applySystemBarInsets() {
@@ -139,13 +143,51 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             Toast.makeText(requireContext(), R.string.music_refresh_done, Toast.LENGTH_SHORT).show();
         });
         mBinding.drawerPlayMode.setOnClickListener(view -> showPlayModeDialog());
-        mBinding.drawerPlayer.setOnClickListener(view -> {
-            mBinding.musicDrawerLayout.closeDrawer(mBinding.musicDrawerPanel);
-            if (!MusicMainDialog.getInstance().isShowing()) {
-                MusicMainDialog.getInstance().show();
-            }
-        });
+        mBinding.drawerSkin.setOnClickListener(view -> showSkinDialog());
         mBinding.drawerAbout.setOnClickListener(view -> showAboutDialog());
+    }
+
+    private void showSkinDialog() {
+        MusicSkin[] skins = MusicSkin.values();
+        int selectedIndex = mMusicSkin == null ? MusicSkin.LIGHT.ordinal() : mMusicSkin.ordinal();
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.music_skin_title)
+                .setSingleChoiceItems(R.array.music_skins, selectedIndex, (dialog, which) -> {
+                    applySkin(skins[which]);
+                    dialog.dismiss();
+                    mBinding.musicDrawerLayout.closeDrawer(mBinding.musicDrawerPanel);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void applySkin(MusicSkin skin) {
+        mMusicSkin = skin;
+        skin.save(requireContext());
+        mBinding.musicDrawerLayout.setBackgroundColor(skin.background());
+        mBinding.musicToolbar.setBackgroundColor(skin.surface());
+        mBinding.musicToolbarTitle.setTextColor(skin.primaryText());
+        mBinding.musicShowDialog.setBackgroundColor(skin.surface());
+        mBinding.musicNamePlay.setTextColor(skin.primaryText());
+        mBinding.musicArtistPlay.setTextColor(skin.secondaryText());
+        mBinding.musicDrawerPanel.setBackgroundColor(skin.drawer());
+        mBinding.drawerProfile.setBackgroundColor(skin.header());
+        mBinding.drawerProfileName.setTextColor(skin.headerPrimaryText());
+        mBinding.drawerProfileSubtitle.setTextColor(skin.headerSecondaryText());
+        mBinding.drawerLibrarySection.setTextColor(skin.secondaryText());
+        mBinding.drawerPlayerSection.setTextColor(skin.secondaryText());
+        mBinding.drawerRefreshText.setTextColor(skin.primaryText());
+        mBinding.drawerPlayModeText.setTextColor(skin.primaryText());
+        mBinding.drawerPlayModeValue.setTextColor(skin.secondaryText());
+        mBinding.drawerSkinText.setTextColor(skin.primaryText());
+        mBinding.drawerAboutText.setTextColor(skin.primaryText());
+        mBinding.musicGroup.setBackgroundColor(skin.surface());
+        mBinding.musicMain.setTextColor(skin.primaryText());
+        mBinding.musicOnline.setTextColor(skin.primaryText());
+        mBinding.musicMine.setTextColor(skin.primaryText());
+        mViewModel.applySkin(requireActivity(), skin);
+        MusicMainDialog.getInstance().applySkin(skin);
+        SystemBarUtils.setLightSystemBars(requireActivity().getWindow(), skin.usesLightSystemBars());
     }
 
     private void showProfileDialog() {

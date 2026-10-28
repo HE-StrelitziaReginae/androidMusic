@@ -21,7 +21,11 @@
     <string name="music_section_player">播放器</string>
     <string name="music_refresh_library">刷新音乐库</string>
     <string name="music_play_mode">播放模式</string>
-    <string name="music_player">打开播放器</string>
+    <string name="music_skin">换肤</string>
+    <string name="music_skin_title">选择主题</string>
+    <string name="music_skin_light">浅色</string>
+    <string name="music_skin_dark">深色</string>
+    <string name="music_skin_ocean">海洋蓝</string>
     <string name="music_about">关于应用</string>
     <string name="music_about_message">一个简洁的本地音乐播放器。</string>
     <string name="music_play_mode_title">播放模式</string>
@@ -37,5 +41,11 @@
         <item>@string/music_mode_loop</item>
         <item>@string/music_mode_list</item>
         <item>@string/music_mode_shuffle</item>
+    </string-array>
+
+    <string-array name="music_skins">
+        <item>@string/music_skin_light</item>
+        <item>@string/music_skin_dark</item>
+        <item>@string/music_skin_ocean</item>
     </string-array>
 </resources>

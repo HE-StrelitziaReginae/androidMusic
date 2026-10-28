@@ -25,14 +25,27 @@ public final class SystemBarUtils {
             window.setNavigationBarContrastEnforced(false);
         }
 
-        int systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        setLightSystemBars(window, true);
+    }
+
+    public static void setLightSystemBars(Window window, boolean lightBars) {
+        int systemUiVisibility = window.getDecorView().getSystemUiVisibility()
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            systemUiVisibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            if (lightBars) {
+                systemUiVisibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            } else {
+                systemUiVisibility &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            systemUiVisibility |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+            if (lightBars) {
+                systemUiVisibility |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+            } else {
+                systemUiVisibility &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+            }
         }
         window.getDecorView().setSystemUiVisibility(systemUiVisibility);
     }
