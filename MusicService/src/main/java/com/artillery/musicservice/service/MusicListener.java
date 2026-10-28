@@ -5,12 +5,16 @@ import androidx.annotation.Nullable;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
 
+import java.util.ArrayList;
+
 /**
  * @author ArtilleryOrchid
  */
 public interface MusicListener {
 
     void setPlayList(PlayList list);
+
+    void syncPlayList(ArrayList<Song> songs);
 
     boolean play();
 
@@ -37,6 +41,8 @@ public interface MusicListener {
     boolean seekTo(int progress);
 
     void setPlayMode(MusicMode playMode);
+
+    MusicMode getPlayMode();
 
     void registerCallback(Callback callback);
 

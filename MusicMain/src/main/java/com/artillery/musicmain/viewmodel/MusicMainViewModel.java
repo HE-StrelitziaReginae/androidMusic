@@ -39,6 +39,13 @@ public class MusicMainViewModel extends BaseViewModel {
         mMusicRepository.bindMusicView(musicPlayFragment);
     }
 
+    public void refreshMusicList(FragmentActivity fragmentActivity) {
+        Fragment fragment = fragmentActivity.getSupportFragmentManager().findFragmentByTag("0");
+        if (fragment instanceof MusicListFragment) {
+            ((MusicListFragment) fragment).refreshMusicList();
+        }
+    }
+
     private void initFragment() {
         mFragments = new ArrayList<>();
         mFragments.add(new MusicListFragment());

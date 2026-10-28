@@ -4,6 +4,7 @@
         <!-- 透明状态栏和导航栏 -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <!-- 设置状态栏文字和图标为浅色（反色效果） -->
         <item name="android:windowLightStatusBar">true</item>
     </style>

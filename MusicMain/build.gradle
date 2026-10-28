@@ -31,6 +31,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.drawerlayout:drawerlayout:1.0.0'
     //Music Service Module
     implementation project(':MusicService')
     //Music Base

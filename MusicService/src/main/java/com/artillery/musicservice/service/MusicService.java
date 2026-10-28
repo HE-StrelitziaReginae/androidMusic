@@ -13,6 +13,8 @@ import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
 
+import java.util.ArrayList;
+
 /**
  * @author ArtilleryOrchid
  */
@@ -70,6 +72,11 @@ public class MusicService extends Service implements MusicListener, MusicListene
     @Override
     public void setPlayList(PlayList list) {
         mMusicPlayer.setPlayList(list);
+    }
+
+    @Override
+    public void syncPlayList(ArrayList<Song> songs) {
+        mMusicPlayer.syncPlayList(songs);
     }
 
     @Override
@@ -135,6 +142,11 @@ public class MusicService extends Service implements MusicListener, MusicListene
     @Override
     public void setPlayMode(MusicMode playMode) {
         mMusicPlayer.setPlayMode(playMode);
+    }
+
+    @Override
+    public MusicMode getPlayMode() {
+        return mMusicPlayer.getPlayMode();
     }
 
     @Override

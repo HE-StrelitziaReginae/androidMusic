@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="music_toolbar_background">#FFFFFFFF</color>
+    <color name="music_drawer_background">#FFFFFFFF</color>
+    <color name="music_drawer_header">#FF202536</color>
+    <color name="music_drawer_header_text_secondary">#FFD7D9E7</color>
+    <color name="music_text_primary">#FF202124</color>
+    <color name="music_text_secondary">#FF74757C</color>
+    <color name="music_drawer_icon">#FF5F6368</color>
+</resources>

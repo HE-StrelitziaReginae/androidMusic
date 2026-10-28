@@ -25,6 +25,12 @@ public class MusicDaraListener {
         mMusicDataListener.sendMusicSong(songList, startIndex, song);
     }
 
+    public void updateMusicList(ArrayList<Song> songList) {
+        if (mMusicDataListener != null) {
+            mMusicDataListener.onMusicListUpdated(songList);
+        }
+    }
+
     public void setMusicDataListener(MusicDataListener mMusicDataListener) {
         this.mMusicDataListener = mMusicDataListener;
     }

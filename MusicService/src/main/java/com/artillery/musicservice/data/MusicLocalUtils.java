@@ -46,7 +46,7 @@ public class MusicLocalUtils {
                 song.setAlbum(albumName);
                 // 检查文件大小是否符合要求
                 if (fileSize <= 800 * 1000) { // 小于800KB直接跳过
-                    return null;
+                    continue;
                 }
                 // 提取标题和艺术家信息
                 String[] parsedData = parseDisplayName(displayName);
@@ -61,8 +61,9 @@ public class MusicLocalUtils {
                 list.add(song);
             }
         }
-        assert cursor != null;
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
         return list;
     }
 

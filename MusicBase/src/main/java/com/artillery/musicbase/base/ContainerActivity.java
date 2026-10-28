@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.artillery.musicbase.R;
+import com.artillery.musicbase.utils.SystemBarUtils;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.lang.ref.WeakReference;
@@ -28,6 +29,7 @@ public class ContainerActivity extends RxAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         super.onCreate(savedInstanceState);
+        SystemBarUtils.configureImmersive(getWindow());
         setContentView(R.layout.activity_container);
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = null;

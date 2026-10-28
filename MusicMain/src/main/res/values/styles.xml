@@ -22,4 +22,36 @@
         <item name="android:windowEnterAnimation">@anim/music_dialog_slide_show</item>
         <item name="android:windowExitAnimation">@anim/music_dialog_slide_hide</item>
     </style>
+
+    <style name="MusicDrawerItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp_56</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">@dimen/dp_24</item>
+        <item name="android:paddingEnd">@dimen/dp_16</item>
+    </style>
+
+    <style name="MusicDrawerIcon">
+        <item name="android:layout_width">@dimen/dp_24</item>
+        <item name="android:layout_height">@dimen/dp_24</item>
+        <item name="android:layout_marginEnd">@dimen/dp_20</item>
+    </style>
+
+    <style name="MusicDrawerTrailingIcon">
+        <item name="android:layout_width">@dimen/dp_20</item>
+        <item name="android:layout_height">@dimen/dp_20</item>
+        <item name="android:layout_marginStart">@dimen/dp_12</item>
+    </style>
+
+    <style name="MusicDrawerItemText">
+        <item name="android:layout_width">@dimen/dp_0</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/music_text_primary</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+    </style>
 </resources>

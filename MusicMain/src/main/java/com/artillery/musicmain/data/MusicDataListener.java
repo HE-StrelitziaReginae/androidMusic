@@ -9,4 +9,6 @@ import java.util.ArrayList;
  */
 public interface MusicDataListener {
     void sendMusicSong(ArrayList<Song> songArrayList, int index, Song song);
+
+    void onMusicListUpdated(ArrayList<Song> songArrayList);
 }

@@ -4,10 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.artillery.musicbase.base.AppManager;
@@ -38,6 +42,8 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         implements MusicPlayView, MusicListener.Callback {
     protected MusicListener mMusicListener;
     private PlayList mPlayList;
+    private ArrayList<Song> mMusicList = new ArrayList<>();
+    private boolean mMusicListLoaded;
     private int mStartIndex = 0;
 
     @Override
@@ -56,11 +62,21 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 startPlay();
                 activateMarquee(true);
             }
+
+            @Override
+            public void onMusicListUpdated(ArrayList<Song> songArrayList) {
+                mMusicList = songArrayList == null ? new ArrayList<>() : new ArrayList<>(songArrayList);
+                mMusicListLoaded = true;
+                if (mMusicListener != null) {
+                    mMusicListener.syncPlayList(mMusicList);
+                }
+            }
         });
     }
 
     @Override
     public void initViewObservable() {
+        applySystemBarInsets();
         mViewModel.binMusicView(this);
         mBinding.musicGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -86,6 +102,91 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 MusicMainDialog.getInstance().show();
             }
         });
+        initDrawer();
+    }
+
+    private void applySystemBarInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(mBinding.musicDrawerLayout, (view, windowInsets) -> {
+            int topInset = windowInsets.getSystemWindowInsetTop();
+            int bottomInset = windowInsets.getSystemWindowInsetBottom();
+            ViewGroup.MarginLayoutParams toolbarParams =
+                    (ViewGroup.MarginLayoutParams) mBinding.musicToolbar.getLayoutParams();
+            toolbarParams.topMargin = topInset;
+            mBinding.musicToolbar.setLayoutParams(toolbarParams);
+
+            ViewGroup.MarginLayoutParams groupParams =
+                    (ViewGroup.MarginLayoutParams) mBinding.musicGroup.getLayoutParams();
+            groupParams.bottomMargin = bottomInset;
+            mBinding.musicGroup.setLayoutParams(groupParams);
+
+            mBinding.musicDrawerPanel.setPadding(
+                    mBinding.musicDrawerPanel.getPaddingLeft(),
+                    topInset,
+                    mBinding.musicDrawerPanel.getPaddingRight(),
+                    bottomInset);
+            return windowInsets;
+        });
+        ViewCompat.requestApplyInsets(mBinding.musicDrawerLayout);
+    }
+
+    private void initDrawer() {
+        updateDrawerPlayMode(MusicMode.getDefault());
+        mBinding.musicMenuBtn.setOnClickListener(view -> mBinding.musicDrawerLayout.openDrawer(mBinding.musicDrawerPanel));
+        mBinding.drawerProfile.setOnClickListener(view -> showProfileDialog());
+        mBinding.drawerRefresh.setOnClickListener(view -> {
+            mViewModel.refreshMusicList(requireActivity());
+            mBinding.musicDrawerLayout.closeDrawer(mBinding.musicDrawerPanel);
+            Toast.makeText(requireContext(), R.string.music_refresh_done, Toast.LENGTH_SHORT).show();
+        });
+        mBinding.drawerPlayMode.setOnClickListener(view -> showPlayModeDialog());
+        mBinding.drawerPlayer.setOnClickListener(view -> {
+            mBinding.musicDrawerLayout.closeDrawer(mBinding.musicDrawerPanel);
+            if (!MusicMainDialog.getInstance().isShowing()) {
+                MusicMainDialog.getInstance().show();
+            }
+        });
+        mBinding.drawerAbout.setOnClickListener(view -> showAboutDialog());
+    }
+
+    private void showProfileDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.music_profile_name)
+                .setMessage(R.string.music_profile_message)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+    }
+
+    private void showAboutDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.music_about)
+                .setMessage(R.string.music_about_message)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+    }
+
+    private void showPlayModeDialog() {
+        if (mMusicListener == null) {
+            return;
+        }
+        MusicMode currentMode = mMusicListener.getPlayMode();
+        MusicMode[] modes = MusicMode.values();
+        int selectedIndex = currentMode == null ? MusicMode.getDefault().ordinal() : currentMode.ordinal();
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.music_play_mode_title)
+                .setSingleChoiceItems(R.array.music_play_modes, selectedIndex, (dialog, which) -> {
+                    mMusicListener.setPlayMode(modes[which]);
+                    updatePlayMode(modes[which]);
+                    dialog.dismiss();
+                    mBinding.musicDrawerLayout.closeDrawer(mBinding.musicDrawerPanel);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void updateDrawerPlayMode(@Nullable MusicMode playMode) {
+        MusicMode mode = playMode == null ? MusicMode.getDefault() : playMode;
+        String[] modeNames = getResources().getStringArray(R.array.music_play_modes);
+        mBinding.drawerPlayModeValue.setText(modeNames[mode.ordinal()]);
     }
 
     private void activateMarquee(boolean activate) {
@@ -130,6 +231,10 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         KLogUtils.e("onPlaybackServiceBound: ");
         mMusicListener = service;
         mMusicListener.registerCallback(this);
+        updateDrawerPlayMode(mMusicListener.getPlayMode());
+        if (mMusicListLoaded) {
+            mMusicListener.syncPlayList(mMusicList);
+        }
     }
 
     private void startPlay() {
@@ -172,6 +277,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public void updatePlayMode(MusicMode playMode) {
         KLogUtils.e("updatePlayMode: ");
+        updateDrawerPlayMode(playMode);
     }
 
     @Override
@@ -200,7 +306,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
 
     @Override
     public int initVariableId() {
-        return BR.musicMain;
+        return BR.musicMainModel;
     }
 
     @Override

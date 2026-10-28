@@ -12,4 +12,30 @@
 
     <string name="music_not_play">暂无播放</string>
     <string name="music_unknown">未知</string>
+    <string name="music_app_name">本地音乐</string>
+    <string name="music_menu">打开菜单</string>
+    <string name="music_profile_avatar">用户头像</string>
+    <string name="music_profile_name">音乐爱好者</string>
+    <string name="music_profile_subtitle">你的本地音乐空间</string>
+    <string name="music_section_library">音乐库</string>
+    <string name="music_section_player">播放器</string>
+    <string name="music_refresh_library">刷新音乐库</string>
+    <string name="music_play_mode">播放模式</string>
+    <string name="music_player">打开播放器</string>
+    <string name="music_about">关于应用</string>
+    <string name="music_about_message">一个简洁的本地音乐播放器。</string>
+    <string name="music_play_mode_title">播放模式</string>
+    <string name="music_mode_single">单曲循环</string>
+    <string name="music_mode_loop">列表循环</string>
+    <string name="music_mode_list">顺序播放</string>
+    <string name="music_mode_shuffle">随机播放</string>
+    <string name="music_profile_message">本地个人资料\n无需登录账号。</string>
+    <string name="music_refresh_done">音乐库已刷新</string>
+
+    <string-array name="music_play_modes">
+        <item>@string/music_mode_single</item>
+        <item>@string/music_mode_loop</item>
+        <item>@string/music_mode_list</item>
+        <item>@string/music_mode_shuffle</item>
+    </string-array>
 </resources>

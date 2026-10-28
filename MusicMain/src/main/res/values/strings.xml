@@ -12,4 +12,31 @@
 
     <string name="music_not_play">Not Play</string>
     <string name="music_unknown">Unknown</string>
+
+    <string name="music_app_name">Local Music</string>
+    <string name="music_menu">Open menu</string>
+    <string name="music_profile_avatar">Profile avatar</string>
+    <string name="music_profile_name">Music listener</string>
+    <string name="music_profile_subtitle">Your local music space</string>
+    <string name="music_section_library">LIBRARY</string>
+    <string name="music_section_player">PLAYER</string>
+    <string name="music_refresh_library">Refresh library</string>
+    <string name="music_play_mode">Playback mode</string>
+    <string name="music_player">Open player</string>
+    <string name="music_about">About this app</string>
+    <string name="music_about_message">A simple local music player for your device.</string>
+    <string name="music_play_mode_title">Playback mode</string>
+    <string name="music_mode_single">Single repeat</string>
+    <string name="music_mode_loop">Loop all</string>
+    <string name="music_mode_list">Play once</string>
+    <string name="music_mode_shuffle">Shuffle</string>
+    <string name="music_profile_message">Local profile\nNo account is required.</string>
+    <string name="music_refresh_done">Library refreshed</string>
+
+    <string-array name="music_play_modes">
+        <item>@string/music_mode_single</item>
+        <item>@string/music_mode_loop</item>
+        <item>@string/music_mode_list</item>
+        <item>@string/music_mode_shuffle</item>
+    </string-array>
 </resources>
