@@ -53,7 +53,7 @@ public class AppManager {
      * 移除指定的Activity
      */
     public void removeActivity(Activity activity) {
-        if (activity != null) {
+        if (activity != null && activityStack != null) {
             activityStack.remove(activity);
         }
     }
@@ -72,7 +72,7 @@ public class AppManager {
      * 获取当前Activity（堆栈中最后一个压入的）
      */
     public Activity currentActivity() {
-        return activityStack.lastElement();
+        return activityStack == null || activityStack.isEmpty() ? null : activityStack.lastElement();
     }
 
     /**
@@ -139,17 +139,22 @@ public class AppManager {
      * 添加Fragment到堆栈
      */
     public void addFragment(Fragment fragment) {
+        if (fragment == null) {
+            return;
+        }
         if (fragmentStack == null) {
             fragmentStack = new Stack<Fragment>();
         }
-        fragmentStack.add(fragment);
+        if (!fragmentStack.contains(fragment)) {
+            fragmentStack.add(fragment);
+        }
     }
 
     /**
      * 移除指定的Fragment
      */
     public void removeFragment(Fragment fragment) {
-        if (fragment != null) {
+        if (fragment != null && fragmentStack != null) {
             fragmentStack.remove(fragment);
         }
     }
@@ -169,7 +174,7 @@ public class AppManager {
      * 获取当前Activity（堆栈中最后一个压入的）
      */
     public Fragment currentFragment() {
-        if (fragmentStack != null) {
+        if (fragmentStack != null && !fragmentStack.isEmpty()) {
             return fragmentStack.lastElement();
         }
         return null;

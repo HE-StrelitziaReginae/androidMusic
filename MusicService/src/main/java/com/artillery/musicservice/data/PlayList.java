@@ -123,6 +123,12 @@ public class PlayList implements Parcelable {
             songs = new ArrayList<>();
         }
         this.songs = songs;
+        numOfSongs = songs.size();
+        if (songs.isEmpty()) {
+            playingIndex = NO_POSITION;
+        } else if (playingIndex >= songs.size()) {
+            playingIndex = songs.size() - 1;
+        }
     }
 
     public int getPlayingIndex() {
@@ -138,7 +144,7 @@ public class PlayList implements Parcelable {
     }
 
     public void setPlayMode(MusicMode playMode) {
-        this.playMode = playMode;
+        this.playMode = playMode == null ? MusicMode.getDefault() : playMode;
     }
 
     // Parcelable
@@ -173,7 +179,7 @@ public class PlayList implements Parcelable {
         this.songs = in.createTypedArrayList(Song.CREATOR);
         this.playingIndex = in.readInt();
         int tmpPlayMode = in.readInt();
-        this.playMode = tmpPlayMode == -1 ? null : MusicMode.values()[tmpPlayMode];
+        this.playMode = tmpPlayMode == -1 ? MusicMode.getDefault() : MusicMode.values()[tmpPlayMode];
     }
 
     public static final Creator<PlayList> CREATOR = new Creator<PlayList>() {
@@ -225,15 +231,16 @@ public class PlayList implements Parcelable {
         int index;
         if ((index = songs.indexOf(song)) != -1) {
             if (songs.remove(index) != null) {
-                numOfSongs = songs.size();
+                updatePlayingIndexAfterRemoval(index);
                 return true;
             }
         } else {
             for (Iterator<Song> iterator = songs.iterator(); iterator.hasNext(); ) {
                 Song item = iterator.next();
-                if (song.getPath().equals(item.getPath())) {
+                if (song.getPath() != null && song.getPath().equals(item.getPath())) {
+                    int removedIndex = songs.indexOf(item);
                     iterator.remove();
-                    numOfSongs = songs.size();
+                    updatePlayingIndexAfterRemoval(removedIndex);
                     return true;
                 }
             }
@@ -248,7 +255,7 @@ public class PlayList implements Parcelable {
         if (songs.isEmpty()) {
             return false;
         }
-        if (playingIndex == NO_POSITION) {
+        if (playingIndex == NO_POSITION || playingIndex >= songs.size()) {
             playingIndex = 0;
         }
         return true;
@@ -258,7 +265,7 @@ public class PlayList implements Parcelable {
      * The current song being played or is playing based on the {@link #playingIndex}
      */
     public Song getCurrentSong() {
-        if (playingIndex != NO_POSITION) {
+        if (playingIndex >= 0 && playingIndex < songs.size()) {
             return songs.get(playingIndex);
         }
         return null;
@@ -269,6 +276,15 @@ public class PlayList implements Parcelable {
     }
 
     public Song last() {
+        if (songs.isEmpty()) {
+            return null;
+        }
+        if (playMode == null) {
+            playMode = MusicMode.getDefault();
+        }
+        if (playingIndex < 0 || playingIndex >= songs.size()) {
+            playingIndex = 0;
+        }
         switch (playMode) {
             case LOOP:
             case LIST:
@@ -314,6 +330,16 @@ public class PlayList implements Parcelable {
      * @return The next song to play
      */
     public Song next() {
+        if (songs.isEmpty()) {
+            return null;
+        }
+        if (playingIndex < 0 || playingIndex >= songs.size()) {
+            playingIndex = 0;
+            return songs.get(playingIndex);
+        }
+        if (playMode == null) {
+            playMode = MusicMode.getDefault();
+        }
         switch (playMode) {
             case LOOP:
             case LIST:
@@ -332,11 +358,22 @@ public class PlayList implements Parcelable {
     }
 
     private int randomPlayIndex() {
-        int randomIndex = new Random().nextInt(songs.size());
-        // Make sure not play the same song twice if there are at least 2 songs
-        if (songs.size() > 1 && randomIndex == playingIndex) {
-            randomPlayIndex();
-        }
+        int randomIndex;
+        do {
+            randomIndex = new Random().nextInt(songs.size());
+        } while (songs.size() > 1 && randomIndex == playingIndex);
         return randomIndex;
     }
+
+    private void updatePlayingIndexAfterRemoval(int removedIndex) {
+        numOfSongs = songs.size();
+        if (songs.isEmpty()) {
+            playingIndex = NO_POSITION;
+        } else if (removedIndex < playingIndex) {
+            playingIndex--;
+        } else if (playingIndex >= songs.size()) {
+            playingIndex = songs.size() - 1;
+        }
+    }
+
 }

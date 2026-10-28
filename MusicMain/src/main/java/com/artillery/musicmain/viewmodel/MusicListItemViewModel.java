@@ -37,7 +37,7 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
     public BindingCommand musicPlay = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            MusicMainDialog.getInstance().show();
+            MusicMainDialog.showCurrent();
             MusicDaraListener.getInstance().observerMusicData(mSongList, mStartIndex, mSong);
         }
     });

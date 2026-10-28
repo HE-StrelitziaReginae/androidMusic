@@ -167,7 +167,6 @@ public class MusicService extends Service implements MusicListener, MusicListene
     @Override
     public void releasePlayer() {
         mMusicPlayer.releasePlayer();
-        super.onDestroy();
     }
 
     @Override
@@ -196,6 +195,7 @@ public class MusicService extends Service implements MusicListener, MusicListene
 
     @Override
     public void onDestroy() {
+        mMusicPlayer.unregisterCallback(this);
         releasePlayer();
         super.onDestroy();
     }

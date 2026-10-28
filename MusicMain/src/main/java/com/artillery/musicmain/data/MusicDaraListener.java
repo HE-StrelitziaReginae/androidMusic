@@ -22,7 +22,9 @@ public class MusicDaraListener {
 
 
     public void observerMusicData(ArrayList<Song> songList, int startIndex, Song song) {
-        mMusicDataListener.sendMusicSong(songList, startIndex, song);
+        if (mMusicDataListener != null) {
+            mMusicDataListener.sendMusicSong(songList, startIndex, song);
+        }
     }
 
     public void updateMusicList(ArrayList<Song> songList) {
@@ -36,14 +38,26 @@ public class MusicDaraListener {
     }
 
     public void setUpdate(Song song) {
-        mMusicObserver.update(song);
+        if (mMusicObserver != null) {
+            mMusicObserver.update(song);
+        }
     }
 
     public void setUpdateUi(boolean isPlaying) {
-        mMusicObserver.updateUi(isPlaying);
+        if (mMusicObserver != null) {
+            mMusicObserver.updateUi(isPlaying);
+        }
     }
 
     public void setMusicObserver(MusicObserver musicObserver) {
         mMusicObserver = musicObserver;
+    }
+
+    public void clearMusicDataListener() {
+        mMusicDataListener = null;
+    }
+
+    public void clearMusicObserver() {
+        mMusicObserver = null;
     }
 }

@@ -3,6 +3,7 @@ package com.artillery.musicservice.data;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 
@@ -25,8 +26,22 @@ public class MusicLocalUtils {
 
     public ArrayList<Song> getMusic(Context context) {
         ArrayList<Song> list = new ArrayList<>();
-        Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                , null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        String[] projection = {
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.SIZE,
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.MIME_TYPE
+        };
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                MediaStore.Audio.Media.IS_MUSIC + " != 0",
+                null,
+                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 Song song = new Song();
@@ -38,6 +53,10 @@ public class MusicLocalUtils {
                 int songDuration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
                 int fileSize = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
                 String albumName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
+                String mimeType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.MIME_TYPE));
+                if (TextUtils.isEmpty(filePath) || TextUtils.isEmpty(mimeType)) {
+                    continue;
+                }
                 // 设置基础属性
                 song.setId(songId);
                 song.setPath(filePath);

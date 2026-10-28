@@ -21,12 +21,12 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     private PlayList mPlayList;
     private final List<Callback> mCallbacks = new ArrayList<>(2);
     private boolean isPaused;
+    private boolean isPreparing;
     private long mPlaybackGeneration;
 
     private MusicPlayer() {
-        mPlayer = new MediaPlayer();
+        mPlayer = createMediaPlayer();
         mPlayList = new PlayList();
-        mPlayer.setOnCompletionListener(this);
     }
 
     // 静态内部类，只有第一次使用时才会加载
@@ -40,6 +40,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public synchronized void setPlayList(PlayList list) {
+        ensurePlayList();
         if (list == null) {
             list = new PlayList();
         }
@@ -48,9 +49,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public synchronized void syncPlayList(ArrayList<Song> songs) {
-        if (mPlayList == null) {
-            mPlayList = new PlayList();
-        }
+        ensurePlayList();
 
         int oldIndex = mPlayList.getPlayingIndex();
         Song currentSong = null;
@@ -89,6 +88,8 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public synchronized boolean play() {
+        ensurePlayer();
+        ensurePlayList();
         KLogUtils.i("play: " + isPaused);
         if (isPaused) {
             try {
@@ -103,8 +104,9 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
                 return false;
             }
         }
-        KLogUtils.i("prepare: " + mPlayList.prepare());
-        if (mPlayList.prepare()) {
+        boolean prepared = mPlayList.prepare();
+        KLogUtils.i("prepare: " + prepared);
+        if (prepared) {
             Song song = mPlayList.getCurrentSong();
             if (prepareAndStart(song)) {
                 notifyPlayStatusChanged(true);
@@ -116,8 +118,11 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     }
 
     private boolean prepareAndStart(Song song) {
+        if (song == null || song.getPath() == null || song.getPath().isEmpty()) {
+            return false;
+        }
         final long generation = ++mPlaybackGeneration;
-        final MediaPlayer nextPlayer = new MediaPlayer();
+        final MediaPlayer nextPlayer = createMediaPlayer();
         final MediaPlayer previousPlayer = mPlayer;
 
         nextPlayer.setOnCompletionListener(this);
@@ -128,6 +133,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
                 }
                 try {
                     mp.start();
+                    isPreparing = false;
                     isPaused = false;
                 } catch (IllegalStateException e) {
                     KLogUtils.e(TAG + e);
@@ -137,6 +143,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         });
 
         mPlayer = nextPlayer;
+        isPreparing = true;
         try {
             nextPlayer.setDataSource(song.getPath());
             nextPlayer.prepareAsync();
@@ -147,8 +154,28 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
             if (mPlayer == nextPlayer) {
                 mPlayer = previousPlayer;
             }
+            isPreparing = false;
             releaseMediaPlayer(nextPlayer);
             return false;
+        }
+    }
+
+    private MediaPlayer createMediaPlayer() {
+        MediaPlayer player = new MediaPlayer();
+        player.setOnCompletionListener(this);
+        player.setOnErrorListener(this);
+        return player;
+    }
+
+    private void ensurePlayer() {
+        if (mPlayer == null) {
+            mPlayer = createMediaPlayer();
+        }
+    }
+
+    private void ensurePlayList() {
+        if (mPlayList == null) {
+            mPlayList = new PlayList();
         }
     }
 
@@ -159,6 +186,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         try {
             player.setOnCompletionListener(null);
             player.setOnPreparedListener(null);
+            player.setOnErrorListener(null);
             player.reset();
         } catch (IllegalStateException e) {
             KLogUtils.e(TAG + e);
@@ -195,8 +223,8 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
             return false;
         }
         isPaused = false;
-        mPlayList.getSongs().clear();
-        mPlayList.getSongs().add(song);
+        mPlayList = new PlayList(song);
+        mPlayList.setPlayingIndex(0);
         return play();
     }
 
@@ -207,9 +235,10 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         boolean hasLast = mPlayList.hasLast();
         if (hasLast) {
             Song last = mPlayList.last();
-            play();
-            notifyPlayLast(last);
-            return true;
+            if (play()) {
+                notifyPlayLast(last);
+                return true;
+            }
         }
         return false;
     }
@@ -221,16 +250,27 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         boolean hasNext = mPlayList.hasNext(false);
         if (hasNext) {
             Song next = mPlayList.next();
-            play();
-            notifyPlayNext(next);
-            return true;
+            if (play()) {
+                notifyPlayNext(next);
+                return true;
+            }
         }
         return false;
     }
 
     @Override
     public synchronized boolean pause() {
+        ensurePlayer();
         KLogUtils.i("pause: ");
+        if (isPreparing) {
+            ++mPlaybackGeneration;
+            isPreparing = false;
+            releaseMediaPlayer(mPlayer);
+            mPlayer = createMediaPlayer();
+            isPaused = false;
+            notifyPlayStatusChanged(false);
+            return true;
+        }
         if (mPlayer.isPlaying()) {
             mPlayer.pause();
             isPaused = true;
@@ -242,27 +282,29 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public synchronized boolean isPlaying() {
-        return mPlayer.isPlaying();
+        return mPlayer != null && mPlayer.isPlaying();
     }
 
     @Override
     public synchronized int getProgress() {
-        return mPlayer.getCurrentPosition();
+        return mPlayer == null ? 0 : mPlayer.getCurrentPosition();
     }
 
     @Nullable
     @Override
     public synchronized Song getPlayingSong() {
-        return mPlayList.getCurrentSong();
+        return mPlayList == null ? null : mPlayList.getCurrentSong();
     }
 
     @Override
     public synchronized long currentPosition() {
-        return mPlayer.getCurrentPosition();
+        return mPlayer == null ? 0 : mPlayer.getCurrentPosition();
     }
 
     @Override
     public synchronized boolean seekTo(int progress) {
+        ensurePlayer();
+        ensurePlayList();
         if (mPlayList.getSongs().isEmpty()) {
             return false;
         }
@@ -280,24 +322,27 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
 
     @Override
     public synchronized void setPlayMode(MusicMode playMode) {
+        ensurePlayList();
         mPlayList.setPlayMode(playMode);
     }
 
     @Override
     public synchronized MusicMode getPlayMode() {
+        ensurePlayList();
         return mPlayList.getPlayMode();
     }
 
     //Listener
     @Override
     public synchronized void onCompletion(MediaPlayer mp) {
-        if (mp != mPlayer) {
+        if (mp != mPlayer || mPlayList == null) {
             return;
         }
+        isPreparing = false;
         Song next = null;
         if (mPlayList.getPlayMode() == MusicMode.LIST && mPlayList.getPlayingIndex() == mPlayList.getNumOfSongs() - 1) {
-            //TODO
-            KLogUtils.i("onCompletion: ");
+            isPaused = false;
+            notifyPlayStatusChanged(false);
         } else if (mPlayList.getPlayMode() == MusicMode.SINGLE) {
             next = mPlayList.getCurrentSong();
             play();
@@ -314,53 +359,72 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     @Override
     public synchronized void releasePlayer() {
         ++mPlaybackGeneration;
-        mPlayList = null;
         releaseMediaPlayer(mPlayer);
         mPlayer = null;
+        mPlayList = new PlayList();
+        isPaused = false;
+        isPreparing = false;
     }
 
     // Callbacks
     @Override
-    public void registerCallback(Callback callback) {
-        mCallbacks.add(callback);
+    public synchronized void registerCallback(Callback callback) {
+        if (callback != null && !mCallbacks.contains(callback)) {
+            mCallbacks.add(callback);
+        }
     }
 
     @Override
-    public void unregisterCallback(Callback callback) {
+    public synchronized void unregisterCallback(Callback callback) {
         mCallbacks.remove(callback);
     }
 
     @Override
-    public void removeCallbacks() {
+    public synchronized void removeCallbacks() {
         mCallbacks.clear();
     }
 
     private void notifyPlayStatusChanged(boolean isPlaying) {
-        mCallbacks.forEach(callback -> {
+        for (Callback callback : callbackSnapshot()) {
             callback.onPlayStatusChanged(isPlaying);
-        });
+        }
     }
 
     private void notifyPlayLast(Song song) {
-        mCallbacks.forEach(callback -> {
+        for (Callback callback : callbackSnapshot()) {
             callback.onSwitchLast(song);
-        });
+        }
     }
 
     private void notifyPlayNext(Song song) {
-        mCallbacks.forEach(callback -> {
+        for (Callback callback : callbackSnapshot()) {
             callback.onSwitchNext(song);
-        });
+        }
     }
 
     private void notifyComplete(Song song) {
-        mCallbacks.forEach(callback -> {
+        for (Callback callback : callbackSnapshot()) {
             callback.onComplete(song);
-        });
+        }
+    }
+
+    private synchronized Callback[] callbackSnapshot() {
+        return mCallbacks.toArray(new Callback[0]);
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        return false;
+        synchronized (this) {
+            if (mp != mPlayer) {
+                return true;
+            }
+            isPaused = false;
+            isPreparing = false;
+            ++mPlaybackGeneration;
+            releaseMediaPlayer(mPlayer);
+            mPlayer = createMediaPlayer();
+        }
+        notifyPlayStatusChanged(false);
+        return true;
     }
 }

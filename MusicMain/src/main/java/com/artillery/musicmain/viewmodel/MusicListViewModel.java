@@ -27,18 +27,23 @@ public class MusicListViewModel extends BaseViewModel<MusicRepository> {
         super(application);
     }
 
-    public ArrayList<Song> refreshMusicList() {
+    public ArrayList<Song> scanMusicList() {
         ArrayList<Song> music = MusicLocalUtils.getInstance().getMusic(getApplication());
         if (music == null) {
             music = new ArrayList<>();
         }
+        return music;
+    }
 
+    public void updateMusicList(ArrayList<Song> music) {
+        if (music == null) {
+            music = new ArrayList<>();
+        }
         musicListItem.clear();
         ArrayList<Song> currentMusic = new ArrayList<>(music);
         currentMusic.forEach(LambadaTools.forEachWithIndex((song, start) -> {
             musicListItem.add(new MusicListItemViewModel(this, song, currentMusic, start));
         }));
-        return currentMusic;
     }
 
     public ObservableList<MusicListItemViewModel> musicListItem = new ObservableArrayList<>();

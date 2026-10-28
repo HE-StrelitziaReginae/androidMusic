@@ -3,6 +3,7 @@ package com.artillery.androidmusic;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 
@@ -35,8 +36,11 @@ public class LauncherActivity extends BaseActivity<ActivityLauncherBinding, Laun
 
     @Override
     public void initData() {
+        String[] permissions = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? new String[]{Permission.READ_MEDIA_AUDIO, Permission.POST_NOTIFICATIONS}
+                : new String[]{Permission.READ_EXTERNAL_STORAGE};
         XXPermissions.with(this)
-                .permission(Permission.READ_MEDIA_AUDIO, Permission.POST_NOTIFICATIONS)
+                .permission(permissions)
                 .request(new OnPermissionCallback() {
                     @Override
                     public void onGranted(@NonNull List<String> permissions, boolean allGranted) {

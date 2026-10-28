@@ -5,6 +5,7 @@ import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.SeekBar;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.artillery.musicbase.base.AppManager;
@@ -25,28 +26,57 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     public final Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
-            int progress = (int) (mBinding.musicSeekbar.getMax()
-                    * ((float) mFragment.mMusicListener.getProgress() / (float) getCurrentSongDuration()));
-            mBinding.musicSeekbar.post(() -> {
-                updateProgressTextWithDuration(mFragment.mMusicListener.getProgress());
-            });
-            if (progress >= 0 && progress <= mBinding.musicSeekbar.getMax()) {
-                mBinding.musicSeekbar.setProgress((int) mFragment.mMusicListener.currentPosition() / 1000);
-                BackgroundThreadUtils.getInstance().postDelayed(mProgressCallback, DateUtils.SECOND_IN_MILLIS);
+            if (!isShowing() || mBinding == null || mFragment == null || mFragment.mMusicListener == null) {
+                return;
             }
+            mBinding.musicSeekbar.post(MusicMainDialog.this::updateProgressOnMainThread);
         }
     };
 
-    private static class Holder {
-        private static final MusicMainDialog instance = new MusicMainDialog(AppManager.getAppManager().currentActivity());
-    }
-
-    public static MusicMainDialog getInstance() {
-        return MusicMainDialog.Holder.instance;
-    }
-
     public MusicMainDialog(Context context) {
         super(context, R.style.CustomFullDialog);
+    }
+
+    private static MusicMainDialog sInstance;
+
+    public static synchronized MusicMainDialog getInstance() {
+        Context context = AppManager.getAppManager().currentActivity();
+        if (context == null) {
+            return null;
+        }
+        if (sInstance == null || sInstance.getContext() != context) {
+            if (sInstance != null && sInstance.isShowing()) {
+                sInstance.dismiss();
+            }
+            sInstance = new MusicMainDialog(context);
+        }
+        return sInstance;
+    }
+
+    public static void showCurrent() {
+        MusicMainDialog dialog = getInstance();
+        if (dialog != null) {
+            dialog.bindFragment((MusicMainFragment) AppManager.getAppManager().currentFragment());
+            if (!dialog.isShowing()) {
+                dialog.show();
+            }
+        }
+    }
+
+    public static MusicMainDialog getExistingInstance() {
+        return sInstance;
+    }
+
+    public static void dismissCurrent() {
+        if (sInstance != null && sInstance.isShowing()) {
+            sInstance.dismiss();
+        }
+    }
+
+    public static void applySkinCurrent(MusicSkin skin) {
+        if (sInstance != null) {
+            sInstance.applySkin(skin);
+        }
     }
 
     @Override
@@ -57,23 +87,27 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     @Override
     public void initData() {
         KLogUtils.i("initData: ");
-        mFragment = (MusicMainFragment) AppManager.getAppManager().currentFragment();
-        MusicDaraListener.getInstance().setMusicObserver(this);
+        bindFragment((MusicMainFragment) AppManager.getAppManager().currentFragment());
         applySkin(MusicSkin.load(getContext()));
+    }
+
+    public void bindFragment(@Nullable MusicMainFragment fragment) {
+        mFragment = fragment;
+        MusicDaraListener.getInstance().setMusicObserver(fragment == null ? null : this);
     }
 
     public void applySkin(MusicSkin skin) {
         if (mBinding == null) {
             return;
         }
-        mBinding.getRoot().setBackgroundColor(skin.background());
-        mBinding.musicNamePlay.setTextColor(skin.primaryText());
-        mBinding.musicArtistPlay.setTextColor(skin.secondaryText());
-        mBinding.musicTimeStart.setTextColor(skin.secondaryText());
-        mBinding.musicTimeEnd.setTextColor(skin.secondaryText());
-        mBinding.musicBriefly.setBackgroundColor(skin.surface());
-        mBinding.musicProgress.setBackgroundColor(skin.surface());
-        mBinding.musicActionLiner.setBackgroundColor(skin.surface());
+        mBinding.getRoot().setBackgroundColor(skin.background(getContext()));
+        mBinding.musicNamePlay.setTextColor(skin.primaryText(getContext()));
+        mBinding.musicArtistPlay.setTextColor(skin.secondaryText(getContext()));
+        mBinding.musicTimeStart.setTextColor(skin.secondaryText(getContext()));
+        mBinding.musicTimeEnd.setTextColor(skin.secondaryText(getContext()));
+        mBinding.musicBriefly.setBackgroundColor(skin.surface(getContext()));
+        mBinding.musicProgress.setBackgroundColor(skin.surface(getContext()));
+        mBinding.musicActionLiner.setBackgroundColor(skin.surface(getContext()));
     }
 
     @Override
@@ -91,6 +125,9 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
 
     @Override
     public void dismiss() {
+        BackgroundThreadUtils.getInstance().removeCallbacks(mProgressCallback);
+        MusicDaraListener.getInstance().clearMusicObserver();
+        mFragment = null;
         super.dismiss();
         activateMarquee(false);
     }
@@ -112,19 +149,48 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     }
 
     private int getDuration(int progress) {
-        return (int) (getCurrentSongDuration() * ((float) progress / mBinding.musicSeekbar.getMax()));
+        int max = mBinding.musicSeekbar.getMax();
+        return max == 0 ? 0 : (int) (getCurrentSongDuration() * ((float) progress / max));
     }
 
     private void updateProgressTextWithProgress(int progress) {
         mBinding.musicTimeStart.setText(TimeUtils.formatDuration(getDuration(progress)));
     }
 
-    private void updateProgressTextWithDuration(int duration) {
+    private void updateProgressTextWithDuration(long duration) {
         mBinding.musicTimeStart.setText(TimeUtils.formatDuration(duration));
     }
 
+    private void updateProgress(long position, long duration) {
+        if (!isShowing() || mBinding == null) {
+            return;
+        }
+        int max = Math.max(1, (int) (duration / 1000));
+        int progress = Math.max(0, Math.min(max, (int) (position / 1000)));
+        mBinding.musicSeekbar.setMax(max);
+        mBinding.musicSeekbar.setProgress(progress);
+        updateProgressTextWithDuration(position);
+        if (mFragment != null && mFragment.mMusicListener != null && mFragment.mMusicListener.isPlaying()) {
+            BackgroundThreadUtils.getInstance().postDelayed(mProgressCallback, DateUtils.SECOND_IN_MILLIS);
+        }
+    }
+
+    private void updateProgressOnMainThread() {
+        if (!isShowing() || mBinding == null || mFragment == null || mFragment.mMusicListener == null) {
+            return;
+        }
+        long duration = getCurrentSongDuration();
+        if (duration <= 0) {
+            return;
+        }
+        long position = mFragment.mMusicListener.currentPosition();
+        updateProgress(position, duration);
+    }
+
     private void seekTo(int duration) {
-        mFragment.mMusicListener.seekTo(duration);
+        if (mFragment != null && mFragment.mMusicListener != null) {
+            mFragment.mMusicListener.seekTo(duration);
+        }
     }
 
     private long getCurrentSongDuration() {
@@ -143,6 +209,9 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mFragment == null || mFragment.mMusicListener == null) {
+                    return;
+                }
                 if (mFragment.mMusicListener.isPlaying()) {
                     mFragment.mMusicListener.pause();
                 } else {
@@ -153,13 +222,17 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragment.mMusicListener.playNext();
+                if (mFragment != null && mFragment.mMusicListener != null) {
+                    mFragment.mMusicListener.playNext();
+                }
             }
         });
         mBinding.musicPreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragment.mMusicListener.playLast();
+                if (mFragment != null && mFragment.mMusicListener != null) {
+                    mFragment.mMusicListener.playLast();
+                }
             }
         });
     }
@@ -179,7 +252,7 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         seekTo(getDuration(seekBar.getProgress()));
-        if (mFragment.mMusicListener.isPlaying()) {
+        if (mFragment != null && mFragment.mMusicListener != null && mFragment.mMusicListener.isPlaying()) {
             BackgroundThreadUtils.getInstance().removeCallbacks(mProgressCallback);
             BackgroundThreadUtils.getInstance().post(mProgressCallback);
         }

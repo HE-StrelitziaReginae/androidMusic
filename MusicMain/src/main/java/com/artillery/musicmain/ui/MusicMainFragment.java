@@ -94,6 +94,9 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             }
         });
         mViewModel.mPlay = new BindingCommand(() -> {
+            if (mMusicListener == null) {
+                return;
+            }
             if (mMusicListener.isPlaying()) {
                 mMusicListener.pause();
             } else {
@@ -101,9 +104,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             }
         });
         mViewModel.mShow = new BindingCommand(() -> {
-            if (!MusicMainDialog.getInstance().isShowing()) {
-                MusicMainDialog.getInstance().show();
-            }
+            MusicMainDialog.showCurrent();
         });
         initDrawer();
         applySkin(MusicSkin.load(requireContext()));
@@ -164,29 +165,29 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     private void applySkin(MusicSkin skin) {
         mMusicSkin = skin;
         skin.save(requireContext());
-        mBinding.musicDrawerLayout.setBackgroundColor(skin.background());
-        mBinding.musicToolbar.setBackgroundColor(skin.surface());
-        mBinding.musicToolbarTitle.setTextColor(skin.primaryText());
-        mBinding.musicShowDialog.setBackgroundColor(skin.surface());
-        mBinding.musicNamePlay.setTextColor(skin.primaryText());
-        mBinding.musicArtistPlay.setTextColor(skin.secondaryText());
-        mBinding.musicDrawerPanel.setBackgroundColor(skin.drawer());
-        mBinding.drawerProfile.setBackgroundColor(skin.header());
-        mBinding.drawerProfileName.setTextColor(skin.headerPrimaryText());
-        mBinding.drawerProfileSubtitle.setTextColor(skin.headerSecondaryText());
-        mBinding.drawerLibrarySection.setTextColor(skin.secondaryText());
-        mBinding.drawerPlayerSection.setTextColor(skin.secondaryText());
-        mBinding.drawerRefreshText.setTextColor(skin.primaryText());
-        mBinding.drawerPlayModeText.setTextColor(skin.primaryText());
-        mBinding.drawerPlayModeValue.setTextColor(skin.secondaryText());
-        mBinding.drawerSkinText.setTextColor(skin.primaryText());
-        mBinding.drawerAboutText.setTextColor(skin.primaryText());
-        mBinding.musicGroup.setBackgroundColor(skin.surface());
-        mBinding.musicMain.setTextColor(skin.primaryText());
-        mBinding.musicOnline.setTextColor(skin.primaryText());
-        mBinding.musicMine.setTextColor(skin.primaryText());
+        mBinding.musicDrawerLayout.setBackgroundColor(skin.background(requireContext()));
+        mBinding.musicToolbar.setBackgroundColor(skin.surface(requireContext()));
+        mBinding.musicToolbarTitle.setTextColor(skin.primaryText(requireContext()));
+        mBinding.musicShowDialog.setBackgroundColor(skin.surface(requireContext()));
+        mBinding.musicNamePlay.setTextColor(skin.primaryText(requireContext()));
+        mBinding.musicArtistPlay.setTextColor(skin.secondaryText(requireContext()));
+        mBinding.musicDrawerPanel.setBackgroundColor(skin.drawer(requireContext()));
+        mBinding.drawerProfile.setBackgroundColor(skin.header(requireContext()));
+        mBinding.drawerProfileName.setTextColor(skin.headerPrimaryText(requireContext()));
+        mBinding.drawerProfileSubtitle.setTextColor(skin.headerSecondaryText(requireContext()));
+        mBinding.drawerLibrarySection.setTextColor(skin.secondaryText(requireContext()));
+        mBinding.drawerPlayerSection.setTextColor(skin.secondaryText(requireContext()));
+        mBinding.drawerRefreshText.setTextColor(skin.primaryText(requireContext()));
+        mBinding.drawerPlayModeText.setTextColor(skin.primaryText(requireContext()));
+        mBinding.drawerPlayModeValue.setTextColor(skin.secondaryText(requireContext()));
+        mBinding.drawerSkinText.setTextColor(skin.primaryText(requireContext()));
+        mBinding.drawerAboutText.setTextColor(skin.primaryText(requireContext()));
+        mBinding.musicGroup.setBackgroundColor(skin.surface(requireContext()));
+        mBinding.musicMain.setTextColor(skin.primaryText(requireContext()));
+        mBinding.musicOnline.setTextColor(skin.primaryText(requireContext()));
+        mBinding.musicMine.setTextColor(skin.primaryText(requireContext()));
         mViewModel.applySkin(requireActivity(), skin);
-        MusicMainDialog.getInstance().applySkin(skin);
+        MusicMainDialog.applySkinCurrent(skin);
         SystemBarUtils.setLightSystemBars(requireActivity().getWindow(), skin.usesLightSystemBars());
     }
 
@@ -283,14 +284,19 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         KLogUtils.e("startPlay: ");
         if (mMusicListener != null) {
             mMusicListener.play(mPlayList, mStartIndex);
-            BackgroundThreadUtils.getInstance().post(MusicMainDialog.getInstance().mProgressCallback);
+            MusicMainDialog existingDialog = MusicMainDialog.getExistingInstance();
+            if (existingDialog != null) {
+                BackgroundThreadUtils.getInstance().post(existingDialog.mProgressCallback);
+            }
         }
     }
 
     @Override
     public void onPlaybackServiceUnbound() {
         KLogUtils.e("onPlaybackServiceUnbound: ");
-        mMusicListener.unregisterCallback(this);
+        if (mMusicListener != null) {
+            mMusicListener.unregisterCallback(this);
+        }
         mMusicListener = null;
     }
 
@@ -353,10 +359,15 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
-        if (MusicMainDialog.getInstance().isShowing()) {
-            MusicMainDialog.getInstance().dismiss();
+        if (mMusicListener != null) {
+            mMusicListener.unregisterCallback(this);
+            mMusicListener = null;
         }
+        AppManager.getAppManager().removeFragment(this);
+        MusicDaraListener.getInstance().clearMusicDataListener();
+        MusicDaraListener.getInstance().clearMusicObserver();
+        super.onDestroyView();
+        MusicMainDialog.dismissCurrent();
         mViewModel.mMusicRepository.unBindMusicService();
     }
 }

@@ -24,13 +24,17 @@ public class MusicPlayContractImpl implements MusicPlaySource {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMusicService = ((MusicService.LocalBinder) service).getService();
-            mMusicPlayView.onPlaybackServiceBound(mMusicService);
+            if (mMusicPlayView != null) {
+                mMusicPlayView.onPlaybackServiceBound(mMusicService);
+            }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mMusicService = null;
-            mMusicPlayView.onPlaybackServiceUnbound();
+            if (mMusicPlayView != null) {
+                mMusicPlayView.onPlaybackServiceUnbound();
+            }
         }
     };
 
@@ -65,6 +69,9 @@ public class MusicPlayContractImpl implements MusicPlaySource {
 
     @Override
     public void bindMusicService() {
+        if (mIsServiceBound) {
+            return;
+        }
         Utils.getContext().bindService(new Intent(Utils.getContext(), MusicService.class), mConnection, Context.BIND_AUTO_CREATE);
         mIsServiceBound = true;
     }
@@ -75,6 +82,8 @@ public class MusicPlayContractImpl implements MusicPlaySource {
             Utils.getContext().unbindService(mConnection);
             mIsServiceBound = false;
         }
+        mMusicService = null;
+        mMusicPlayView = null;
     }
 
 }
