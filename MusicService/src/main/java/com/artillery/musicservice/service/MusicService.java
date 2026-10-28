@@ -188,6 +188,11 @@ public class MusicService extends Service implements MusicListener, MusicListene
 
     }
 
+    @Override
+    public void onPlaybackStateChanged(@Nullable Song song, long position, boolean isPlaying) {
+
+    }
+
     @SuppressLint({"WrongConstant", "UnspecifiedImmutableFlag"})
     private PendingIntent getPendingIntent(String action) {
         return PendingIntent.getService(this, MusicContext.ACTION_CODE, new Intent(action), MusicContext.ACTION_FLAG);

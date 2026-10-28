@@ -72,6 +72,10 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 mMusicListLoaded = true;
                 if (mMusicListener != null) {
                     mMusicListener.syncPlayList(mMusicList);
+                    if (mMusicList.isEmpty()) {
+                        updateMainUi(null);
+                        updatePlayToggle(false);
+                    }
                 }
             }
         });
@@ -260,6 +264,13 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     }
 
     @Override
+    public void onPlaybackStateChanged(@Nullable Song song, long position, boolean isPlaying) {
+        onSongUpdated(song);
+        updatePlayToggle(isPlaying);
+        MusicDaraListener.getInstance().setUpdatePosition(position);
+    }
+
+    @Override
     public void onPlayStatusChanged(boolean isPlaying) {
         updatePlayToggle(isPlaying);
     }
@@ -274,6 +285,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         KLogUtils.e("onPlaybackServiceBound: ");
         mMusicListener = service;
         mMusicListener.registerCallback(this);
+        onPlaybackStateChanged(mMusicListener.getPlayingSong(), mMusicListener.currentPosition(), mMusicListener.isPlaying());
         updateDrawerPlayMode(mMusicListener.getPlayMode());
         if (mMusicListLoaded) {
             mMusicListener.syncPlayList(mMusicList);
@@ -283,7 +295,10 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     private void startPlay() {
         KLogUtils.e("startPlay: ");
         if (mMusicListener != null) {
-            mMusicListener.play(mPlayList, mStartIndex);
+            if (!mMusicListener.play(mPlayList, mStartIndex)) {
+                updatePlayToggle(false);
+                return;
+            }
             MusicMainDialog existingDialog = MusicMainDialog.getExistingInstance();
             if (existingDialog != null) {
                 BackgroundThreadUtils.getInstance().post(existingDialog.mProgressCallback);
@@ -308,9 +323,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public void onSongUpdated(@Nullable Song song) {
         KLogUtils.e("onSongUpdated: ");
-        if (song == null) {
-            return;
-        }
         //Music Duration
         updateMainUi(song);
     }
@@ -318,6 +330,11 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     private void updateMainUi(Song song) {
         KLogUtils.e("updateMainUi: ");
         MusicDaraListener.getInstance().setUpdate(song);
+        if (song == null) {
+            mBinding.musicNamePlay.setText(R.string.music_not_play);
+            mBinding.musicArtistPlay.setText(R.string.music_unknown);
+            return;
+        }
         mBinding.musicNamePlay.setText(song.getTitle());
         mBinding.musicArtistPlay.setText(song.getArtist());
     }

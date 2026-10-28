@@ -49,6 +49,12 @@ public class MusicDaraListener {
         }
     }
 
+    public void setUpdatePosition(long position) {
+        if (mMusicObserver != null) {
+            mMusicObserver.updatePosition(position);
+        }
+    }
+
     public void setMusicObserver(MusicObserver musicObserver) {
         mMusicObserver = musicObserver;
     }

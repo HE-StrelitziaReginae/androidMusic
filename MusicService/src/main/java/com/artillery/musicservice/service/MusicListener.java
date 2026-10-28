@@ -60,5 +60,7 @@ public interface MusicListener {
         void onComplete(@Nullable Song next);
 
         void onPlayStatusChanged(boolean isPlaying);
+
+        void onPlaybackStateChanged(@Nullable Song song, long position, boolean isPlaying);
     }
 }

@@ -60,6 +60,7 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
             if (!dialog.isShowing()) {
                 dialog.show();
             }
+            dialog.syncCurrentPlaybackState();
         }
     }
 
@@ -96,6 +97,15 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         MusicDaraListener.getInstance().setMusicObserver(fragment == null ? null : this);
     }
 
+    public void syncCurrentPlaybackState() {
+        if (mBinding == null || mFragment == null || mFragment.mMusicListener == null) {
+            return;
+        }
+        update(mFragment.mMusicListener.getPlayingSong());
+        updateUi(mFragment.mMusicListener.isPlaying());
+        updatePosition(mFragment.mMusicListener.currentPosition());
+    }
+
     public void applySkin(MusicSkin skin) {
         if (mBinding == null) {
             return;
@@ -112,6 +122,16 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
 
     @Override
     public void update(Song song) {
+        if (song == null) {
+            mSong = null;
+            mBinding.musicNamePlay.setText(R.string.music_not_play);
+            mBinding.musicArtistPlay.setText(R.string.music_unknown);
+            mBinding.musicTimeStart.setText(R.string.music_time);
+            mBinding.musicTimeEnd.setText(R.string.music_time);
+            mBinding.musicSeekbar.setMax(0);
+            mBinding.musicSeekbar.setProgress(0);
+            return;
+        }
         updateMainUi(song);
         activateMarquee(true);
     }
@@ -121,6 +141,14 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         KLogUtils.e("updatePlayToggle: " + isPlaying);
         mBinding.musicPlayBtn.setImageDrawable(isPlaying ? ContextCompat.getDrawable(getContext(), R.drawable.pause)
                 : ContextCompat.getDrawable(getContext(), R.drawable.play));
+    }
+
+    @Override
+    public void updatePosition(long position) {
+        if (mBinding == null || mSong == null) {
+            return;
+        }
+        updateProgress(position, mSong.getDuration());
     }
 
     @Override

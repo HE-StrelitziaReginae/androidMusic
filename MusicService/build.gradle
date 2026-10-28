@@ -41,4 +41,6 @@ android {
 dependencies {
     //Music Base
     implementation project(':MusicBase')
+    implementation rootProject.ext.dependencies["room-runtime"]
+    annotationProcessor rootProject.ext.dependencies["room-compiler"]
 }
