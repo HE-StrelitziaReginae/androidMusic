@@ -36,6 +36,25 @@
     <string name="music_mode_shuffle">Shuffle</string>
     <string name="music_profile_message">Local profile\nNo account is required.</string>
     <string name="music_refresh_done">Library refreshed</string>
+    <string name="music_online_search_hint">Search online music</string>
+    <string name="music_online_search">Search</string>
+    <string name="music_online_country">Music category</string>
+    <string-array name="music_online_categories">
+        <item>Chinese</item>
+        <item>Western</item>
+        <item>Japan / Korea</item>
+        <item>Other</item>
+    </string-array>
+    <string name="music_online_empty">Search by song or artist</string>
+    <string name="music_online_no_result">No matching songs</string>
+    <string name="music_online_error">Unable to load online music</string>
+    <string name="music_online_preview_unavailable">Preview unavailable</string>
+
+    <string name="music_online_clear">Clear search</string>
+    <string name="music_online_category_chinese">Chinese</string>
+    <string name="music_online_category_western">Western</string>
+    <string name="music_online_category_japan_korea">Japan / Korea</string>
+    <string name="music_online_category_other">Other</string>
 
     <string-array name="music_play_modes">
         <item>@string/music_mode_single</item>

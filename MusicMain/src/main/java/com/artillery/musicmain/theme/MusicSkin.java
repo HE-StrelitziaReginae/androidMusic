@@ -2,6 +2,7 @@ package com.artillery.musicmain.theme;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.GradientDrawable;
 
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
@@ -105,6 +106,13 @@ public enum MusicSkin {
 
     public int icon(Context context) {
         return resolve(context, iconColor);
+    }
+
+    public GradientDrawable cardBackground(Context context, boolean selected) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(selected ? header(context) : surface(context));
+        drawable.setCornerRadius(12 * context.getResources().getDisplayMetrics().density);
+        return drawable;
     }
 
     private int resolve(Context context, @ColorRes int colorResId) {

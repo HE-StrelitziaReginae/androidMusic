@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="trackModel"
+            type="com.artillery.musicmain.viewmodel.MetingTrackItemViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_80"
+        android:layout_marginStart="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_4"
+        android:layout_marginEnd="@dimen/dp_12"
+        android:layout_marginBottom="@dimen/dp_4"
+        android:background="@{trackModel.cardBackground}"
+        android:paddingStart="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_12"
+        android:foreground="?android:attr/selectableItemBackground"
+        binding:onClickCommand="@{trackModel.play}">
+
+        <View
+            android:id="@+id/online_selected_indicator"
+            android:layout_width="@dimen/dp_3"
+            android:layout_height="@dimen/dp_40"
+            android:background="@{trackModel.selectedIndicatorColor}"
+            android:visibility="@{trackModel.selected ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/online_album"
+            android:layout_width="@dimen/dp_56"
+            android:layout_height="@dimen/dp_56"
+            android:background="@drawable/music_album_background"
+            android:clipToOutline="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ellipse"
+            app:url="@{trackModel.imageUrl}"
+            app:placeholderRes="@drawable/ellipse"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/online_selected_indicator"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/online_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{trackModel.title}"
+            android:textColor="@{trackModel.titleColor}"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintBottom_toTopOf="@id/online_artist"
+            app:layout_constraintEnd_toStartOf="@id/online_duration"
+            app:layout_constraintStart_toEndOf="@id/online_album"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/online_artist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_2"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{trackModel.artist}"
+            android:textColor="@{trackModel.artistColor}"
+            android:textSize="@dimen/sp_10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/online_duration"
+            app:layout_constraintStart_toEndOf="@id/online_album"
+            app:layout_constraintTop_toBottomOf="@id/online_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/online_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{trackModel.duration}"
+            android:textColor="@{trackModel.durationColor}"
+            android:textSize="@dimen/sp_11"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

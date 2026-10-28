@@ -24,6 +24,8 @@ public interface MusicListener {
 
     boolean play(Song song);
 
+    boolean playOnline(Song song);
+
     boolean playLast();
 
     boolean playNext();

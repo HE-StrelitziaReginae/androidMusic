@@ -52,6 +52,10 @@ public class MusicMainViewModel extends BaseViewModel {
         if (fragment instanceof MusicListFragment) {
             ((MusicListFragment) fragment).applySkin(skin);
         }
+        Fragment onlineFragment = fragmentActivity.getSupportFragmentManager().findFragmentByTag("1");
+        if (onlineFragment instanceof MusicOnlineFragment) {
+            ((MusicOnlineFragment) onlineFragment).applySkin(skin);
+        }
     }
 
     private void initFragment() {

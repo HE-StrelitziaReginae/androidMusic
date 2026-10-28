@@ -4,14 +4,17 @@ import android.content.Context;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.SeekBar;
+import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import com.artillery.musicbase.base.AppManager;
 import com.artillery.musicbase.base.BaseDialog;
 import com.artillery.musicbase.utils.BackgroundThreadUtils;
 import com.artillery.musicbase.utils.KLogUtils;
+import com.artillery.musicbase.utils.SystemBarUtils;
 import com.artillery.musicmain.R;
 import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.databinding.MusicMianDialogBinding;
@@ -86,9 +89,17 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        SystemBarUtils.configureImmersive(getWindow());
+        super.onCreate(savedInstanceState);
+        SystemBarUtils.setLightSystemBars(getWindow(), MusicSkin.load(getContext()).usesLightSystemBars());
+    }
+
+    @Override
     public void initData() {
         KLogUtils.i("initData: ");
         bindFragment((MusicMainFragment) AppManager.getAppManager().currentFragment());
+        applySystemBarInsets();
         applySkin(MusicSkin.load(getContext()));
     }
 
@@ -110,14 +121,34 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         if (mBinding == null) {
             return;
         }
-        mBinding.getRoot().setBackgroundColor(skin.background(getContext()));
-        mBinding.musicNamePlay.setTextColor(skin.primaryText(getContext()));
-        mBinding.musicArtistPlay.setTextColor(skin.secondaryText(getContext()));
-        mBinding.musicTimeStart.setTextColor(skin.secondaryText(getContext()));
-        mBinding.musicTimeEnd.setTextColor(skin.secondaryText(getContext()));
-        mBinding.musicBriefly.setBackgroundColor(skin.surface(getContext()));
-        mBinding.musicProgress.setBackgroundColor(skin.surface(getContext()));
-        mBinding.musicActionLiner.setBackgroundColor(skin.surface(getContext()));
+        int background = skin.background(getContext());
+        int primaryText = skin.primaryText(getContext());
+        int secondaryText = skin.secondaryText(getContext());
+        mBinding.musicDialog.setBackgroundColor(background);
+        mBinding.musicNamePlay.setTextColor(primaryText);
+        mBinding.musicArtistPlay.setTextColor(secondaryText);
+        mBinding.musicTimeStart.setTextColor(secondaryText);
+        mBinding.musicTimeEnd.setTextColor(secondaryText);
+        mBinding.musicPreBtn.setColorFilter(skin.icon(getContext()));
+        mBinding.musicPlayBtn.setColorFilter(skin.icon(getContext()));
+        mBinding.musicNextBtn.setColorFilter(skin.icon(getContext()));
+        if (getWindow() != null) {
+            SystemBarUtils.setLightSystemBars(getWindow(), skin.usesLightSystemBars());
+        }
+    }
+
+    private void applySystemBarInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(mBinding.musicDialog, (view, insets) -> {
+            int topInset = insets.getSystemWindowInsetTop();
+            int bottomInset = insets.getSystemWindowInsetBottom();
+            mBinding.musicDialog.setPadding(
+                    mBinding.musicDialog.getPaddingLeft(),
+                    topInset,
+                    mBinding.musicDialog.getPaddingRight(),
+                    bottomInset);
+            return insets;
+        });
+        ViewCompat.requestApplyInsets(mBinding.musicDialog);
     }
 
     @Override

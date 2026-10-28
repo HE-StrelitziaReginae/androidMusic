@@ -100,6 +100,11 @@ public class MusicService extends Service implements MusicListener, MusicListene
     }
 
     @Override
+    public boolean playOnline(Song song) {
+        return mMusicPlayer.playOnline(song);
+    }
+
+    @Override
     public boolean playLast() {
         return mMusicPlayer.playLast();
     }

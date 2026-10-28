@@ -4,7 +4,7 @@
     xmlns:binding="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View" />
         <import type="com.artillery.musicmain.viewmodel.MusicListItemViewModel" />
 
         <variable
@@ -13,52 +13,86 @@
 
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50">
+        android:layout_height="@dimen/dp_80"
+        android:layout_marginStart="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_4"
+        android:layout_marginEnd="@dimen/dp_12"
+        android:layout_marginBottom="@dimen/dp_4"
+        android:background="@{musicListItemModel.cardBackground}"
+        android:paddingStart="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_12"
+        android:foreground="?android:attr/selectableItemBackground"
+        binding:onClickCommand="@{musicListItemModel.musicPlay}">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_10"
+        <View
+            android:id="@+id/music_selected_indicator"
+            android:layout_width="@dimen/dp_3"
+            android:layout_height="@dimen/dp_40"
+            android:background="@{musicListItemModel.selectedIndicatorColor}"
+            android:visibility="@{musicListItemModel.selected ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            binding:onClickCommand="@{musicListItemModel.musicPlay}">
+            app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_album"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/song"
+                android:layout_width="@dimen/dp_56"
+                android:layout_height="@dimen/dp_56"
+                android:background="@drawable/music_album_background"
+                android:padding="@dimen/dp_16"
+                android:scaleType="centerInside"
+                android:src="@drawable/music_player"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/music_selected_indicator"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/music_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_10"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="@{musicListItemModel.musicName}"
+                android:textColor="@{musicListItemModel.musicNameColor}"
                 android:textSize="@dimen/sp_15"
                 app:layout_constraintBottom_toTopOf="@id/music_artist"
+                app:layout_constraintEnd_toStartOf="@id/music_duration"
                 app:layout_constraintStart_toEndOf="@id/music_album"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/music_artist"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_10"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:layout_marginTop="@dimen/dp_2"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="@{musicListItemModel.musicArtist}"
+                android:textColor="@{musicListItemModel.musicArtistColor}"
                 android:textSize="@dimen/sp_10"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/music_album" />
+                app:layout_constraintEnd_toStartOf="@id/music_duration"
+                app:layout_constraintStart_toEndOf="@id/music_album"
+                app:layout_constraintTop_toBottomOf="@id/music_name" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/music_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{musicListItemModel.musicDuration}"
+                android:textColor="@{musicListItemModel.musicDurationColor}"
+                android:textSize="@dimen/sp_11"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

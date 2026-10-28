@@ -4,19 +4,186 @@
     xmlns:binding="http://schemas.android.com/tools">
 
     <data>
-
         <import type="com.artillery.musicmain.viewmodel.MusicOnlineViewModel" />
-
         <variable
             name="musicOnlineModel"
             type="com.artillery.musicmain.viewmodel.MusicOnlineViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/online_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/online_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_12"
+            android:paddingEnd="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_10">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <FrameLayout
+                android:id="@+id/online_search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48">
 
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/online_search_leading"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/dp_12"
+                    android:contentDescription="@null"
+                    android:src="@drawable/music_search" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/online_search_input"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dp_40"
+                android:layout_marginEnd="@dimen/dp_88"
+                android:background="@android:color/transparent"
+                android:hint="@string/music_online_search_hint"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="@dimen/dp_0"
+                android:paddingEnd="@dimen/dp_0"
+                android:singleLine="true" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/online_clear_button"
+                    android:layout_width="@dimen/dp_40"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="@dimen/dp_44"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/music_online_clear"
+                    android:padding="@dimen/dp_10"
+                    android:src="@drawable/music_close"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/online_search_button"
+                    android:layout_width="@dimen/dp_44"
+                    android:layout_height="@dimen/dp_44"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="@dimen/dp_2"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/music_online_search"
+                    android:padding="@dimen/dp_12"
+                    android:src="@drawable/music_search" />
+            </FrameLayout>
+
+            <RadioGroup
+                android:id="@+id/online_category_group"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_44"
+                android:layout_marginTop="@dimen/dp_10"
+                android:checkedButton="@id/online_category_chinese"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/dp_2">
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/online_category_chinese"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/music_online_category_chinese"
+                    android:textSize="@dimen/sp_12" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/online_category_western"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/music_online_category_western"
+                    android:textSize="@dimen/sp_12" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/online_category_japan_korea"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/music_online_category_japan_korea"
+                    android:textSize="@dimen/sp_12" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/online_category_other"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/music_online_category_other"
+                    android:textSize="@dimen/sp_12" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/online_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/online_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/dp_12"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            binding:itemBinding="@{musicOnlineModel.itemBinding}"
+            binding:items="@{musicOnlineModel.items}" />
+
+            <ProgressBar
+                android:id="@+id/online_loading"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/online_empty_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/online_empty_icon"
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
+                    android:contentDescription="@null"
+                    android:src="@drawable/music_player" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/online_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:gravity="center"
+                    android:text="@string/music_online_empty"
+                    android:textSize="@dimen/sp_14" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
 </layout>

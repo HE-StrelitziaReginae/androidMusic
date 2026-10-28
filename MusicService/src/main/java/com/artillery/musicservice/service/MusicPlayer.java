@@ -24,6 +24,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     private static final String TAG = "MusicPlayer";
     private MediaPlayer mPlayer;
     private PlayList mPlayList;
+    private PlayList mLocalPlayList;
     private final List<Callback> mCallbacks = new ArrayList<>(2);
     private boolean isPaused;
     private boolean isPreparing;
@@ -32,6 +33,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
     private boolean mPlaybackStateLoaded;
     private boolean mExplicitSelection;
+    private boolean mOnlinePlayback;
     private long mRestoredPosition;
     private String mRestoredSongPath;
     private final Runnable mPlaybackStateSaver = new Runnable() {
@@ -50,6 +52,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     private MusicPlayer() {
         mPlayer = createMediaPlayer();
         mPlayList = new PlayList();
+        mLocalPlayList = new PlayList();
         mPlaybackStateStore.load(this::onPlaybackStateLoaded);
     }
 
@@ -68,6 +71,8 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         if (list == null) {
             list = new PlayList();
         }
+        mLocalPlayList = list;
+        mOnlinePlayback = false;
         mPlayList = list;
     }
 
@@ -75,9 +80,12 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     public synchronized void syncPlayList(ArrayList<Song> songs) {
         ensurePlayList();
 
-        int oldIndex = mPlayList.getPlayingIndex();
+        if (mLocalPlayList == null) {
+            mLocalPlayList = new PlayList();
+        }
+        int oldIndex = mLocalPlayList.getPlayingIndex();
         Song currentSong = null;
-        ArrayList<Song> oldSongs = mPlayList.getSongs();
+        ArrayList<Song> oldSongs = mLocalPlayList.getSongs();
         if (oldIndex >= 0 && oldIndex < oldSongs.size()) {
             currentSong = oldSongs.get(oldIndex);
         }
@@ -102,9 +110,12 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
             updatedIndex = oldIndex >= 0 ? Math.min(oldIndex, updatedSongs.size() - 1) : 0;
         }
 
-        mPlayList.setSongs(updatedSongs);
-        mPlayList.setNumOfSongs(updatedSongs.size());
-        mPlayList.setPlayingIndex(updatedIndex);
+        mLocalPlayList.setSongs(updatedSongs);
+        mLocalPlayList.setNumOfSongs(updatedSongs.size());
+        mLocalPlayList.setPlayingIndex(updatedIndex);
+        if (!mOnlinePlayback) {
+            mPlayList = mLocalPlayList;
+        }
         notifyPlaybackStateChanged(mPlayList.getCurrentSong(), currentPosition(), isPlaying());
     }
 
@@ -165,6 +176,10 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
                     return;
                 }
                 try {
+                    int preparedDuration = mp.getDuration();
+                    if (preparedDuration > 0 && (mOnlinePlayback || song.getDuration() <= 0)) {
+                        song.setDuration(preparedDuration);
+                    }
                     if (mRestoredSongPath != null
                             && mRestoredSongPath.equals(song.getPath())
                             && mRestoredPosition > 0
@@ -274,6 +289,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         }
         isPaused = false;
         mExplicitSelection = true;
+        mOnlinePlayback = false;
         list.setPlayingIndex(startIndex);
         setPlayList(list);
         return play();
@@ -287,6 +303,20 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         }
         isPaused = false;
         mExplicitSelection = true;
+        mOnlinePlayback = false;
+        mPlayList = new PlayList(song);
+        mPlayList.setPlayingIndex(0);
+        return play();
+    }
+
+    @Override
+    public synchronized boolean playOnline(Song song) {
+        if (song == null) {
+            return false;
+        }
+        isPaused = false;
+        mExplicitSelection = true;
+        mOnlinePlayback = true;
         mPlayList = new PlayList(song);
         mPlayList.setPlayingIndex(0);
         return play();
@@ -297,6 +327,10 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         KLogUtils.i("playLast: ");
         isPaused = false;
         mExplicitSelection = true;
+        if (mOnlinePlayback && mLocalPlayList != null && !mLocalPlayList.getSongs().isEmpty()) {
+            mOnlinePlayback = false;
+            mPlayList = mLocalPlayList;
+        }
         boolean hasLast = mPlayList.hasLast();
         if (hasLast) {
             Song last = mPlayList.last();
@@ -313,6 +347,10 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         KLogUtils.i("playNext: ");
         isPaused = false;
         mExplicitSelection = true;
+        if (mOnlinePlayback && mLocalPlayList != null && !mLocalPlayList.getSongs().isEmpty()) {
+            mOnlinePlayback = false;
+            mPlayList = mLocalPlayList;
+        }
         boolean hasNext = mPlayList.hasNext(false);
         if (hasNext) {
             Song next = mPlayList.next();
@@ -444,6 +482,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         releaseMediaPlayer(mPlayer);
         mPlayer = null;
         mPlayList = new PlayList();
+        mLocalPlayList = new PlayList();
         isPaused = false;
         isPreparing = false;
         mMainHandler.removeCallbacksAndMessages(null);
@@ -500,7 +539,9 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         Song currentSong = mPlayList == null ? null : mPlayList.getCurrentSong();
         long position = mPlayer == null ? 0 : mPlayer.getCurrentPosition();
         String songPath = currentSong == null ? null : currentSong.getPath();
-        mPlaybackStateStore.save(songPath, position, playing);
+        if (!mOnlinePlayback) {
+            mPlaybackStateStore.save(songPath, position, playing);
+        }
         notifyPlaybackPosition(position);
         if (notify) {
             notifyPlaybackStateChanged(currentSong, position, playing);

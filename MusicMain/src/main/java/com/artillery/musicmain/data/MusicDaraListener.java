@@ -2,6 +2,7 @@ package com.artillery.musicmain.data;
 
 import com.artillery.musicmain.observer.MusicObserver;
 import com.artillery.musicservice.data.Song;
+import com.artillery.musicservice.service.MusicListener;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 public class MusicDaraListener {
     private MusicObserver mMusicObserver;
     private MusicDataListener mMusicDataListener;
+    private MusicListener mMusicListener;
 
     private static class Holder {
         private static final MusicDaraListener instance = new MusicDaraListener();
@@ -37,6 +39,14 @@ public class MusicDaraListener {
         this.mMusicDataListener = mMusicDataListener;
     }
 
+    public void setMusicListener(MusicListener musicListener) {
+        mMusicListener = musicListener;
+    }
+
+    public boolean playOnline(Song song) {
+        return mMusicListener != null && mMusicListener.playOnline(song);
+    }
+
     public void setUpdate(Song song) {
         if (mMusicObserver != null) {
             mMusicObserver.update(song);
@@ -61,6 +71,12 @@ public class MusicDaraListener {
 
     public void clearMusicDataListener() {
         mMusicDataListener = null;
+    }
+
+    public void clearMusicListener(MusicListener musicListener) {
+        if (mMusicListener == musicListener) {
+            mMusicListener = null;
+        }
     }
 
     public void clearMusicObserver() {

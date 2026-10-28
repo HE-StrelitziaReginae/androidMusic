@@ -36,7 +36,8 @@ public class RetrofitClient {
     private static final int DEFAULT_TIMEOUT = 20;
     //缓存时间
     private static final int CACHE_TIMEOUT = 10 * 1024 * 1024;
-    private static final String developUrl = "";
+    private static final String developUrl = "https://api.i-meto.com/meting/";
+    private static final String PUBLIC_PLAYBACK_BASE_URL = "https://api.injahow.cn/meting/";
     public static String testUrl = "";
     //服务端根路径
     private static final String baseUrl = developUrl;
@@ -97,6 +98,7 @@ public class RetrofitClient {
                         .build()
                 )
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .connectionPool(new ConnectionPool(8, 15, TimeUnit.SECONDS))
                 // 这里你可以根据自己的机型设置同时连接的个数和时间，我这里8个，和每个保持时间为10s
@@ -118,6 +120,10 @@ public class RetrofitClient {
             throw new RuntimeException("Api service is null!");
         }
         return retrofit.create(service);
+    }
+
+    public static String publicPlaybackUrl(String songId) {
+        return PUBLIC_PLAYBACK_BASE_URL + "?server=netease&type=url&id=" + songId;
     }
 
     /**

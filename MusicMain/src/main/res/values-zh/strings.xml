@@ -35,6 +35,25 @@
     <string name="music_mode_shuffle">随机播放</string>
     <string name="music_profile_message">本地个人资料\n无需登录账号。</string>
     <string name="music_refresh_done">音乐库已刷新</string>
+    <string name="music_online_search_hint">搜索在线音乐</string>
+    <string name="music_online_search">搜索</string>
+    <string name="music_online_country">音乐分类</string>
+    <string-array name="music_online_categories">
+        <item>华语</item>
+        <item>欧美</item>
+        <item>日韩</item>
+        <item>其他</item>
+    </string-array>
+    <string name="music_online_error">在线音乐加载失败</string>
+    <string name="music_online_preview_unavailable">暂无试听</string>
+
+    <string name="music_online_empty">&#x641C;&#x7D22;&#x6B4C;&#x66F2;&#x6216;&#x6B4C;&#x624B;</string>
+    <string name="music_online_no_result">&#x6CA1;&#x6709;&#x627E;&#x5230;&#x5339;&#x914D;&#x7684;&#x6B4C;&#x66F2;</string>
+    <string name="music_online_clear">&#x6E05;&#x9664;&#x641C;&#x7D22;</string>
+    <string name="music_online_category_chinese">&#x534E;&#x8BED;</string>
+    <string name="music_online_category_western">&#x6B27;&#x7F8E;</string>
+    <string name="music_online_category_japan_korea">&#x65E5;&#x97E9;</string>
+    <string name="music_online_category_other">&#x5176;&#x4ED6;</string>
 
     <string-array name="music_play_modes">
         <item>@string/music_mode_single</item>

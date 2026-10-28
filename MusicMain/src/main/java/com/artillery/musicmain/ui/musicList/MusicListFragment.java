@@ -97,11 +97,11 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
         if (mBinding == null) {
             return;
         }
+        mViewModel.applySkin(skin);
         mBinding.musicList.setBackgroundColor(skin.background(requireContext()));
         mBinding.musicList.post(() -> {
             for (int index = 0; index < mBinding.musicList.getChildCount(); index++) {
                 android.view.View item = mBinding.musicList.getChildAt(index);
-                item.setBackgroundColor(skin.surface(requireContext()));
                 android.widget.TextView title = item.findViewById(R.id.music_name);
                 android.widget.TextView artist = item.findViewById(R.id.music_artist);
                 if (title != null) {

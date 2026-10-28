@@ -1,18 +1,28 @@
 package com.artillery.musicmain.ui;
 
+import android.content.Context;
+import android.content.ClipData;
 import android.os.Bundle;
+import android.content.Intent;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.io.File;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProviders;
+
+import com.bumptech.glide.Glide;
 
 import com.artillery.musicbase.base.AppManager;
 import com.artillery.musicbase.base.BaseFragment;
@@ -42,6 +52,11 @@ import java.util.ArrayList;
  */
 public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, MusicMainViewModel>
         implements MusicPlayView, MusicListener.Callback {
+    private static final int REQUEST_PROFILE_IMAGE = 1001;
+    private static final int REQUEST_PROFILE_CROP = 1002;
+    private static final String PROFILE_PREFERENCES = "music_profile_preferences";
+    private static final String PROFILE_IMAGE_URI = "profile_image_uri";
+    private Uri mPendingProfileImageUri;
     protected MusicListener mMusicListener;
     private PlayList mPlayList;
     private ArrayList<Song> mMusicList = new ArrayList<>();
@@ -51,6 +66,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
 
     @Override
     public void initData() {
+        loadProfileImage();
         AppManager.getAppManager().addFragment(this);
         mViewModel.showFragment(requireActivity(), 0);
         MusicDaraListener.getInstance().setMusicDataListener(new MusicDataListener() {
@@ -118,15 +134,23 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         ViewCompat.setOnApplyWindowInsetsListener(mBinding.musicDrawerLayout, (view, windowInsets) -> {
             int topInset = windowInsets.getSystemWindowInsetTop();
             int bottomInset = windowInsets.getSystemWindowInsetBottom();
-            ViewGroup.MarginLayoutParams toolbarParams =
-                    (ViewGroup.MarginLayoutParams) mBinding.musicToolbar.getLayoutParams();
-            toolbarParams.topMargin = topInset;
+            ViewGroup.LayoutParams toolbarParams = mBinding.musicToolbar.getLayoutParams();
+            toolbarParams.height = getResources().getDimensionPixelSize(com.artillery.musicbase.R.dimen.dp_56) + topInset;
             mBinding.musicToolbar.setLayoutParams(toolbarParams);
+            mBinding.musicToolbar.setPadding(
+                    mBinding.musicToolbar.getPaddingLeft(),
+                    topInset,
+                    mBinding.musicToolbar.getPaddingRight(),
+                    mBinding.musicToolbar.getPaddingBottom());
 
-            ViewGroup.MarginLayoutParams groupParams =
-                    (ViewGroup.MarginLayoutParams) mBinding.musicGroup.getLayoutParams();
-            groupParams.bottomMargin = bottomInset;
+            ViewGroup.LayoutParams groupParams = mBinding.musicGroup.getLayoutParams();
+            groupParams.height = getResources().getDimensionPixelSize(com.artillery.musicbase.R.dimen.dp_50) + bottomInset;
             mBinding.musicGroup.setLayoutParams(groupParams);
+            mBinding.musicGroup.setPadding(
+                    mBinding.musicGroup.getPaddingLeft(),
+                    mBinding.musicGroup.getPaddingTop(),
+                    mBinding.musicGroup.getPaddingRight(),
+                    bottomInset);
 
             mBinding.musicDrawerPanel.setPadding(
                     mBinding.musicDrawerPanel.getPaddingLeft(),
@@ -142,6 +166,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         updateDrawerPlayMode(MusicMode.getDefault());
         mBinding.musicMenuBtn.setOnClickListener(view -> mBinding.musicDrawerLayout.openDrawer(mBinding.musicDrawerPanel));
         mBinding.drawerProfile.setOnClickListener(view -> showProfileDialog());
+        mBinding.drawerAvatar.setOnClickListener(view -> openProfileImagePicker());
         mBinding.drawerRefresh.setOnClickListener(view -> {
             mViewModel.refreshMusicList(requireActivity());
             mBinding.musicDrawerLayout.closeDrawer(mBinding.musicDrawerPanel);
@@ -150,6 +175,94 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         mBinding.drawerPlayMode.setOnClickListener(view -> showPlayModeDialog());
         mBinding.drawerSkin.setOnClickListener(view -> showSkinDialog());
         mBinding.drawerAbout.setOnClickListener(view -> showAboutDialog());
+    }
+
+    private void openProfileImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        startActivityForResult(intent, REQUEST_PROFILE_IMAGE);
+    }
+
+    private void startProfileCrop(Uri sourceUri) {
+        File outputFile = getProfileImageFile();
+        if (outputFile.exists()) {
+            outputFile.delete();
+        }
+        Uri outputUri = FileProvider.getUriForFile(
+                requireContext(),
+                requireContext().getPackageName() + ".fileprovider",
+                outputFile);
+        Intent cropIntent = new Intent("com.android.camera.action.CROP");
+        cropIntent.setDataAndType(sourceUri, "image/*");
+        cropIntent.putExtra("crop", "true");
+        cropIntent.putExtra("aspectX", 1);
+        cropIntent.putExtra("aspectY", 1);
+        cropIntent.putExtra("outputX", 512);
+        cropIntent.putExtra("outputY", 512);
+        cropIntent.putExtra("scale", true);
+        cropIntent.putExtra("return-data", false);
+        cropIntent.putExtra("output", outputUri);
+        cropIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        cropIntent.setClipData(ClipData.newRawUri("profile_image", sourceUri));
+        if (cropIntent.resolveActivity(requireContext().getPackageManager()) != null) {
+            startActivityForResult(cropIntent, REQUEST_PROFILE_CROP);
+        } else {
+            saveProfileImage(sourceUri);
+        }
+    }
+
+    private File getProfileImageFile() {
+        File directory = new File(requireContext().getFilesDir(), "profile");
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        return new File(directory, "avatar.jpg");
+    }
+
+    private void saveProfileImage(Uri uri) {
+        requireContext().getSharedPreferences(PROFILE_PREFERENCES, Context.MODE_PRIVATE)
+                .edit().putString(PROFILE_IMAGE_URI, uri.toString()).apply();
+        loadProfileImage();
+    }
+
+    private void loadProfileImage() {
+        String uri = requireContext().getSharedPreferences(PROFILE_PREFERENCES, Context.MODE_PRIVATE)
+                .getString(PROFILE_IMAGE_URI, null);
+        if (!TextUtils.isEmpty(uri)) {
+            Glide.with(this).load(Uri.parse(uri)).circleCrop().placeholder(R.drawable.ellipse).error(R.drawable.ellipse)
+                    .into(mBinding.drawerAvatar);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != android.app.Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == REQUEST_PROFILE_IMAGE && data != null && data.getData() != null) {
+            Uri uri = data.getData();
+            try {
+                requireContext().getContentResolver().takePersistableUriPermission(
+                        uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            } catch (SecurityException ignored) {
+            }
+            mPendingProfileImageUri = uri;
+            startProfileCrop(uri);
+        } else if (requestCode == REQUEST_PROFILE_CROP) {
+            File outputFile = getProfileImageFile();
+            if (outputFile.exists()) {
+                Uri uri = FileProvider.getUriForFile(
+                        requireContext(),
+                        requireContext().getPackageName() + ".fileprovider",
+                        outputFile);
+                saveProfileImage(uri);
+            } else if (mPendingProfileImageUri != null) {
+                saveProfileImage(mPendingProfileImageUri);
+            }
+        }
     }
 
     private void showSkinDialog() {
@@ -285,6 +398,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         KLogUtils.e("onPlaybackServiceBound: ");
         mMusicListener = service;
         mMusicListener.registerCallback(this);
+        MusicDaraListener.getInstance().setMusicListener(mMusicListener);
         onPlaybackStateChanged(mMusicListener.getPlayingSong(), mMusicListener.currentPosition(), mMusicListener.isPlaying());
         updateDrawerPlayMode(mMusicListener.getPlayMode());
         if (mMusicListLoaded) {
@@ -378,6 +492,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     public void onDestroyView() {
         if (mMusicListener != null) {
             mMusicListener.unregisterCallback(this);
+            MusicDaraListener.getInstance().clearMusicListener(mMusicListener);
             mMusicListener = null;
         }
         AppManager.getAppManager().removeFragment(this);
