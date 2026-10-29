@@ -1,14 +1,15 @@
 package com.artillery.musicservice.db;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
+import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
-import com.artillery.musicservice.data.PlaybackState;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,17 +19,33 @@ import java.util.List;
 public interface MusicDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMusic(List<Song> song);
+    void insertSongs(List<Song> songs);
 
-    @Query("select * from song")
-    List<Song> getMusic();
+    @Update
+    int updateSong(Song song);
 
-    @Query("delete from song where title=:title")
-    void deleteMusic(String title);
+    @Delete
+    int deleteSong(Song song);
 
-    @Query("select * from playback_state where id=1 limit 1")
-    PlaybackState getPlaybackState();
+    @Query("SELECT * FROM songs ORDER BY title COLLATE NOCASE, artist COLLATE NOCASE")
+    List<Song> getSongs();
+
+    @Query("SELECT * FROM songs WHERE favorite = 1 ORDER BY title COLLATE NOCASE, artist COLLATE NOCASE")
+    List<Song> getFavoriteSongs();
+
+    @Query("DELETE FROM songs")
+    int deleteAllSongs();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void savePlaybackState(PlaybackState state);
+    long insertPlaylist(PlayList playList);
+
+    @Update
+    int updatePlaylist(PlayList playList);
+
+    @Delete
+    int deletePlaylist(PlayList playList);
+
+    @Query("SELECT * FROM playlists ORDER BY updatedAt DESC, createdAt DESC, name COLLATE NOCASE")
+    List<PlayList> getPlaylists();
+
 }

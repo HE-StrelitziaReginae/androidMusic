@@ -20,14 +20,14 @@ import java.util.Random;
 /**
  * @author ArtilleryOrchid
  */
-@Entity
+@Entity(tableName = "playlists")
 public class PlayList implements Parcelable {
 
     // Play List: Favorite
     public static final int NO_POSITION = -1;
     public static final String COLUMN_FAVORITE = "favorite";
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
     @ColumnInfo(name = "name")
     private String name;
     @ColumnInfo
@@ -62,11 +62,11 @@ public class PlayList implements Parcelable {
         readFromParcel(in);
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -156,7 +156,7 @@ public class PlayList implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeString(this.name);
         dest.writeInt(this.numOfSongs);
         dest.writeByte(this.favorite ? (byte) 1 : (byte) 0);
@@ -168,7 +168,7 @@ public class PlayList implements Parcelable {
     }
 
     public void readFromParcel(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.name = in.readString();
         this.numOfSongs = in.readInt();
         this.favorite = in.readByte() != 0;

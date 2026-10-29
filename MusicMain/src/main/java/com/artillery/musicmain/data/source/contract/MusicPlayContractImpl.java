@@ -9,7 +9,6 @@ import android.os.IBinder;
 import com.artillery.musicbase.utils.Utils;
 import com.artillery.musicmain.data.source.MusicPlaySource;
 import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
-import com.artillery.musicservice.data.Song;
 import com.artillery.musicservice.service.MusicService;
 
 /**
@@ -56,15 +55,6 @@ public class MusicPlayContractImpl implements MusicPlaySource {
     @Override
     public void bindMusicView(MusicPlayView musicPlayView) {
         mMusicPlayView = musicPlayView;
-    }
-
-    @Override
-    public void retrieveLastPlayMode() {
-    }
-
-    @Override
-    public void setSongAsFavorite(Song song, boolean favorite) {
-
     }
 
     @Override

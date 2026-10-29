@@ -11,10 +11,12 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
+import com.artillery.musicmain.app.AppViewModelFactory;
 import com.artillery.musicmain.databinding.FragmentMusicOnlineBinding;
 import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.viewmodel.MusicOnlineViewModel;
@@ -181,6 +183,12 @@ public class MusicOnlineFragment extends BaseFragment<FragmentMusicOnlineBinding
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return R.layout.fragment_music_online;
+    }
+
+    @Override
+    public MusicOnlineViewModel initViewModel() {
+        AppViewModelFactory factory = AppViewModelFactory.getInstance(requireActivity().getApplication());
+        return ViewModelProviders.of(this, factory).get(MusicOnlineViewModel.class);
     }
 
     @Override

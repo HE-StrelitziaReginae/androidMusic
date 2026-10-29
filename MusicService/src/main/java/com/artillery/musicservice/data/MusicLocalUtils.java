@@ -5,27 +5,17 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 
-/**
- * @author ArtilleryOrchid
- */
-public class MusicLocalUtils {
-    private static volatile MusicLocalUtils mInstance;
-
-    public static MusicLocalUtils getInstance() {
-        if (mInstance == null) {
-            synchronized (MusicLocalUtils.class) {
-                if (mInstance == null) {
-                    mInstance = new MusicLocalUtils();
-                }
-            }
-        }
-        return mInstance;
+public final class MusicLocalUtils {
+    private MusicLocalUtils() {
     }
 
-    public ArrayList<Song> getMusic(Context context) {
-        ArrayList<Song> list = new ArrayList<>();
+    @Nullable
+    public static ArrayList<Song> getMusic(Context context) {
+        ArrayList<Song> songs = new ArrayList<>();
         String[] projection = {
                 MediaStore.Audio.Media.DISPLAY_NAME,
                 MediaStore.Audio.Media._ID,
@@ -36,73 +26,72 @@ public class MusicLocalUtils {
                 MediaStore.Audio.Media.ALBUM,
                 MediaStore.Audio.Media.MIME_TYPE
         };
-        Cursor cursor = context.getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                projection,
-                MediaStore.Audio.Media.IS_MUSIC + " != 0",
-                null,
-                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-        if (cursor != null) {
+        Cursor cursor;
+        try {
+            cursor = context.getContentResolver().query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    MediaStore.Audio.Media.IS_MUSIC + " != 0",
+                    null,
+                    MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        } catch (SecurityException error) {
+            return null;
+        }
+        if (cursor == null) {
+            return null;
+        }
+        try {
             while (cursor.moveToNext()) {
-                Song song = new Song();
-                // 提取公共逻辑到方法中，增强复用性
-                String displayName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
-                int songId = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-                String artistName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
-                String filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                int songDuration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+                String displayName = cursor.getString(cursor.getColumnIndexOrThrow(
+                        MediaStore.Audio.Media.DISPLAY_NAME));
+                String filePath = cursor.getString(cursor.getColumnIndexOrThrow(
+                        MediaStore.Audio.Media.DATA));
+                String mimeType = cursor.getString(cursor.getColumnIndexOrThrow(
+                        MediaStore.Audio.Media.MIME_TYPE));
+                if (TextUtils.isEmpty(filePath) || TextUtils.isEmpty(mimeType)
+                        || TextUtils.isEmpty(displayName)) {
+                    continue;
+                }
+
                 int fileSize = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
-                String albumName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
-                String mimeType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.MIME_TYPE));
-                if (TextUtils.isEmpty(filePath) || TextUtils.isEmpty(mimeType)) {
+                if (fileSize <= 800 * 1000) {
                     continue;
                 }
-                // 设置基础属性
-                song.setId(songId);
+
+                Song song = new Song();
+                song.setId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)));
+                song.setDisplayName(displayName);
                 song.setPath(filePath);
-                song.setDuration(songDuration);
+                song.setDuration(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)));
                 song.setSize(fileSize);
-                song.setAlbum(albumName);
-                // 检查文件大小是否符合要求
-                if (fileSize <= 800 * 1000) { // 小于800KB直接跳过
-                    continue;
-                }
-                // 提取标题和艺术家信息
+                song.setAlbum(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)));
+
                 String[] parsedData = parseDisplayName(displayName);
                 if (parsedData != null) {
                     song.setTitle(parsedData[0]);
                     song.setArtist(parsedData[1]);
                 } else {
-                    song.setTitle(displayName.trim()); // 使用原始艺术家名称
-                    song.setArtist(artistName);
+                    song.setTitle(displayName.trim());
+                    song.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
                 }
-                // 添加到列表
-                list.add(song);
+                songs.add(song);
             }
-        }
-        if (cursor != null) {
+        } finally {
             cursor.close();
         }
-        return list;
+        return songs;
     }
 
-    /**
-     * 工具方法：解析显示名称
-     *
-     * @param displayName 文件显示名称
-     * @return 包含艺术家和标题的数组，格式：[artist, title]，如果无法解析则返回null
-     */
-    private String[] parseDisplayName(String displayName) {
+    private static String[] parseDisplayName(String displayName) {
         if (displayName == null || !displayName.contains("-")) {
             return null;
         }
-        String[] splitName = displayName.split("-");
+        String[] splitName = displayName.split("-", 2);
         if (splitName.length < 2) {
             return null;
         }
-        // 去除文件扩展名并返回结果
         String title = splitName[0].trim();
-        String artist = splitName[1].trim().replaceAll("\\.[^.]+$", ""); // 去除扩展名
+        String artist = splitName[1].trim().replaceAll("\\.[^.]+$", "");
         return new String[]{title, artist};
     }
 }

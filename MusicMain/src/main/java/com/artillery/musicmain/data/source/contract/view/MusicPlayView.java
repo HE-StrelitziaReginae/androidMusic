@@ -1,6 +1,5 @@
 package com.artillery.musicmain.data.source.contract.view;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.artillery.musicservice.data.Song;
@@ -17,13 +16,10 @@ public abstract interface MusicPlayView {
 
     void onPlaybackServiceUnbound();
 
-    void onSongSetAsFavorite(@NonNull Song song);
-
     void onSongUpdated(@Nullable Song song);
 
     void updatePlayMode(MusicMode playMode);
 
     void updatePlayToggle(boolean play);
 
-    void updateFavoriteToggle(boolean favorite);
 }

@@ -3,6 +3,7 @@ package com.artillery.musicmain.viewmodel;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
 
@@ -12,7 +13,6 @@ import com.artillery.musicmain.R;
 import com.artillery.musicmain.data.MusicRepository;
 import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.utils.LambadaTools;
-import com.artillery.musicservice.data.MusicLocalUtils;
 import com.artillery.musicservice.data.Song;
 
 import java.util.ArrayList;
@@ -25,15 +25,13 @@ import me.tatarka.bindingcollectionadapter2.ItemBinding;
 public class MusicListViewModel extends BaseViewModel<MusicRepository> {
     private MusicListItemViewModel selectedItem;
 
-    public MusicListViewModel(@NonNull Application application) {
-        super(application);
+    public MusicListViewModel(@NonNull Application application, @NonNull MusicRepository repository) {
+        super(application, repository);
     }
 
+    @Nullable
     public ArrayList<Song> scanMusicList() {
-        ArrayList<Song> music = MusicLocalUtils.getInstance().getMusic(getApplication());
-        if (music == null) {
-            music = new ArrayList<>();
-        }
+        ArrayList<Song> music = model.scanMusicList();
         return music;
     }
 

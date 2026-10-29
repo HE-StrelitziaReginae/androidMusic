@@ -23,14 +23,14 @@ import java.util.List;
 /**
  * @author ArtilleryOrchid
  */
-public class MusicMainViewModel extends BaseViewModel {
+public class MusicMainViewModel extends BaseViewModel<MusicRepository> {
     public BindingCommand mShow;
     public BindingCommand mPlay;
     public MusicRepository mMusicRepository;
     private List<Fragment> mFragments;
 
     public MusicMainViewModel(@NonNull Application application, MusicRepository mode) {
-        super(application);
+        super(application, mode);
         mMusicRepository = mode;
         mMusicRepository.bindMusicService();
         initFragment();

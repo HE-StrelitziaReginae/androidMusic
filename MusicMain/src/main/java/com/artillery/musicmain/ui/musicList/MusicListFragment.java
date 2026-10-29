@@ -15,11 +15,14 @@ import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicbase.utils.BackgroundThreadUtils;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
+import com.artillery.musicmain.app.AppViewModelFactory;
 import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.databinding.FragmentMusicListBinding;
 import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.viewmodel.MusicListViewModel;
 import com.artillery.musicservice.data.Song;
+
+import androidx.lifecycle.ViewModelProviders;
 
 import java.util.ArrayList;
 
@@ -47,6 +50,13 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
     @Override
     public int initVariableId() {
         return BR.musicListModel;
+    }
+
+    @Override
+    public MusicListViewModel initViewModel() {
+        AppViewModelFactory factory = AppViewModelFactory.getInstance(
+                requireActivity().getApplication());
+        return ViewModelProviders.of(this, factory).get(MusicListViewModel.class);
     }
 
     @Override
@@ -80,6 +90,9 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
             ArrayList<Song> music = mViewModel.scanMusicList();
             mMainHandler.post(() -> {
                 if (!isAdded() || mViewModel == null || generation != mRefreshGeneration) {
+                    return;
+                }
+                if (music == null) {
                     return;
                 }
                 mViewModel.updateMusicList(music);

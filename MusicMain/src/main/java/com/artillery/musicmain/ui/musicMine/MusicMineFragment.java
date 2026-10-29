@@ -6,12 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
+import com.artillery.musicmain.app.AppViewModelFactory;
 import com.artillery.musicmain.databinding.FragmentMusicMineBinding;
-import com.artillery.musicmain.ui.musicList.MusicListFragment;
 import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.viewmodel.MusicMineViewModel;
 
@@ -62,5 +63,12 @@ public class MusicMineFragment extends BaseFragment<FragmentMusicMineBinding, Mu
     @Override
     public int initVariableId() {
         return BR.musicMineModel;
+    }
+
+    @Override
+    public MusicMineViewModel initViewModel() {
+        AppViewModelFactory factory = AppViewModelFactory.getInstance(
+                requireActivity().getApplication());
+        return ViewModelProviders.of(this, factory).get(MusicMineViewModel.class);
     }
 }

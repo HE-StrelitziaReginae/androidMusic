@@ -7,9 +7,8 @@ import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
 
 import com.artillery.musicmain.BR;
+import com.artillery.musicmain.data.MusicRepository;
 import com.artillery.musicmain.data.source.http.model.MetingTrack;
-import com.artillery.musicmain.data.source.http.service.MetingApiService;
-import com.artillery.musicmain.net.RetrofitClient;
 import com.artillery.musicmain.R;
 import com.os.sys.musicskin.MusicSkin;
 
@@ -22,20 +21,19 @@ import java.util.Map;
 /**
  * @author ArtilleryOrchid
  */
-public class MusicOnlineViewModel extends BaseViewModel {
+public class MusicOnlineViewModel extends BaseViewModel<MusicRepository> {
     public final ObservableList<MetingTrackItemViewModel> items = new ObservableArrayList<>();
     public final ItemBinding<MetingTrackItemViewModel> itemBinding =
             ItemBinding.of(BR.trackModel, R.layout.music_online_item);
-    private final MetingApiService mApi = RetrofitClient.getInstance().create(MetingApiService.class);
     private MetingTrackItemViewModel selectedItem;
 
-    public MusicOnlineViewModel(@NonNull Application application) {
-        super(application);
+    public MusicOnlineViewModel(@NonNull Application application, @NonNull MusicRepository repository) {
+        super(application, repository);
     }
 
 
     public void search(String query, int category, SearchCallback callback) {
-        addSubscribe(mApi.searchSongs("netease", "search", query, 30)
+        addSubscribe(model.searchSongs("netease", "search", query, 30)
                 .subscribeOn(io.reactivex.schedulers.Schedulers.io())
                 .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
                 .subscribe(tracks -> {
@@ -65,6 +63,10 @@ public class MusicOnlineViewModel extends BaseViewModel {
         if (item != null) {
             item.setSelected(true);
         }
+    }
+
+    public String getPlaybackUrl(String songId) {
+        return model.getPlaybackUrl(songId);
     }
 
     public void clear() {

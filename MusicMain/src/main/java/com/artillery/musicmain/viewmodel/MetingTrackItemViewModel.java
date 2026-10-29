@@ -10,7 +10,6 @@ import com.artillery.musicbase.binding.command.BindingAction;
 import com.artillery.musicbase.binding.command.BindingCommand;
 import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.data.source.http.model.MetingTrack;
-import com.artillery.musicmain.net.RetrofitClient;
 import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.ui.MusicMainDialog;
 import com.artillery.musicservice.data.Song;
@@ -58,7 +57,7 @@ public class MetingTrackItemViewModel extends MultiItemViewModel<MusicOnlineView
     });
 
     public String getPlaybackUrl() {
-        return RetrofitClient.publicPlaybackUrl(mTrack.getSongId());
+        return mViewModel.getPlaybackUrl(mTrack.getSongId());
     }
 
     public void setSelected(boolean value) {

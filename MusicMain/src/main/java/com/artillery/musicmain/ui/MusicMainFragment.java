@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.os.Bundle;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,10 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.File;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
@@ -421,7 +424,8 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         MusicMode currentMode = mMusicListener.getPlayMode();
         MusicMode[] modes = MusicMode.values();
         int selectedIndex = currentMode == null ? MusicMode.getDefault().ordinal() : currentMode.ordinal();
-        new AlertDialog.Builder(requireContext())
+        MusicSkin skin = mMusicSkin == null ? MusicSkin.load(requireContext()) : mMusicSkin;
+        AlertDialog playModeDialog = new AlertDialog.Builder(requireContext())
                 .setTitle(R.string.music_play_mode_title)
                 .setSingleChoiceItems(R.array.music_play_modes, selectedIndex, (dialog, which) -> {
                     mMusicListener.setPlayMode(modes[which]);
@@ -431,6 +435,85 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
+        stylePlayModeDialog(playModeDialog, skin);
+    }
+
+    private void stylePlayModeDialog(AlertDialog dialog, MusicSkin skin) {
+        int background = skin.surface(requireContext());
+        int primary = skin.primaryText(requireContext());
+        int secondary = skin.secondaryText(requireContext());
+        int accent = skin.accent(requireContext());
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(roundBackground(background, 24));
+            dialog.getWindow().setDimAmount(0.42f);
+        }
+        int titleId = getResources().getIdentifier("alertTitle", "id", "android");
+        TextView title = titleId == 0 ? null : dialog.findViewById(titleId);
+        if (title != null) {
+            title.setTextColor(primary);
+            title.setTextSize(20);
+            title.setTypeface(title.getTypeface(), android.graphics.Typeface.BOLD);
+            title.setPadding(dp(24), dp(20), dp(24), dp(8));
+        }
+        ListView list = dialog.getListView();
+        list.setPadding(dp(12), dp(4), dp(12), dp(4));
+        list.setDivider(null);
+        list.setBackgroundColor(background);
+        for (int index = 0; index < list.getChildCount(); index++) {
+            View child = list.getChildAt(index);
+            stylePlayModeRow(child, index == list.getCheckedItemPosition(), primary, secondary, accent, background);
+        }
+        list.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+            @Override
+            public void onChildViewAdded(View parent, View child) {
+                int position = list.getPositionForView(child);
+                stylePlayModeRow(child, position == list.getCheckedItemPosition(), primary, secondary, accent, background);
+            }
+
+            @Override
+            public void onChildViewRemoved(View parent, View child) {
+            }
+        });
+        Button negative = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        if (negative != null) {
+            negative.setTextColor(accent);
+            negative.setAllCaps(false);
+            negative.setTypeface(negative.getTypeface(), android.graphics.Typeface.BOLD);
+        }
+    }
+
+    private void stylePlayModeRow(View row, boolean selected, int primary, int secondary,
+                                  int accent, int background) {
+        if (!(row instanceof ViewGroup)) {
+            return;
+        }
+        row.setMinimumHeight(dp(56));
+        row.setPadding(dp(12), dp(2), dp(12), dp(2));
+        row.setBackground(roundBackground(selected ? withAlpha(accent, 30) : background, 16));
+        if (row instanceof android.widget.CheckedTextView) {
+            android.widget.CheckedTextView textView = (android.widget.CheckedTextView) row;
+            textView.setTextColor(selected ? accent : primary);
+            textView.setTextSize(16);
+            textView.setCheckMarkTintList(new android.content.res.ColorStateList(
+                    new int[][]{new int[]{android.R.attr.state_checked}, new int[]{}},
+                    new int[]{accent, secondary}));
+        }
+    }
+
+    private GradientDrawable roundBackground(int color, int radiusDp) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(color);
+        drawable.setCornerRadius(dp(radiusDp));
+        return drawable;
+    }
+
+    private int withAlpha(int color, int alpha) {
+        return android.graphics.Color.argb(alpha, android.graphics.Color.red(color),
+                android.graphics.Color.green(color), android.graphics.Color.blue(color));
+    }
+
+    private int dp(int value) {
+        return Math.round(value * getResources().getDisplayMetrics().density);
     }
 
     private void updateDrawerPlayMode(@Nullable MusicMode playMode) {
@@ -520,11 +603,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     }
 
     @Override
-    public void onSongSetAsFavorite(@NonNull Song song) {
-        KLogUtils.e("onSongSetAsFavorite: ");
-    }
-
-    @Override
     public void onSongUpdated(@Nullable Song song) {
         KLogUtils.e("onSongUpdated: ");
         //Music Duration
@@ -557,11 +635,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 : ContextCompat.getDrawable(requireContext(), R.drawable.play));
         mBinding.musicPlayBtn.setColorFilter((mMusicSkin == null ? MusicSkin.load(requireContext()) : mMusicSkin)
                 .icon(requireContext()));
-    }
-
-    @Override
-    public void updateFavoriteToggle(boolean favorite) {
-        KLogUtils.e("updateFavoriteToggle: ");
     }
 
     @Override

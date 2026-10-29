@@ -10,11 +10,11 @@ import androidx.room.PrimaryKey;
 /**
  * @author ArtilleryOrchid
  */
-@Entity
+@Entity(tableName = "songs")
 public class Song implements Parcelable {
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey
+    private long id;
 
     @ColumnInfo(name = "title")
     private String title;
@@ -41,11 +41,11 @@ public class Song implements Parcelable {
         readFromParcel(in);
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -120,7 +120,7 @@ public class Song implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeString(this.title);
         dest.writeString(this.displayName);
         dest.writeString(this.artist);
@@ -132,7 +132,7 @@ public class Song implements Parcelable {
     }
 
     public void readFromParcel(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.title = in.readString();
         this.displayName = in.readString();
         this.artist = in.readString();

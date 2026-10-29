@@ -8,10 +8,10 @@ public class PlaybackStateStore {
         void onLoaded(PlaybackState state);
     }
 
-    private final MusicDao mDao;
+    private final PlaybackStateDao mDao;
 
     public PlaybackStateStore() {
-        mDao = MusicDBHelper.getInstance().getMusicDataBase().musicDao();
+        mDao = MusicDBHelper.getInstance().getMusicDataBase().playbackStateDao();
     }
 
     public void load(Callback callback) {

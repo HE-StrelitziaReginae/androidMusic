@@ -1,8 +1,7 @@
 package com.artillery.musicmain.data;
 
-import android.database.Observable;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.artillery.musicbase.base.BaseModel;
 import com.artillery.musicmain.data.source.MusicHttpSource;
@@ -10,12 +9,16 @@ import com.artillery.musicmain.data.source.MusicLocalSource;
 import com.artillery.musicmain.data.source.MusicPlaySource;
 import com.artillery.musicmain.data.source.contract.MusicPlayContractImpl;
 import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
+import com.artillery.musicmain.data.source.http.MusicHttpSourceImpl;
+import com.artillery.musicmain.data.source.http.model.MetingTrack;
 import com.artillery.musicmain.data.source.local.MusicLocalSourceImpl;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
 
 /**
  * MVVM的Model层，统一模块的数据仓库，包含网络数据和本地数据（一个应用可以有多个Repository）
@@ -24,20 +27,24 @@ import java.util.List;
  */
 public class MusicRepository extends BaseModel implements MusicHttpSource, MusicLocalSource, MusicPlaySource {
     private volatile static MusicRepository INSTANCE = null;
-//    private final MusicHttpSource mHttpDataSource;
+    private final MusicHttpSource mHttpDataSource;
     private final MusicLocalSource mLocalDataSource;
     private final MusicPlaySource mMusicPlaySource;
-    private MusicRepository(@NonNull MusicLocalSource localDataSource, @NonNull MusicPlaySource musicPlaySource) {
-//        mHttpDataSource = httpDataSource;
+    private MusicRepository(@NonNull MusicHttpSource httpDataSource,
+                             @NonNull MusicLocalSource localDataSource,
+                             @NonNull MusicPlaySource musicPlaySource) {
+        mHttpDataSource = httpDataSource;
         mLocalDataSource = localDataSource;
         mMusicPlaySource = musicPlaySource;
     }
 
-    public static MusicRepository getInstance(MusicLocalSource localDataSource, MusicPlaySource musicPlaySource) {
+    public static MusicRepository getInstance(MusicHttpSource httpDataSource,
+                                               MusicLocalSource localDataSource,
+                                               MusicPlaySource musicPlaySource) {
         if (INSTANCE == null) {
             synchronized (MusicRepository.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new MusicRepository(localDataSource, musicPlaySource);
+                    INSTANCE = new MusicRepository(httpDataSource, localDataSource, musicPlaySource);
                 }
             }
         }
@@ -45,19 +52,25 @@ public class MusicRepository extends BaseModel implements MusicHttpSource, Music
     }
 
     public static void destroyInstance(){
+        MusicHttpSourceImpl.destroyInstance();
         MusicPlayContractImpl.destroyInstance();
         MusicLocalSourceImpl.destroyInstance();
         INSTANCE = null;
     }
 
     @Override
-    public Observable<List<PlayList>> playLists() {
-        return mLocalDataSource.playLists();
+    public Observable<List<MetingTrack>> searchSongs(String server, String type, String query, int limit) {
+        return mHttpDataSource.searchSongs(server, type, query, limit);
     }
 
     @Override
-    public List<PlayList> cachedPlayLists() {
-        return mLocalDataSource.cachedPlayLists();
+    public String getPlaybackUrl(String songId) {
+        return mHttpDataSource.getPlaybackUrl(songId);
+    }
+
+    @Override
+    public Observable<List<PlayList>> playLists() {
+        return mLocalDataSource.playLists();
     }
 
     @Override
@@ -86,18 +99,34 @@ public class MusicRepository extends BaseModel implements MusicHttpSource, Music
     }
 
     @Override
+    public Observable<Song> delete(Song song) {
+        return mLocalDataSource.delete(song);
+    }
+
+    @Override
+    public Observable<Song> setFavorite(Song song, boolean favorite) {
+        return mLocalDataSource.setFavorite(song, favorite);
+    }
+
+    @Override
+    public Observable<ArrayList<Song>> songs() {
+        return mLocalDataSource.songs();
+    }
+
+    @Override
+    public Observable<ArrayList<Song>> favoriteSongs() {
+        return mLocalDataSource.favoriteSongs();
+    }
+
+    @Override
+    @Nullable
+    public ArrayList<Song> scanMusicList() {
+        return mLocalDataSource.scanMusicList();
+    }
+
+    @Override
     public void bindMusicView(MusicPlayView musicPlayView) {
         mMusicPlaySource.bindMusicView(musicPlayView);
-    }
-
-    @Override
-    public void retrieveLastPlayMode() {
-        mMusicPlaySource.retrieveLastPlayMode();
-    }
-
-    @Override
-    public void setSongAsFavorite(Song song, boolean favorite) {
-        mMusicPlaySource.setSongAsFavorite(song, favorite);
     }
 
     @Override
