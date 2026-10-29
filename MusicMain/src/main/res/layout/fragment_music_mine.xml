@@ -33,6 +33,7 @@
                 android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/music_mine_skin_banner_art"
                     android:layout_width="@dimen/dp_190"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"

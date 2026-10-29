@@ -27,6 +27,7 @@
             android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/online_skin_banner_art"
                 android:layout_width="@dimen/dp_160"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"

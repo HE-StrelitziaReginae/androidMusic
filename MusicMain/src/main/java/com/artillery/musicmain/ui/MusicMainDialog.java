@@ -139,10 +139,15 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicCharacterScrim.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         mBinding.musicCharacterBadge.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         mBinding.musicCharacterName.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
+        if (characterSkin) {
+            mBinding.musicCharacterBackground.setImageResource(skin.keyArt());
+            mBinding.musicCharacterBadge.setText(skin.characterBadge());
+            mBinding.musicCharacterName.setText(skin.characterName());
+        }
         mBinding.musicCharacterBadge.setTextColor(skin.accent(getContext()));
         mBinding.musicCharacterName.setTextColor(primaryText);
         mBinding.musicAlbumImage.setImageResource(characterSkin
-                ? com.os.sys.musicskin.R.drawable.skin_sakura_avatar : R.drawable.ellipse);
+                ? skin.avatar() : R.drawable.ellipse);
         if (getWindow() != null) {
             SystemBarUtils.setLightSystemBars(getWindow(), skin.usesLightSystemBars());
         }
@@ -216,8 +221,9 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     }
 
     private void applyAlbumSkin() {
-        mBinding.musicAlbumImage.setImageResource(MusicSkin.load(getContext()).isCharacterSkin()
-                ? com.os.sys.musicskin.R.drawable.skin_sakura_avatar : R.drawable.ellipse);
+        MusicSkin skin = MusicSkin.load(getContext());
+        mBinding.musicAlbumImage.setImageResource(skin.isCharacterSkin()
+                ? skin.avatar() : R.drawable.ellipse);
     }
 
     private void activateMarquee(boolean activate) {

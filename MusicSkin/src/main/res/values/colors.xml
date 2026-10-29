@@ -28,4 +28,24 @@
     <color name="music_sakura_header_primary">#FFFFFFFF</color>
     <color name="music_sakura_icon">#FF9A5F82</color>
     <color name="music_sakura_accent">#FFE77EAA</color>
+    <color name="music_kira_background">#FF070D20</color>
+    <color name="music_kira_surface">#FF101A35</color>
+    <color name="music_kira_drawer">#FF0C1530</color>
+    <color name="music_kira_header">#FF152D5A</color>
+    <color name="music_kira_primary">#FFF3F7FF</color>
+    <color name="music_kira_secondary">#FF9EB4D9</color>
+    <color name="music_kira_header_secondary">#FFB9D9FF</color>
+    <color name="music_kira_header_primary">#FFFFFFFF</color>
+    <color name="music_kira_icon">#FF63D9FF</color>
+    <color name="music_kira_accent">#FF20CFFF</color>
+    <color name="music_noa_background">#FF101B19</color>
+    <color name="music_noa_surface">#FF1B2B27</color>
+    <color name="music_noa_drawer">#FF152621</color>
+    <color name="music_noa_header">#FF315445</color>
+    <color name="music_noa_primary">#FFFFF8E8</color>
+    <color name="music_noa_secondary">#FFB7C7A5</color>
+    <color name="music_noa_header_secondary">#FFE8D8A7</color>
+    <color name="music_noa_header_primary">#FFFFFFFF</color>
+    <color name="music_noa_icon">#FFE3B95F</color>
+    <color name="music_noa_accent">#FFF0C86A</color>
 </resources>

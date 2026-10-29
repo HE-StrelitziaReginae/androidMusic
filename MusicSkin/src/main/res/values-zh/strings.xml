@@ -6,6 +6,8 @@
     <string name="music_skin_dark">深色</string>
     <string name="music_skin_ocean">海洋蓝</string>
     <string name="music_skin_sakura">樱花幻想</string>
+    <string name="music_skin_kira">琪拉·维加：霓虹频率</string>
+    <string name="music_skin_noa">诺亚·流明：森语共鸣</string>
     <string name="music_character_name">星野琉璃</string>
     <string name="music_character_badge">午夜樱花 · 音乐选择者</string>
     <string name="music_character_hint">原创角色主题</string>
@@ -18,10 +20,36 @@
     <string name="music_character_mine_eyebrow">我的收藏 · 星野琉璃</string>
     <string name="music_character_mine_title">把喜欢的歌留在身边</string>
     <string name="music_character_mine_subtitle">属于你的私人音乐宇宙</string>
+    <string name="music_kira_name">琪拉·维加</string>
+    <string name="music_kira_badge">霓虹频率 · 深夜电台 DJ</string>
+    <string name="music_kira_hint">原创角色主题</string>
+    <string name="music_kira_music_eyebrow">实时信号 · 城市深夜</string>
+    <string name="music_kira_music_title">琪拉的夜班电波</string>
+    <string name="music_kira_music_subtitle">在沉睡城市上空播放脉冲节拍</string>
+    <string name="music_kira_online_eyebrow">扫描下一段频率</string>
+    <string name="music_kira_online_title">琪拉的信号雷达</string>
+    <string name="music_kira_online_subtitle">调谐到一段带电的旋律</string>
+    <string name="music_kira_mine_eyebrow">我的档案 · 琪拉·维加</string>
+    <string name="music_kira_mine_title">让信号持续下去</string>
+    <string name="music_kira_mine_subtitle">收藏属于午夜的私人传输</string>
+    <string name="music_noa_name">诺亚·流明</string>
+    <string name="music_noa_badge">森语共鸣 · 植物声音艺术家</string>
+    <string name="music_noa_hint">原创角色主题</string>
+    <string name="music_noa_music_eyebrow">月下花园 · 静谧聆听</string>
+    <string name="music_noa_music_title">诺亚的声音花园</string>
+    <string name="music_noa_music_subtitle">每一首歌都在黑暗里悄然绽放</string>
+    <string name="music_noa_online_eyebrow">聆听新的生长</string>
+    <string name="music_noa_online_title">诺亚的共鸣图谱</string>
+    <string name="music_noa_online_subtitle">寻找一段更柔和的频率</string>
+    <string name="music_noa_mine_eyebrow">我的收藏 · 诺亚·流明</string>
+    <string name="music_noa_mine_title">让喜欢的歌继续生长</string>
+    <string name="music_noa_mine_subtitle">收藏歌曲与微小奇迹的生命档案</string>
     <string-array name="music_skins">
         <item>@string/music_skin_light</item>
         <item>@string/music_skin_dark</item>
         <item>@string/music_skin_ocean</item>
         <item>@string/music_skin_sakura</item>
+        <item>@string/music_skin_kira</item>
+        <item>@string/music_skin_noa</item>
     </string-array>
 </resources>

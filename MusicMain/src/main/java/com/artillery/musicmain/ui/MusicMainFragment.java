@@ -302,18 +302,21 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         mBinding.drawerProfile.setBackground(skin.drawerHeaderBackground(requireContext()));
         mBinding.drawerCharacterArt.setVisibility(skin.isCharacterSkin() ? View.VISIBLE : View.GONE);
         mBinding.drawerCharacterScrim.setVisibility(skin.isCharacterSkin() ? View.VISIBLE : View.GONE);
+        if (skin.isCharacterSkin()) {
+            mBinding.drawerCharacterArt.setImageResource(skin.keyArt());
+        }
         mBinding.drawerProfileName.setText(skin.isCharacterSkin()
-                ? com.os.sys.musicskin.R.string.music_character_name : R.string.music_profile_name);
+                ? skin.characterName() : R.string.music_profile_name);
         mBinding.drawerProfileSubtitle.setText(skin.isCharacterSkin()
-                ? com.os.sys.musicskin.R.string.music_character_badge : R.string.music_profile_subtitle);
+                ? skin.characterBadge() : R.string.music_profile_subtitle);
         mBinding.drawerProfileHint.setText(skin.isCharacterSkin()
-                ? com.os.sys.musicskin.R.string.music_character_hint : R.string.music_profile_hint);
+                ? skin.characterHint() : R.string.music_profile_hint);
         mBinding.drawerProfileName.setTextColor(skin.headerPrimaryText(requireContext()));
         mBinding.drawerProfileSubtitle.setTextColor(skin.headerSecondaryText(requireContext()));
         mBinding.drawerProfileHint.setTextColor(skin.headerSecondaryText(requireContext()));
         applyProfileAvatar(skin);
         mBinding.musicAlbumImg.setImageResource(skin.isCharacterSkin()
-                ? com.os.sys.musicskin.R.drawable.skin_sakura_avatar : R.drawable.ellipse);
+                ? skin.avatar() : R.drawable.ellipse);
         mBinding.drawerLibrarySection.setTextColor(skin.secondaryText(requireContext()));
         mBinding.drawerPlayerSection.setTextColor(skin.secondaryText(requireContext()));
         mBinding.drawerRefreshText.setTextColor(skin.primaryText(requireContext()));
@@ -327,11 +330,11 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         mBinding.musicOnline.setTextColor(skin.tabTextColors(requireContext()));
         mBinding.musicMine.setTextColor(skin.tabTextColors(requireContext()));
         applyTabVisual(mBinding.musicMain, skin, com.os.sys.musicskin.R.drawable.music_tab_home,
-                com.os.sys.musicskin.R.drawable.skin_sakura_tab_music);
+                skin.musicTab());
         applyTabVisual(mBinding.musicOnline, skin, com.os.sys.musicskin.R.drawable.music_tab_online,
-                com.os.sys.musicskin.R.drawable.skin_sakura_tab_online);
+                skin.onlineTab());
         applyTabVisual(mBinding.musicMine, skin, com.os.sys.musicskin.R.drawable.music_tab_mine,
-                com.os.sys.musicskin.R.drawable.skin_sakura_tab_mine);
+                skin.mineTab());
         mBinding.musicMain.setBackground(skin.tabBackground(requireContext()));
         mBinding.musicOnline.setBackground(skin.tabBackground(requireContext()));
         mBinding.musicMine.setBackground(skin.tabBackground(requireContext()));
@@ -363,7 +366,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         String uri = requireContext().getSharedPreferences(PROFILE_PREFERENCES, Context.MODE_PRIVATE)
                 .getString(PROFILE_IMAGE_URI, null);
         if (skin.isCharacterSkin() && TextUtils.isEmpty(uri)) {
-            mBinding.drawerAvatar.setImageResource(com.os.sys.musicskin.R.drawable.skin_sakura_avatar);
+            mBinding.drawerAvatar.setImageResource(skin.avatar());
             return;
         }
         loadProfileImage();

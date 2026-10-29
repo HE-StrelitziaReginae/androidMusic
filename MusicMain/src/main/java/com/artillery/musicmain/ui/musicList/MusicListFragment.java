@@ -103,7 +103,11 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
         boolean characterSkin = skin.isCharacterSkin();
         mBinding.musicSkinBanner.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         if (characterSkin) {
+            mBinding.musicSkinBannerArt.setImageResource(skin.keyArt());
             mBinding.musicSkinBanner.setBackground(skin.featureBackground(requireContext()));
+            mBinding.musicSkinBannerEyebrow.setText(skin.musicEyebrow());
+            mBinding.musicSkinBannerTitle.setText(skin.musicTitle());
+            mBinding.musicSkinBannerSubtitle.setText(skin.musicSubtitle());
             mBinding.musicSkinBannerEyebrow.setTextColor(skin.headerSecondaryText(requireContext()));
             mBinding.musicSkinBannerTitle.setTextColor(skin.headerPrimaryText(requireContext()));
             mBinding.musicSkinBannerSubtitle.setTextColor(skin.headerSecondaryText(requireContext()));

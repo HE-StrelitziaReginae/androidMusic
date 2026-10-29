@@ -33,7 +33,11 @@ public class MusicMineFragment extends BaseFragment<FragmentMusicMineBinding, Mu
         mBinding.musicMineRoot.setBackgroundColor(skin.background(requireContext()));
         mBinding.musicMineSkinBanner.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         if (characterSkin) {
+            mBinding.musicMineSkinBannerArt.setImageResource(skin.keyArt());
             mBinding.musicMineSkinBanner.setBackground(skin.featureBackground(requireContext()));
+            mBinding.musicMineSkinEyebrow.setText(skin.mineEyebrow());
+            mBinding.musicMineSkinTitle.setText(skin.mineTitle());
+            mBinding.musicMineSkinSubtitle.setText(skin.mineSubtitle());
             mBinding.musicMineSkinEyebrow.setTextColor(skin.headerSecondaryText(requireContext()));
             mBinding.musicMineSkinTitle.setTextColor(skin.headerPrimaryText(requireContext()));
             mBinding.musicMineSkinSubtitle.setTextColor(skin.headerSecondaryText(requireContext()));

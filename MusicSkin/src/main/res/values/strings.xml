@@ -6,6 +6,8 @@
     <string name="music_skin_dark">Dark</string>
     <string name="music_skin_ocean">Ocean</string>
     <string name="music_skin_sakura">Sakura Fantasy</string>
+    <string name="music_skin_kira">Kira Vega: Neon Frequency</string>
+    <string name="music_skin_noa">Noa Lumen: Verdant Resonance</string>
     <string name="music_character_name">HOSHINO RURI</string>
     <string name="music_character_badge">MIDNIGHT CHERRY / MUSIC SELECTOR</string>
     <string name="music_character_hint">ORIGINAL CHARACTER THEME</string>
@@ -18,10 +20,36 @@
     <string name="music_character_mine_eyebrow">MY COLLECTION / HOSHINO RURI</string>
     <string name="music_character_mine_title">KEEP YOUR FAVORITES CLOSE</string>
     <string name="music_character_mine_subtitle">Your private little music universe</string>
+    <string name="music_kira_name">KIRA VEGA</string>
+    <string name="music_kira_badge">NEON FREQUENCY / NIGHT RADIO DJ</string>
+    <string name="music_kira_hint">ORIGINAL CHARACTER THEME</string>
+    <string name="music_kira_music_eyebrow">LIVE SIGNAL / CITY AFTER DARK</string>
+    <string name="music_kira_music_title">KIRA NIGHT SHIFT</string>
+    <string name="music_kira_music_subtitle">Pulse-driven playlists above the sleeping city</string>
+    <string name="music_kira_online_eyebrow">SCAN THE NEXT FREQUENCY</string>
+    <string name="music_kira_online_title">KIRA SIGNAL RADAR</string>
+    <string name="music_kira_online_subtitle">Tune in to something electric</string>
+    <string name="music_kira_mine_eyebrow">MY ARCHIVE / KIRA VEGA</string>
+    <string name="music_kira_mine_title">KEEP THE SIGNAL ALIVE</string>
+    <string name="music_kira_mine_subtitle">A private archive of midnight transmissions</string>
+    <string name="music_noa_name">NOA LUMEN</string>
+    <string name="music_noa_badge">VERDANT RESONANCE / BOTANICAL SOUND ARTIST</string>
+    <string name="music_noa_hint">ORIGINAL CHARACTER THEME</string>
+    <string name="music_noa_music_eyebrow">MOONLIT GARDEN / QUIET LISTENING</string>
+    <string name="music_noa_music_title">NOA SOUND GARDEN</string>
+    <string name="music_noa_music_subtitle">Every song blooms somewhere in the dark</string>
+    <string name="music_noa_online_eyebrow">LISTEN FOR NEW GROWTH</string>
+    <string name="music_noa_online_title">NOA RESONANCE ATLAS</string>
+    <string name="music_noa_online_subtitle">Find a softer frequency to follow</string>
+    <string name="music_noa_mine_eyebrow">MY COLLECTION / NOA LUMEN</string>
+    <string name="music_noa_mine_title">LET YOUR FAVORITES BLOOM</string>
+    <string name="music_noa_mine_subtitle">A living archive of songs and small wonders</string>
     <string-array name="music_skins">
         <item>@string/music_skin_light</item>
         <item>@string/music_skin_dark</item>
         <item>@string/music_skin_ocean</item>
         <item>@string/music_skin_sakura</item>
+        <item>@string/music_skin_kira</item>
+        <item>@string/music_skin_noa</item>
     </string-array>
 </resources>

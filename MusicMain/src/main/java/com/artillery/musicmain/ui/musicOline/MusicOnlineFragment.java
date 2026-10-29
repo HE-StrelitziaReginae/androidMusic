@@ -42,7 +42,11 @@ public class MusicOnlineFragment extends BaseFragment<FragmentMusicOnlineBinding
         boolean characterSkin = skin.isCharacterSkin();
         mBinding.onlineSkinBanner.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         if (characterSkin) {
+            mBinding.onlineSkinBannerArt.setImageResource(skin.keyArt());
             mBinding.onlineSkinBanner.setBackground(skin.featureBackground(requireContext()));
+            mBinding.onlineSkinBannerEyebrow.setText(skin.onlineEyebrow());
+            mBinding.onlineSkinBannerTitle.setText(skin.onlineTitle());
+            mBinding.onlineSkinBannerSubtitle.setText(skin.onlineSubtitle());
             mBinding.onlineSkinBannerEyebrow.setTextColor(skin.headerSecondaryText(requireContext()));
             mBinding.onlineSkinBannerTitle.setTextColor(skin.headerPrimaryText(requireContext()));
             mBinding.onlineSkinBannerSubtitle.setTextColor(skin.headerSecondaryText(requireContext()));
