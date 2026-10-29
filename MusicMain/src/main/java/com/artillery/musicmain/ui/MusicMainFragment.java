@@ -8,9 +8,13 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.Button;
@@ -288,7 +292,8 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     private void showSkinDialog() {
         MusicSkin[] skins = MusicSkin.values();
         int selectedIndex = mMusicSkin == null ? MusicSkin.LIGHT.ordinal() : mMusicSkin.ordinal();
-        new AlertDialog.Builder(requireContext())
+        MusicSkin skin = currentSkin();
+        AlertDialog skinDialog = new AlertDialog.Builder(requireContext())
                 .setTitle(com.os.sys.musicskin.R.string.music_skin_title)
                 .setSingleChoiceItems(com.os.sys.musicskin.R.array.music_skins, selectedIndex, (dialog, which) -> {
                     applySkin(skins[which]);
@@ -297,6 +302,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
+        styleChoiceDialog(skinDialog, skin);
     }
 
     private void applySkin(MusicSkin skin) {
@@ -415,19 +421,17 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     }
 
     private void showProfileDialog() {
-        new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.music_profile_name)
-                .setMessage(R.string.music_profile_message)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
+        MusicSkin skin = currentSkin();
+        int title = skin.isCharacterSkin() ? skin.characterName() : R.string.music_profile_name;
+        int message = skin.isCharacterSkin() ? skin.characterBadge() : R.string.music_profile_message;
+        int icon = skin.isCharacterSkin() ? skin.avatar() : R.drawable.music_profile;
+        showInfoDialog(title, message, R.string.music_profile_badge, icon, skin, true);
     }
 
     private void showAboutDialog() {
-        new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.music_about)
-                .setMessage(R.string.music_about_message)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
+        MusicSkin skin = currentSkin();
+        showInfoDialog(R.string.music_about, R.string.music_about_message,
+                R.string.music_about_version, R.drawable.music_info, skin, false);
     }
 
     private void showPlayModeDialog() {
@@ -437,7 +441,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         MusicMode currentMode = mMusicListener.getPlayMode();
         MusicMode[] modes = MusicMode.values();
         int selectedIndex = currentMode == null ? MusicMode.getDefault().ordinal() : currentMode.ordinal();
-        MusicSkin skin = mMusicSkin == null ? MusicSkin.load(requireContext()) : mMusicSkin;
+        MusicSkin skin = currentSkin();
         AlertDialog playModeDialog = new AlertDialog.Builder(requireContext())
                 .setTitle(R.string.music_play_mode_title)
                 .setSingleChoiceItems(R.array.music_play_modes, selectedIndex, (dialog, which) -> {
@@ -448,18 +452,49 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
-        stylePlayModeDialog(playModeDialog, skin);
+        styleChoiceDialog(playModeDialog, skin);
     }
 
-    private void stylePlayModeDialog(AlertDialog dialog, MusicSkin skin) {
+    private MusicSkin currentSkin() {
+        return mMusicSkin == null ? MusicSkin.load(requireContext()) : mMusicSkin;
+    }
+
+    private void showInfoDialog(int titleRes, int messageRes, int badgeRes, int iconRes,
+                                MusicSkin skin, boolean profile) {
+        View content = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_music_info, null, false);
+        ImageView icon = content.findViewById(R.id.dialog_info_icon);
+        FrameLayout iconContainer = content.findViewById(R.id.dialog_info_icon_container);
+        TextView title = content.findViewById(R.id.dialog_info_title);
+        TextView message = content.findViewById(R.id.dialog_info_message);
+        TextView badge = content.findViewById(R.id.dialog_info_badge);
+
+        icon.setImageResource(iconRes);
+        if (!profile || !skin.isCharacterSkin()) {
+            icon.setColorFilter(skin.accent(requireContext()));
+        }
+        title.setText(titleRes);
+        message.setText(messageRes);
+        badge.setText(badgeRes);
+        title.setTextColor(skin.primaryText(requireContext()));
+        message.setTextColor(skin.secondaryText(requireContext()));
+        badge.setTextColor(skin.accent(requireContext()));
+        iconContainer.setBackground(roundBackground(withAlpha(skin.accent(requireContext()), 28), 24));
+        badge.setBackground(roundBackground(withAlpha(skin.accent(requireContext()), 22), 18));
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                .setView(content)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+        styleDialogWindow(dialog, skin);
+        styleDialogButton(dialog.getButton(AlertDialog.BUTTON_POSITIVE), skin);
+    }
+
+    private void styleChoiceDialog(AlertDialog dialog, MusicSkin skin) {
         int background = skin.surface(requireContext());
         int primary = skin.primaryText(requireContext());
         int secondary = skin.secondaryText(requireContext());
         int accent = skin.accent(requireContext());
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawable(roundBackground(background, 24));
-            dialog.getWindow().setDimAmount(0.42f);
-        }
+        styleDialogWindow(dialog, skin);
         int titleId = getResources().getIdentifier("alertTitle", "id", "android");
         TextView title = titleId == 0 ? null : dialog.findViewById(titleId);
         if (title != null) {
@@ -487,12 +522,27 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             public void onChildViewRemoved(View parent, View child) {
             }
         });
-        Button negative = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-        if (negative != null) {
-            negative.setTextColor(accent);
-            negative.setAllCaps(false);
-            negative.setTypeface(negative.getTypeface(), android.graphics.Typeface.BOLD);
+        styleDialogButton(dialog.getButton(AlertDialog.BUTTON_NEGATIVE), skin);
+    }
+
+    private void styleDialogWindow(AlertDialog dialog, MusicSkin skin) {
+        Window window = dialog.getWindow();
+        if (window == null) {
+            return;
         }
+        window.setBackgroundDrawable(roundBackground(skin.surface(requireContext()), 24));
+        window.setDimAmount(0.46f);
+        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        window.setGravity(Gravity.CENTER);
+    }
+
+    private void styleDialogButton(@Nullable Button button, MusicSkin skin) {
+        if (button == null) {
+            return;
+        }
+        button.setTextColor(skin.accent(requireContext()));
+        button.setAllCaps(false);
+        button.setTypeface(button.getTypeface(), android.graphics.Typeface.BOLD);
     }
 
     private void stylePlayModeRow(View row, boolean selected, int primary, int secondary,

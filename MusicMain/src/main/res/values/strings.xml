@@ -31,12 +31,14 @@
     <string name="music_mine_empty_message">Play a song to start building your own setlist.</string>
     <string name="music_about">About this app</string>
     <string name="music_about_message">A simple local music player for your device.</string>
+    <string name="music_about_version">Version 1.0</string>
     <string name="music_play_mode_title">Playback mode</string>
     <string name="music_mode_single">Single repeat</string>
     <string name="music_mode_loop">Loop all</string>
     <string name="music_mode_list">Play once</string>
     <string name="music_mode_shuffle">Shuffle</string>
     <string name="music_profile_message">Local profile\nNo account is required.</string>
+    <string name="music_profile_badge">Stored only on this device</string>
     <string name="music_refresh_done">Library refreshed</string>
     <string name="music_online_search_hint">Search online music</string>
     <string name="music_online_search">Search</string>

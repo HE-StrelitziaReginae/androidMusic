@@ -30,12 +30,14 @@
     <string name="music_mine_empty_message">播放一首歌，开始建立你的专属歌单。</string>
     <string name="music_about">关于应用</string>
     <string name="music_about_message">一个简洁的本地音乐播放器。</string>
+    <string name="music_about_version">版本 1.0</string>
     <string name="music_play_mode_title">播放模式</string>
     <string name="music_mode_single">单曲循环</string>
     <string name="music_mode_loop">列表循环</string>
     <string name="music_mode_list">顺序播放</string>
     <string name="music_mode_shuffle">随机播放</string>
     <string name="music_profile_message">本地个人资料\n无需登录账号。</string>
+    <string name="music_profile_badge">资料仅保存在本机</string>
     <string name="music_refresh_done">音乐库已刷新</string>
     <string name="music_online_search_hint">搜索在线音乐</string>
     <string name="music_online_search">搜索</string>
