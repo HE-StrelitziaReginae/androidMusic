@@ -178,9 +178,22 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             mBinding.musicDrawerLayout.closeDrawer(mBinding.musicDrawerPanel);
             Toast.makeText(requireContext(), R.string.music_refresh_done, Toast.LENGTH_SHORT).show();
         });
-        mBinding.drawerPlayMode.setOnClickListener(view -> showPlayModeDialog());
+        mBinding.drawerPlayMode.setOnClickListener(view -> switchNextPlayMode());
+        mBinding.drawerPlayMode.setOnLongClickListener(view -> {
+            showPlayModeDialog();
+            return true;
+        });
         mBinding.drawerSkin.setOnClickListener(view -> showSkinDialog());
         mBinding.drawerAbout.setOnClickListener(view -> showAboutDialog());
+    }
+
+    private void switchNextPlayMode() {
+        if (mMusicListener == null) {
+            return;
+        }
+        MusicMode nextMode = MusicMode.switchNextMode(mMusicListener.getPlayMode());
+        mMusicListener.setPlayMode(nextMode);
+        updatePlayMode(nextMode);
     }
 
     private void openProfileImagePicker() {

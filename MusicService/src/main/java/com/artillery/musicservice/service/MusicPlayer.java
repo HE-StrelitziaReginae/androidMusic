@@ -25,6 +25,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     private MediaPlayer mPlayer;
     private PlayList mPlayList;
     private PlayList mLocalPlayList;
+    private MusicMode mPlayMode = MusicMode.getDefault();
     private final List<Callback> mCallbacks = new ArrayList<>(2);
     private boolean isPaused;
     private boolean isPreparing;
@@ -71,6 +72,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         if (list == null) {
             list = new PlayList();
         }
+        list.setPlayMode(mPlayMode);
         mLocalPlayList = list;
         mOnlinePlayback = false;
         mPlayList = list;
@@ -253,6 +255,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     private void ensurePlayList() {
         if (mPlayList == null) {
             mPlayList = new PlayList();
+            mPlayList.setPlayMode(mPlayMode);
         }
     }
 
@@ -305,6 +308,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         mExplicitSelection = true;
         mOnlinePlayback = false;
         mPlayList = new PlayList(song);
+        mPlayList.setPlayMode(mPlayMode);
         mPlayList.setPlayingIndex(0);
         return play();
     }
@@ -318,6 +322,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         mExplicitSelection = true;
         mOnlinePlayback = true;
         mPlayList = new PlayList(song);
+        mPlayList.setPlayMode(mPlayMode);
         mPlayList.setPlayingIndex(0);
         return play();
     }
@@ -442,13 +447,16 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     @Override
     public synchronized void setPlayMode(MusicMode playMode) {
         ensurePlayList();
-        mPlayList.setPlayMode(playMode);
+        mPlayMode = playMode == null ? MusicMode.getDefault() : playMode;
+        mPlayList.setPlayMode(mPlayMode);
+        if (mLocalPlayList != null) {
+            mLocalPlayList.setPlayMode(mPlayMode);
+        }
     }
 
     @Override
     public synchronized MusicMode getPlayMode() {
-        ensurePlayList();
-        return mPlayList.getPlayMode();
+        return mPlayMode;
     }
 
     //Listener
@@ -483,6 +491,8 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         mPlayer = null;
         mPlayList = new PlayList();
         mLocalPlayList = new PlayList();
+        mPlayList.setPlayMode(mPlayMode);
+        mLocalPlayList.setPlayMode(mPlayMode);
         isPaused = false;
         isPreparing = false;
         mMainHandler.removeCallbacksAndMessages(null);
