@@ -1,7 +1,5 @@
 package com.artillery.musicservice.service;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicbase.utils.BackgroundThreadUtils;
+import com.artillery.musicbase.utils.SPUtils;
 import com.artillery.musicbase.utils.Utils;
 import com.artillery.musicservice.data.PlaybackState;
 import com.artillery.musicservice.data.PlayList;
@@ -25,7 +24,6 @@ import java.util.List;
  */
 public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
     private static final String TAG = "MusicPlayer";
-    private static final String PLAYBACK_PREFERENCES = "music_playback_preferences";
     private static final String KEY_PLAY_MODE = "play_mode";
     private MediaPlayer mPlayer;
     private PlayList mPlayList;
@@ -469,9 +467,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     }
 
     private MusicMode loadPlayMode() {
-        SharedPreferences preferences = Utils.getContext()
-                .getSharedPreferences(PLAYBACK_PREFERENCES, Context.MODE_PRIVATE);
-        String value = preferences.getString(KEY_PLAY_MODE, null);
+        String value = SPUtils.getInstance(Utils.getContext()).getString(KEY_PLAY_MODE, null);
         if (value == null) {
             return MusicMode.getDefault();
         }
@@ -483,10 +479,7 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
     }
 
     private void savePlayMode(MusicMode playMode) {
-        Utils.getContext().getSharedPreferences(PLAYBACK_PREFERENCES, Context.MODE_PRIVATE)
-                .edit()
-                .putString(KEY_PLAY_MODE, playMode.name())
-                .apply();
+        SPUtils.getInstance(Utils.getContext()).put(KEY_PLAY_MODE, playMode.name());
     }
 
     //Listener
