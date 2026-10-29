@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_60"
+    android:layout_marginBottom="@dimen/dp_8"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/dp_16"
+    android:paddingEnd="@dimen/dp_12">
+
+    <View
+        android:id="@+id/choice_accent_bar"
+        android:layout_width="@dimen/dp_4"
+        android:layout_height="@dimen/dp_32"
+        android:layout_marginEnd="@dimen/dp_12" />
+
+    <TextView
+        android:id="@+id/choice_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:maxLines="2"
+        android:textColor="@color/music_text_primary"
+        android:textSize="@dimen/sp_16" />
+
+    <FrameLayout
+        android:id="@+id/choice_indicator"
+        android:layout_width="@dimen/dp_24"
+        android:layout_height="@dimen/dp_24"
+        android:layout_marginStart="@dimen/dp_12">
+
+        <View
+            android:id="@+id/choice_indicator_dot"
+            android:layout_width="@dimen/dp_8"
+            android:layout_height="@dimen/dp_8"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+</LinearLayout>

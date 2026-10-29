@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -293,16 +293,12 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         MusicSkin[] skins = MusicSkin.values();
         int selectedIndex = mMusicSkin == null ? MusicSkin.LIGHT.ordinal() : mMusicSkin.ordinal();
         MusicSkin skin = currentSkin();
-        AlertDialog skinDialog = new AlertDialog.Builder(requireContext())
-                .setTitle(com.os.sys.musicskin.R.string.music_skin_title)
-                .setSingleChoiceItems(com.os.sys.musicskin.R.array.music_skins, selectedIndex, (dialog, which) -> {
+        String[] names = getResources().getStringArray(com.os.sys.musicskin.R.array.music_skins);
+        showChoiceDialog(com.os.sys.musicskin.R.string.music_skin_title, R.string.music_skin_subtitle,
+                com.os.sys.musicskin.R.drawable.music_skin, names, selectedIndex, skin, which -> {
                     applySkin(skins[which]);
-                    dialog.dismiss();
                     mBinding.musicDrawerLayout.closeDrawer(mBinding.musicDrawerPanel);
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
-        styleChoiceDialog(skinDialog, skin);
+                });
     }
 
     private void applySkin(MusicSkin skin) {
@@ -442,17 +438,13 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         MusicMode[] modes = MusicMode.values();
         int selectedIndex = currentMode == null ? MusicMode.getDefault().ordinal() : currentMode.ordinal();
         MusicSkin skin = currentSkin();
-        AlertDialog playModeDialog = new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.music_play_mode_title)
-                .setSingleChoiceItems(R.array.music_play_modes, selectedIndex, (dialog, which) -> {
+        String[] names = getResources().getStringArray(R.array.music_play_modes);
+        showChoiceDialog(R.string.music_play_mode_title, R.string.music_play_mode_subtitle,
+                R.drawable.music_mode, names, selectedIndex, skin, which -> {
                     mMusicListener.setPlayMode(modes[which]);
                     updatePlayMode(modes[which]);
-                    dialog.dismiss();
                     mBinding.musicDrawerLayout.closeDrawer(mBinding.musicDrawerPanel);
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
-        styleChoiceDialog(playModeDialog, skin);
+                });
     }
 
     private MusicSkin currentSkin() {
@@ -489,40 +481,47 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         styleDialogButton(dialog.getButton(AlertDialog.BUTTON_POSITIVE), skin);
     }
 
-    private void styleChoiceDialog(AlertDialog dialog, MusicSkin skin) {
-        int background = skin.surface(requireContext());
-        int primary = skin.primaryText(requireContext());
-        int secondary = skin.secondaryText(requireContext());
-        int accent = skin.accent(requireContext());
-        styleDialogWindow(dialog, skin);
-        int titleId = getResources().getIdentifier("alertTitle", "id", "android");
-        TextView title = titleId == 0 ? null : dialog.findViewById(titleId);
-        if (title != null) {
-            title.setTextColor(primary);
-            title.setTextSize(20);
-            title.setTypeface(title.getTypeface(), android.graphics.Typeface.BOLD);
-            title.setPadding(dp(24), dp(20), dp(24), dp(8));
-        }
-        ListView list = dialog.getListView();
-        list.setPadding(dp(12), dp(4), dp(12), dp(4));
-        list.setDivider(null);
-        list.setBackgroundColor(background);
-        for (int index = 0; index < list.getChildCount(); index++) {
-            View child = list.getChildAt(index);
-            stylePlayModeRow(child, index == list.getCheckedItemPosition(), primary, secondary, accent, background);
-        }
-        list.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-            @Override
-            public void onChildViewAdded(View parent, View child) {
-                int position = list.getPositionForView(child);
-                stylePlayModeRow(child, position == list.getCheckedItemPosition(), primary, secondary, accent, background);
-            }
+    private void showChoiceDialog(int titleRes, int subtitleRes, int iconRes, String[] labels,
+                                  int selectedIndex, MusicSkin skin, ChoiceSelectedListener listener) {
+        View content = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_music_choice, null, false);
+        FrameLayout iconContainer = content.findViewById(R.id.dialog_choice_icon_container);
+        ImageView icon = content.findViewById(R.id.dialog_choice_icon);
+        TextView title = content.findViewById(R.id.dialog_choice_title);
+        TextView subtitle = content.findViewById(R.id.dialog_choice_subtitle);
+        LinearLayout options = content.findViewById(R.id.dialog_choice_options);
+        View divider = content.findViewById(R.id.dialog_choice_divider);
+        Button cancel = content.findViewById(R.id.dialog_choice_cancel);
 
-            @Override
-            public void onChildViewRemoved(View parent, View child) {
-            }
-        });
-        styleDialogButton(dialog.getButton(AlertDialog.BUTTON_NEGATIVE), skin);
+        icon.setImageResource(iconRes);
+        icon.setColorFilter(skin.accent(requireContext()));
+        iconContainer.setBackground(roundBackground(withAlpha(skin.accent(requireContext()), 28), 16));
+        title.setText(titleRes);
+        title.setTextColor(skin.primaryText(requireContext()));
+        subtitle.setText(subtitleRes);
+        subtitle.setTextColor(skin.secondaryText(requireContext()));
+        divider.setBackgroundColor(withAlpha(skin.secondaryText(requireContext()), 35));
+        styleDialogButton(cancel, skin);
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext()).setView(content).create();
+        for (int index = 0; index < labels.length; index++) {
+            final int position = index;
+            View row = LayoutInflater.from(requireContext())
+                    .inflate(R.layout.item_music_choice, options, false);
+            bindChoiceRow(row, labels[index], index == selectedIndex, skin);
+            row.setOnClickListener(view -> {
+                listener.onSelected(position);
+                dialog.dismiss();
+            });
+            options.addView(row);
+        }
+        cancel.setOnClickListener(view -> dialog.dismiss());
+        dialog.show();
+        styleDialogWindow(dialog, skin);
+        Window window = dialog.getWindow();
+        if (window != null) {
+            int width = Math.min(dp(360), getResources().getDisplayMetrics().widthPixels - dp(32));
+            window.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
     }
 
     private void styleDialogWindow(AlertDialog dialog, MusicSkin skin) {
@@ -545,22 +544,37 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         button.setTypeface(button.getTypeface(), android.graphics.Typeface.BOLD);
     }
 
-    private void stylePlayModeRow(View row, boolean selected, int primary, int secondary,
-                                  int accent, int background) {
-        if (!(row instanceof ViewGroup)) {
-            return;
+    private void bindChoiceRow(View row, String label, boolean selected, MusicSkin skin) {
+        TextView labelView = row.findViewById(R.id.choice_label);
+        View accentBar = row.findViewById(R.id.choice_accent_bar);
+        FrameLayout indicator = row.findViewById(R.id.choice_indicator);
+        View indicatorDot = row.findViewById(R.id.choice_indicator_dot);
+        int accent = skin.accent(requireContext());
+        int secondary = skin.secondaryText(requireContext());
+
+        labelView.setText(label);
+        labelView.setTextColor(selected ? accent : skin.primaryText(requireContext()));
+        labelView.setTypeface(labelView.getTypeface(), selected
+                ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
+        accentBar.setBackground(roundBackground(accent, 4));
+        accentBar.setVisibility(selected ? View.VISIBLE : View.INVISIBLE);
+        GradientDrawable indicatorBackground = roundBackground(selected ? accent : android.graphics.Color.TRANSPARENT, 12);
+        if (!selected) {
+            indicatorBackground.setStroke(dp(1), withAlpha(secondary, 110));
         }
-        row.setMinimumHeight(dp(56));
-        row.setPadding(dp(12), dp(2), dp(12), dp(2));
-        row.setBackground(roundBackground(selected ? withAlpha(accent, 30) : background, 16));
-        if (row instanceof android.widget.CheckedTextView) {
-            android.widget.CheckedTextView textView = (android.widget.CheckedTextView) row;
-            textView.setTextColor(selected ? accent : primary);
-            textView.setTextSize(16);
-            textView.setCheckMarkTintList(new android.content.res.ColorStateList(
-                    new int[][]{new int[]{android.R.attr.state_checked}, new int[]{}},
-                    new int[]{accent, secondary}));
+        indicator.setBackground(indicatorBackground);
+        indicatorDot.setBackground(roundBackground(android.graphics.Color.WHITE, 4));
+        indicatorDot.setVisibility(selected ? View.VISIBLE : View.GONE);
+        GradientDrawable rowBackground = roundBackground(
+                selected ? withAlpha(accent, 24) : withAlpha(secondary, 10), 16);
+        if (selected) {
+            rowBackground.setStroke(dp(1), withAlpha(accent, 80));
         }
+        row.setBackground(rowBackground);
+    }
+
+    private interface ChoiceSelectedListener {
+        void onSelected(int which);
     }
 
     private GradientDrawable roundBackground(int color, int radiusDp) {

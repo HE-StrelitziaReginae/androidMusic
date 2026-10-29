@@ -1,5 +1,7 @@
 package com.artillery.musicservice.service;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicbase.utils.BackgroundThreadUtils;
+import com.artillery.musicbase.utils.Utils;
 import com.artillery.musicservice.data.PlaybackState;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
@@ -22,6 +25,8 @@ import java.util.List;
  */
 public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
     private static final String TAG = "MusicPlayer";
+    private static final String PLAYBACK_PREFERENCES = "music_playback_preferences";
+    private static final String KEY_PLAY_MODE = "play_mode";
     private MediaPlayer mPlayer;
     private PlayList mPlayList;
     private PlayList mLocalPlayList;
@@ -54,6 +59,9 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         mPlayer = createMediaPlayer();
         mPlayList = new PlayList();
         mLocalPlayList = new PlayList();
+        mPlayMode = loadPlayMode();
+        mPlayList.setPlayMode(mPlayMode);
+        mLocalPlayList.setPlayMode(mPlayMode);
         mPlaybackStateStore.load(this::onPlaybackStateLoaded);
     }
 
@@ -452,11 +460,33 @@ public class MusicPlayer implements MusicListener, MediaPlayer.OnCompletionListe
         if (mLocalPlayList != null) {
             mLocalPlayList.setPlayMode(mPlayMode);
         }
+        savePlayMode(mPlayMode);
     }
 
     @Override
     public synchronized MusicMode getPlayMode() {
         return mPlayMode;
+    }
+
+    private MusicMode loadPlayMode() {
+        SharedPreferences preferences = Utils.getContext()
+                .getSharedPreferences(PLAYBACK_PREFERENCES, Context.MODE_PRIVATE);
+        String value = preferences.getString(KEY_PLAY_MODE, null);
+        if (value == null) {
+            return MusicMode.getDefault();
+        }
+        try {
+            return MusicMode.valueOf(value);
+        } catch (IllegalArgumentException ignored) {
+            return MusicMode.getDefault();
+        }
+    }
+
+    private void savePlayMode(MusicMode playMode) {
+        Utils.getContext().getSharedPreferences(PLAYBACK_PREFERENCES, Context.MODE_PRIVATE)
+                .edit()
+                .putString(KEY_PLAY_MODE, playMode.name())
+                .apply();
     }
 
     //Listener
