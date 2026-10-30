@@ -2,11 +2,15 @@ package com.artillery.musicservice.data;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
+import android.media.MediaMetadataRetriever;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public final class MusicLocalUtils {
@@ -31,9 +35,8 @@ public final class MusicLocalUtils {
             cursor = context.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     projection,
-                    MediaStore.Audio.Media.IS_MUSIC + " != 0 OR "
-                            + MediaStore.Audio.Media.MIME_TYPE + " LIKE ?",
-                    new String[]{"audio/%"},
+                    null,
+                    null,
                     MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         } catch (SecurityException error) {
             return null;
@@ -50,7 +53,7 @@ public final class MusicLocalUtils {
                 String mimeType = cursor.getString(cursor.getColumnIndexOrThrow(
                         MediaStore.Audio.Media.MIME_TYPE));
                 if (TextUtils.isEmpty(filePath) || TextUtils.isEmpty(displayName)
-                        || !isAudioFile(displayName, mimeType)) {
+                        || !isAudioFile(filePath, mimeType)) {
                     continue;
                 }
 
@@ -96,18 +99,51 @@ public final class MusicLocalUtils {
         return new String[]{title, artist};
     }
 
-    private static boolean isAudioFile(String displayName, String mimeType) {
+    private static boolean isAudioFile(String filePath, String mimeType) {
         if (!TextUtils.isEmpty(mimeType) && mimeType.startsWith("audio/")) {
             return true;
         }
-        String lowerName = displayName.toLowerCase(java.util.Locale.ROOT);
-        return lowerName.endsWith(".mp3")
-                || lowerName.endsWith(".flac")
-                || lowerName.endsWith(".wav")
-                || lowerName.endsWith(".m4a")
-                || lowerName.endsWith(".aac")
-                || lowerName.endsWith(".ogg")
-                || lowerName.endsWith(".opus")
-                || lowerName.endsWith(".wma");
+        if (TextUtils.isEmpty(filePath)) {
+            return false;
+        }
+        if (hasAudioTrack(filePath)) {
+            return true;
+        }
+        return hasAudioMetadata(filePath);
+    }
+
+    private static boolean hasAudioTrack(String filePath) {
+        MediaExtractor extractor = new MediaExtractor();
+        try {
+            extractor.setDataSource(filePath);
+            for (int index = 0; index < extractor.getTrackCount(); index++) {
+                MediaFormat format = extractor.getTrackFormat(index);
+                String trackMime = format.getString(MediaFormat.KEY_MIME);
+                if (!TextUtils.isEmpty(trackMime) && trackMime.startsWith("audio/")) {
+                    return true;
+                }
+            }
+        } catch (IOException | RuntimeException ignored) {
+        } finally {
+            extractor.release();
+        }
+        return false;
+    }
+
+    private static boolean hasAudioMetadata(String filePath) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath);
+            String hasAudio = retriever.extractMetadata(
+                    MediaMetadataRetriever.METADATA_KEY_HAS_AUDIO);
+            return "yes".equalsIgnoreCase(hasAudio);
+        } catch (RuntimeException ignored) {
+            return false;
+        } finally {
+            try {
+                retriever.release();
+            } catch (IOException ignored) {
+            }
+        }
     }
 }
