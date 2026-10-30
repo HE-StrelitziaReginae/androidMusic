@@ -5,6 +5,10 @@
     <string name="music_pause">Pause</string>
     <string name="music_next">Next</string>
     <string name="music_dialog_close">Close player</string>
+    <string name="music_album_toggle">Toggle cover and lyrics</string>
+    <string name="music_lyrics_title">LYRICS</string>
+    <string name="music_lyrics_empty">No lyrics available</string>
+    <string name="music_lyrics_hint">Tap to return to cover</string>
 
     <string name="music_home_tab">Music</string>
     <string name="music_online_tab">Online</string>

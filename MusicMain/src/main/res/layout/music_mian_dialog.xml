@@ -47,17 +47,76 @@
                 android:layout_width="@dimen/dp_232"
                 android:layout_height="@dimen/dp_232"
                 android:layout_gravity="center"
+                android:background="@drawable/music_album_disc"
+                android:clickable="true"
+                android:contentDescription="@string/music_album_toggle"
                 android:elevation="@dimen/dp_8"
+                android:focusable="true"
                 android:padding="@dimen/dp_8">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/music_album_image"
+                <FrameLayout
+                    android:id="@+id/music_album_stage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/music_album_background"
-                    android:clipToOutline="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ellipse" />
+                    android:background="@drawable/music_album_disc"
+                    android:clipToOutline="true">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/music_album_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipToOutline="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ellipse" />
+
+                    <LinearLayout
+                        android:id="@+id/music_lyrics_page"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_24"
+                        android:visibility="gone">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/music_lyrics_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:letterSpacing="0.18"
+                            android:text="@string/music_lyrics_title"
+                            android:textSize="@dimen/sp_10"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/music_lyrics_song"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_14"
+                            android:gravity="center"
+                            android:maxLines="2"
+                            android:text="@string/music_not_play"
+                            android:textSize="@dimen/sp_16"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/music_lyrics_empty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_8"
+                            android:text="@string/music_lyrics_empty"
+                            android:textSize="@dimen/sp_12" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/music_lyrics_hint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_16"
+                            android:text="@string/music_lyrics_hint"
+                            android:textSize="@dimen/sp_10" />
+
+                    </LinearLayout>
+
+                </FrameLayout>
             </FrameLayout>
         </FrameLayout>
 

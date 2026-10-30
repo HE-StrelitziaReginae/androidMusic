@@ -5,6 +5,10 @@
     <string name="music_pause">暂停</string>
     <string name="music_next">下一首</string>
     <string name="music_dialog_close">关闭播放器</string>
+    <string name="music_album_toggle">切换封面与歌词</string>
+    <string name="music_lyrics_title">歌词</string>
+    <string name="music_lyrics_empty">暂无歌词</string>
+    <string name="music_lyrics_hint">点击返回封面</string>
 
     <string name="music_home_tab">音乐</string>
     <string name="music_online_tab">在线</string>

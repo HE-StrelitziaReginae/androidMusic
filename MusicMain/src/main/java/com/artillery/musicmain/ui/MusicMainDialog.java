@@ -1,7 +1,10 @@
 package com.artillery.musicmain.ui;
 
 import android.content.Context;
+import android.animation.ObjectAnimator;
+import android.graphics.drawable.GradientDrawable;
 import android.text.format.DateUtils;
+import android.view.animation.LinearInterpolator;
 import android.view.View;
 import android.widget.SeekBar;
 import android.os.Bundle;
@@ -26,6 +29,9 @@ import com.artillery.musicservice.data.Song;
 public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implements SeekBar.OnSeekBarChangeListener, MusicObserver {
     private MusicMainFragment mFragment;
     private Song mSong;
+    private boolean mLyricsVisible;
+    private boolean mPlaying;
+    private ObjectAnimator mAlbumRotationAnimator;
     public final Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
@@ -148,6 +154,16 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicCharacterName.setTextColor(primaryText);
         mBinding.musicAlbumImage.setImageResource(characterSkin
                 ? skin.avatar() : R.drawable.ellipse);
+        int accent = skin.accent(getContext());
+        int lyricsPrimary = skin.isCharacterSkin() ? skin.headerPrimaryText(getContext()) : primaryText;
+        int lyricsSecondary = skin.isCharacterSkin() ? skin.headerSecondaryText(getContext()) : secondaryText;
+        mBinding.musicLyricsPage.setBackground(roundBackground(withAlpha(background, 205), 0));
+        mBinding.musicLyricsTitle.setTextColor(accent);
+        mBinding.musicLyricsSong.setTextColor(lyricsPrimary);
+        mBinding.musicLyricsEmpty.setTextColor(lyricsSecondary);
+        mBinding.musicLyricsHint.setTextColor(lyricsSecondary);
+        mBinding.musicAlbumCard.setBackground(roundBackground(withAlpha(accent, 60), 116));
+        updateCoverPresentation();
         if (getWindow() != null) {
             SystemBarUtils.setLightSystemBars(getWindow(), skin.usesLightSystemBars());
         }
@@ -171,6 +187,7 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     public void update(Song song) {
         if (song == null) {
             mSong = null;
+            mBinding.musicLyricsSong.setText(R.string.music_not_play);
             mBinding.musicNamePlay.setText(R.string.music_not_play);
             mBinding.musicArtistPlay.setText(R.string.music_unknown);
             applyAlbumSkin();
@@ -187,9 +204,11 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     @Override
     public void updateUi(boolean isPlaying) {
         KLogUtils.e("updatePlayToggle: " + isPlaying);
+        mPlaying = isPlaying;
         mBinding.musicPlayBtn.setImageDrawable(isPlaying ? ContextCompat.getDrawable(getContext(), R.drawable.pause)
                 : ContextCompat.getDrawable(getContext(), R.drawable.play));
         mBinding.musicPlayBtn.setColorFilter(MusicSkin.load(getContext()).icon(getContext()));
+        updateCoverPresentation();
     }
 
     @Override
@@ -203,6 +222,9 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     @Override
     public void dismiss() {
         BackgroundThreadUtils.getInstance().removeCallbacks(mProgressCallback);
+        stopAlbumRotation(true);
+        mLyricsVisible = false;
+        mPlaying = false;
         MusicDaraListener.getInstance().clearMusicObserver();
         mFragment = null;
         super.dismiss();
@@ -216,6 +238,7 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicSeekbar.setMax((int) (getCurrentSongDuration() / 1000));
         mBinding.musicNamePlay.setText(song.getTitle());
         mBinding.musicArtistPlay.setText(song.getArtist());
+        mBinding.musicLyricsSong.setText(song.getTitle());
         applyAlbumSkin();
         mBinding.musicTimeEnd.setText(TimeUtils.formatDuration(song.getDuration()));
     }
@@ -224,6 +247,77 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         MusicSkin skin = MusicSkin.load(getContext());
         mBinding.musicAlbumImage.setImageResource(skin.isCharacterSkin()
                 ? skin.avatar() : R.drawable.ellipse);
+        if (mSong == null) {
+            mBinding.musicLyricsSong.setText(R.string.music_not_play);
+        } else {
+            mBinding.musicLyricsSong.setText(mSong.getTitle());
+        }
+        updateCoverPresentation();
+    }
+
+    private void toggleLyrics() {
+        mLyricsVisible = !mLyricsVisible;
+        updateCoverPresentation();
+    }
+
+    private void updateCoverPresentation() {
+        if (mBinding == null) {
+            return;
+        }
+        mBinding.musicLyricsPage.setVisibility(mLyricsVisible ? View.VISIBLE : View.GONE);
+        mBinding.musicAlbumImage.setVisibility(mLyricsVisible ? View.INVISIBLE : View.VISIBLE);
+        mBinding.musicAlbumStage.setBackground(roundBackground(
+                withAlpha(MusicSkin.load(getContext()).surface(getContext()), 230), 116));
+        mBinding.musicAlbumCard.setContentDescription(getContext().getString(R.string.music_album_toggle));
+        if (mPlaying && !mLyricsVisible) {
+            startAlbumRotation();
+        } else {
+            stopAlbumRotation(false);
+        }
+    }
+
+    private void startAlbumRotation() {
+        if (mAlbumRotationAnimator == null) {
+            mAlbumRotationAnimator = ObjectAnimator.ofFloat(mBinding.musicAlbumImage, View.ROTATION, 0f, 360f);
+            mAlbumRotationAnimator.setDuration(getContext().getResources()
+                    .getInteger(R.integer.music_album_rotation_duration));
+            mAlbumRotationAnimator.setInterpolator(new LinearInterpolator());
+            mAlbumRotationAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+            mAlbumRotationAnimator.setRepeatMode(ObjectAnimator.RESTART);
+            mAlbumRotationAnimator.start();
+            return;
+        }
+        if (mAlbumRotationAnimator.isPaused()) {
+            mAlbumRotationAnimator.resume();
+        }
+    }
+
+    private void stopAlbumRotation(boolean release) {
+        if (mAlbumRotationAnimator == null) {
+            return;
+        }
+        if (release) {
+            mAlbumRotationAnimator.cancel();
+            mAlbumRotationAnimator = null;
+        } else if (mAlbumRotationAnimator.isStarted() && !mAlbumRotationAnimator.isPaused()) {
+            mAlbumRotationAnimator.pause();
+        }
+    }
+
+    private GradientDrawable roundBackground(int color, int radiusDp) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(color);
+        drawable.setCornerRadius(dp(radiusDp));
+        return drawable;
+    }
+
+    private int withAlpha(int color, int alpha) {
+        return android.graphics.Color.argb(alpha, android.graphics.Color.red(color),
+                android.graphics.Color.green(color), android.graphics.Color.blue(color));
+    }
+
+    private int dp(int value) {
+        return Math.round(value * getContext().getResources().getDisplayMetrics().density);
     }
 
     private void activateMarquee(boolean activate) {
@@ -291,6 +385,8 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         KLogUtils.i("initViewObservable: ");
         mBinding.musicSeekbar.setOnSeekBarChangeListener(this);
         mBinding.musicDialogClose.setOnClickListener(view -> dismiss());
+        mBinding.musicAlbumCard.setOnClickListener(view -> toggleLyrics());
+        mBinding.musicLyricsPage.setOnClickListener(view -> toggleLyrics());
         mBinding.musicPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
