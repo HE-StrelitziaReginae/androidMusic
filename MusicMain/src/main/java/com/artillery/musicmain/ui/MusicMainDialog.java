@@ -156,6 +156,12 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicCharacterName.setTextColor(primaryText);
         mBinding.musicAlbumImage.setImageResource(characterSkin
                 ? skin.avatar() : R.drawable.ellipse);
+        mBinding.musicAlbumGrooves.setColorFilter(withAlpha(skin.headerPrimaryText(getContext()), 70));
+        mBinding.musicNowPlayingBadge.setBackground(skin.cardBackground(getContext(), false));
+        mBinding.musicNowPlayingIndicator.setBackground(roundBackground(skin.accent(getContext()), 4));
+        mBinding.musicNowPlayingText.setTextColor(skin.secondaryText(getContext()));
+        mBinding.musicDialogRoot.setBackground(skin.cardBackground(getContext(), false));
+        mBinding.musicActionLiner.setBackground(skin.cardBackground(getContext(), false));
         int accent = skin.accent(getContext());
         int lyricsPrimary = skin.isCharacterSkin() ? skin.headerPrimaryText(getContext()) : primaryText;
         int lyricsSecondary = skin.isCharacterSkin() ? skin.headerSecondaryText(getContext()) : secondaryText;
@@ -167,6 +173,8 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicAlbumCard.setBackground(roundBackgroundPx(
                 withAlpha(accent, 60),
                 getContext().getResources().getDimension(dp_116)));
+        mBinding.musicDialogRoot.setBackground(skin.cardBackground(getContext(), false));
+        mBinding.musicActionLiner.setBackground(skin.cardBackground(getContext(), false));
         updateCoverPresentation();
         if (getWindow() != null) {
             SystemBarUtils.setLightSystemBars(getWindow(), skin.usesLightSystemBars());
@@ -174,17 +182,17 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     }
 
     private void applySystemBarInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(mBinding.musicDialog, (view, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(mBinding.musicContent, (view, insets) -> {
             int topInset = insets.getSystemWindowInsetTop();
             int bottomInset = insets.getSystemWindowInsetBottom();
-            mBinding.musicDialog.setPadding(
+            mBinding.musicContent.setPadding(
                     mBinding.musicDialog.getPaddingLeft(),
                     topInset,
                     mBinding.musicDialog.getPaddingRight(),
                     bottomInset);
             return insets;
         });
-        ViewCompat.requestApplyInsets(mBinding.musicDialog);
+        ViewCompat.requestApplyInsets(mBinding.musicContent);
     }
 
     @Override
@@ -275,8 +283,10 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
                 getContext().getResources().getDimension(dp_116)));
         mBinding.musicAlbumCard.setContentDescription(getContext().getString(R.string.music_album_toggle));
         if (mPlaying && !mLyricsVisible) {
+            mBinding.musicNowPlayingIndicator.setAlpha(1f);
             startAlbumRotation();
         } else {
+            mBinding.musicNowPlayingIndicator.setAlpha(0.42f);
             stopAlbumRotation(false);
         }
     }

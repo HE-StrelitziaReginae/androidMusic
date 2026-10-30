@@ -5,6 +5,7 @@
     <string name="music_pause">Pause</string>
     <string name="music_next">Next</string>
     <string name="music_dialog_close">Close player</string>
+    <string name="music_now_playing">NOW PLAYING</string>
     <string name="music_album_toggle">Toggle cover and lyrics</string>
     <string name="music_lyrics_title">LYRICS</string>
     <string name="music_lyrics_empty">No lyrics available</string>

@@ -2,11 +2,34 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/music_dialog"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/music_character_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:scaleX="1.12"
+            android:scaleY="1.12"
+            android:scaleType="centerCrop"
+            android:src="@drawable/skin_sakura_key_art"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/music_character_scrim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/music_character_scrim"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/music_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
         <FrameLayout
             android:id="@+id/music_frame"
@@ -14,21 +37,35 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/music_character_background"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@null"
-                android:scaleType="centerCrop"
-                android:src="@drawable/skin_sakura_key_art"
-                android:visibility="gone" />
+            <LinearLayout
+                android:id="@+id/music_now_playing_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_36"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_marginTop="@dimen/dp_32"
+                android:background="@drawable/music_player_panel"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/dp_16"
+                android:paddingEnd="@dimen/dp_16">
 
-            <View
-                android:id="@+id/music_character_scrim"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/music_character_scrim"
-                android:visibility="gone" />
+                <View
+                    android:id="@+id/music_now_playing_indicator"
+                    android:layout_width="@dimen/dp_8"
+                    android:layout_height="@dimen/dp_8"
+                    android:background="@drawable/music_disc_spindle" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/music_now_playing_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:letterSpacing="0.14"
+                    android:text="@string/music_now_playing"
+                    android:textSize="@dimen/sp_10"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/music_dialog_close"
@@ -50,7 +87,7 @@
                 android:background="@drawable/music_album_disc"
                 android:clickable="true"
                 android:contentDescription="@string/music_album_toggle"
-                android:elevation="@dimen/dp_8"
+                android:elevation="@dimen/dp_20"
                 android:focusable="true"
                 android:padding="@dimen/dp_8">
 
@@ -61,13 +98,44 @@
                     android:background="@drawable/music_album_disc"
                     android:clipToOutline="true">
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/music_album_image"
+                    <FrameLayout
+                        android:id="@+id/music_disc_rotate_group"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:clipToOutline="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ellipse" />
+                        android:clipToOutline="true">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/music_album_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clipToOutline="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ellipse" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/music_album_grooves"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@null"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/music_album_grooves" />
+
+                        <FrameLayout
+                            android:id="@+id/music_album_spindle"
+                            android:layout_width="@dimen/dp_28"
+                            android:layout_height="@dimen/dp_28"
+                            android:layout_gravity="center"
+                            android:padding="@dimen/dp_8">
+
+                            <View
+                                android:id="@+id/music_album_spindle_dot"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/music_disc_spindle" />
+
+                        </FrameLayout>
+
+                    </FrameLayout>
 
                     <LinearLayout
                         android:id="@+id/music_lyrics_page"
@@ -124,10 +192,14 @@
             android:id="@+id/music_dialog_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/dp_8"
-            android:paddingBottom="@dimen/dp_16"
-            android:paddingStart="@dimen/dp_20"
-            android:paddingEnd="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginEnd="@dimen/dp_12"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:elevation="@dimen/dp_8"
+            android:paddingTop="@dimen/dp_20"
+            android:paddingBottom="@dimen/dp_24"
+            android:paddingStart="@dimen/dp_24"
+            android:paddingEnd="@dimen/dp_24"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -168,6 +240,7 @@
                     android:focusableInTouchMode="true"
                     android:freezesText="true"
                     android:gravity="center_horizontal"
+                    android:letterSpacing="0.01"
                     android:lines="1"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
@@ -185,7 +258,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_4"
                     android:text="@string/music_unknown"
-                    android:textSize="@dimen/sp_10"
+                    android:textSize="@dimen/sp_12"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -221,6 +294,7 @@
                     android:layout_marginStart="@dimen/dp_4"
                     android:text="@string/music_time"
                     android:textSize="@dimen/sp_12"
+                    android:fontFamily="monospace"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/music_seekbar" />
 
@@ -231,6 +305,7 @@
                     android:layout_marginEnd="@dimen/dp_4"
                     android:text="@string/music_time"
                     android:textSize="@dimen/sp_12"
+                    android:fontFamily="monospace"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/music_seekbar" />
 
@@ -238,12 +313,13 @@
 
             <LinearLayout
                 android:id="@+id/music_action_liner"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dp_14"
-                android:layout_marginBottom="@dimen/dp_4"
-                android:gravity="center_horizontal|center_vertical"
+                android:layout_marginTop="@dimen/dp_18"
+                android:layout_marginBottom="@dimen/dp_8"
+                android:background="@drawable/music_player_panel"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -259,8 +335,9 @@
                     style="@style/CustomButtonRipple"
                     android:layout_width="@dimen/dp_60"
                     android:layout_height="@dimen/dp_60"
-                    android:layout_marginStart="@dimen/dp_50"
-                    android:layout_marginEnd="@dimen/dp_50"
+                    android:layout_marginStart="@dimen/dp_32"
+                    android:layout_marginEnd="@dimen/dp_32"
+                    android:background="@drawable/music_play_button_background"
                     android:contentDescription="@string/music_play"
                     android:src="@drawable/play" />
 
@@ -276,6 +353,7 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
 
 </layout>
