@@ -26,6 +26,8 @@ import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.utils.TimeUtils;
 import com.artillery.musicservice.data.Song;
 
+import static com.artillery.musicbase.R.dimen.*;
+
 public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implements SeekBar.OnSeekBarChangeListener, MusicObserver {
     private MusicMainFragment mFragment;
     private Song mSong;
@@ -157,12 +159,14 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         int accent = skin.accent(getContext());
         int lyricsPrimary = skin.isCharacterSkin() ? skin.headerPrimaryText(getContext()) : primaryText;
         int lyricsSecondary = skin.isCharacterSkin() ? skin.headerSecondaryText(getContext()) : secondaryText;
-        mBinding.musicLyricsPage.setBackground(roundBackground(withAlpha(background, 205), 0));
+        mBinding.musicLyricsPage.setBackground(roundBackground(withAlpha(background, 205), dp_0));
         mBinding.musicLyricsTitle.setTextColor(accent);
         mBinding.musicLyricsSong.setTextColor(lyricsPrimary);
         mBinding.musicLyricsEmpty.setTextColor(lyricsSecondary);
         mBinding.musicLyricsHint.setTextColor(lyricsSecondary);
-        mBinding.musicAlbumCard.setBackground(roundBackground(withAlpha(accent, 60), 116));
+        mBinding.musicAlbumCard.setBackground(roundBackgroundPx(
+                withAlpha(accent, 60),
+                getContext().getResources().getDimension(dp_116)));
         updateCoverPresentation();
         if (getWindow() != null) {
             SystemBarUtils.setLightSystemBars(getWindow(), skin.usesLightSystemBars());
@@ -266,8 +270,9 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         }
         mBinding.musicLyricsPage.setVisibility(mLyricsVisible ? View.VISIBLE : View.GONE);
         mBinding.musicAlbumImage.setVisibility(mLyricsVisible ? View.INVISIBLE : View.VISIBLE);
-        mBinding.musicAlbumStage.setBackground(roundBackground(
-                withAlpha(MusicSkin.load(getContext()).surface(getContext()), 230), 116));
+        mBinding.musicAlbumStage.setBackground(roundBackgroundPx(
+                withAlpha(MusicSkin.load(getContext()).surface(getContext()), 230),
+                getContext().getResources().getDimension(dp_116)));
         mBinding.musicAlbumCard.setContentDescription(getContext().getString(R.string.music_album_toggle));
         if (mPlaying && !mLyricsVisible) {
             startAlbumRotation();
@@ -308,6 +313,13 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         GradientDrawable drawable = new GradientDrawable();
         drawable.setColor(color);
         drawable.setCornerRadius(dp(radiusDp));
+        return drawable;
+    }
+
+    private GradientDrawable roundBackgroundPx(int color, float radiusPx) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(color);
+        drawable.setCornerRadius(radiusPx);
         return drawable;
     }
 

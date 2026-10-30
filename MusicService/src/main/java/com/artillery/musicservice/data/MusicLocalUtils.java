@@ -31,8 +31,9 @@ public final class MusicLocalUtils {
             cursor = context.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     projection,
-                    MediaStore.Audio.Media.IS_MUSIC + " != 0",
-                    null,
+                    MediaStore.Audio.Media.IS_MUSIC + " != 0 OR "
+                            + MediaStore.Audio.Media.MIME_TYPE + " LIKE ?",
+                    new String[]{"audio/%"},
                     MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         } catch (SecurityException error) {
             return null;
@@ -48,8 +49,8 @@ public final class MusicLocalUtils {
                         MediaStore.Audio.Media.DATA));
                 String mimeType = cursor.getString(cursor.getColumnIndexOrThrow(
                         MediaStore.Audio.Media.MIME_TYPE));
-                if (TextUtils.isEmpty(filePath) || TextUtils.isEmpty(mimeType)
-                        || TextUtils.isEmpty(displayName)) {
+                if (TextUtils.isEmpty(filePath) || TextUtils.isEmpty(displayName)
+                        || !isAudioFile(displayName, mimeType)) {
                     continue;
                 }
 
@@ -93,5 +94,20 @@ public final class MusicLocalUtils {
         String title = splitName[0].trim();
         String artist = splitName[1].trim().replaceAll("\\.[^.]+$", "");
         return new String[]{title, artist};
+    }
+
+    private static boolean isAudioFile(String displayName, String mimeType) {
+        if (!TextUtils.isEmpty(mimeType) && mimeType.startsWith("audio/")) {
+            return true;
+        }
+        String lowerName = displayName.toLowerCase(java.util.Locale.ROOT);
+        return lowerName.endsWith(".mp3")
+                || lowerName.endsWith(".flac")
+                || lowerName.endsWith(".wav")
+                || lowerName.endsWith(".m4a")
+                || lowerName.endsWith(".aac")
+                || lowerName.endsWith(".ogg")
+                || lowerName.endsWith(".opus")
+                || lowerName.endsWith(".wma");
     }
 }

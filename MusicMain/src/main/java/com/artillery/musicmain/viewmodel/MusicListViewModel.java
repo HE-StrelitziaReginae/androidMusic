@@ -24,6 +24,7 @@ import me.tatarka.bindingcollectionadapter2.ItemBinding;
  */
 public class MusicListViewModel extends BaseViewModel<MusicRepository> {
     private MusicListItemViewModel selectedItem;
+    private String selectedSongPath;
 
     public MusicListViewModel(@NonNull Application application, @NonNull MusicRepository repository) {
         super(application, repository);
@@ -39,7 +40,7 @@ public class MusicListViewModel extends BaseViewModel<MusicRepository> {
         if (music == null) {
             music = new ArrayList<>();
         }
-        String selectedPath = selectedItem == null ? null : selectedItem.getSongPath();
+        String selectedPath = selectedItem == null ? selectedSongPath : selectedItem.getSongPath();
         musicListItem.clear();
         selectedItem = null;
         ArrayList<Song> currentMusic = new ArrayList<>(music);
@@ -60,8 +61,30 @@ public class MusicListViewModel extends BaseViewModel<MusicRepository> {
             selectedItem.setSelected(false);
         }
         selectedItem = item;
+        selectedSongPath = item == null ? null : item.getSongPath();
         if (item != null) {
             item.setSelected(true);
+        }
+    }
+
+    public void selectSong(@Nullable Song song) {
+        selectedSongPath = song == null ? null : song.getPath();
+        MusicListItemViewModel matchingItem = null;
+        if (selectedSongPath != null) {
+            for (MusicListItemViewModel item : musicListItem) {
+                if (selectedSongPath.equals(item.getSongPath())) {
+                    matchingItem = item;
+                    break;
+                }
+            }
+        }
+        if (matchingItem != null || song == null) {
+            selectItem(matchingItem);
+        } else {
+            if (selectedItem != null) {
+                selectedItem.setSelected(false);
+                selectedItem = null;
+            }
         }
     }
 

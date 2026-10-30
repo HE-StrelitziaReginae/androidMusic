@@ -43,6 +43,10 @@ public class MusicDaraListener {
         mMusicListener = musicListener;
     }
 
+    public Song getPlayingSong() {
+        return mMusicListener == null ? null : mMusicListener.getPlayingSong();
+    }
+
     public boolean playOnline(Song song) {
         return mMusicListener != null && mMusicListener.playOnline(song);
     }

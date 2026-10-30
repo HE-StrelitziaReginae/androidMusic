@@ -62,6 +62,8 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
     @Override
     public void onStart() {
         super.onStart();
+        Song playingSong = MusicDaraListener.getInstance().getPlayingSong();
+        mViewModel.selectSong(playingSong);
         refreshMusicList();
         applySkin(MusicSkin.load(requireContext()));
         if (!mObserverRegistered) {
@@ -138,6 +140,12 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
                 }
             }
         });
+    }
+
+    public void selectSong(@Nullable Song song) {
+        if (mViewModel != null) {
+            mViewModel.selectSong(song);
+        }
     }
 
 }

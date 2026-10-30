@@ -47,6 +47,7 @@ import com.artillery.musicmain.data.MusicDaraListener;
 import com.artillery.musicmain.data.MusicDataListener;
 import com.artillery.musicmain.data.source.contract.view.MusicPlayView;
 import com.artillery.musicmain.databinding.FragmentMusicMainBinding;
+import com.artillery.musicmain.ui.musicList.MusicListFragment;
 import com.artillery.musicmain.viewmodel.MusicMainViewModel;
 import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicservice.data.PlayList;
@@ -682,8 +683,20 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public void onSongUpdated(@Nullable Song song) {
         KLogUtils.e("onSongUpdated: ");
+        updateMusicListSelection(song);
         //Music Duration
         updateMainUi(song);
+    }
+
+    private void updateMusicListSelection(@Nullable Song song) {
+        if (!isAdded()) {
+            return;
+        }
+        androidx.fragment.app.Fragment listFragment = requireActivity().getSupportFragmentManager()
+                .findFragmentByTag("0");
+        if (listFragment instanceof MusicListFragment) {
+            ((MusicListFragment) listFragment).selectSong(song);
+        }
     }
 
     private void updateMainUi(Song song) {
