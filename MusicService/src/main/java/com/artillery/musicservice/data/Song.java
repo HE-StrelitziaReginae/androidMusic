@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 /**
@@ -30,8 +31,13 @@ public class Song implements Parcelable {
     private int duration;
     @ColumnInfo
     private int size;
-    @ColumnInfo
     private boolean favorite;
+    @Ignore
+    private int quality = QUALITY_STANDARD;
+
+    public static final int QUALITY_STANDARD = 0;
+    public static final int QUALITY_HIGH = 1;
+    public static final int QUALITY_LOSSLESS = 2;
 
     public Song() {
         // Empty
@@ -113,6 +119,15 @@ public class Song implements Parcelable {
         this.favorite = favorite;
     }
 
+    public int getQuality() {
+        return quality;
+    }
+
+    public void setQuality(int quality) {
+        this.quality = quality < QUALITY_STANDARD || quality > QUALITY_LOSSLESS
+                ? QUALITY_STANDARD : quality;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -128,6 +143,7 @@ public class Song implements Parcelable {
         dest.writeString(this.path);
         dest.writeInt(this.duration);
         dest.writeInt(this.size);
+        dest.writeInt(this.quality);
         dest.writeInt(this.favorite ? 1 : 0);
     }
 
@@ -140,6 +156,7 @@ public class Song implements Parcelable {
         this.path = in.readString();
         this.duration = in.readInt();
         this.size = in.readInt();
+        this.quality = in.readInt();
         this.favorite = in.readInt() == 1;
     }
 

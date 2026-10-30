@@ -9,4 +9,5 @@
     <color name="music_drawer_icon">#FF5F6368</color>
     <color name="music_album_scrim">#22000000</color>
     <color name="music_album_placeholder">#FF424242</color>
+    <color name="music_quality_badge">#331F9D75</color>
 </resources>

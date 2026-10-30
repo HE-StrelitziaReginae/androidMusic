@@ -17,6 +17,8 @@
 
     <string name="music_not_play">暂无播放</string>
     <string name="music_unknown">未知</string>
+    <string name="music_quality_high">高清</string>
+    <string name="music_quality_lossless">无损</string>
     <string name="music_app_name">本地音乐</string>
     <string name="music_menu">打开菜单</string>
     <string name="music_profile_avatar">用户头像</string>

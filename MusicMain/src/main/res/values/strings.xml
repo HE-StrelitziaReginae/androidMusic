@@ -17,6 +17,8 @@
 
     <string name="music_not_play">Not Play</string>
     <string name="music_unknown">Unknown</string>
+    <string name="music_quality_high">HQ</string>
+    <string name="music_quality_lossless">LOSSLESS</string>
 
     <string name="music_app_name">Local Music</string>
     <string name="music_menu">Open menu</string>

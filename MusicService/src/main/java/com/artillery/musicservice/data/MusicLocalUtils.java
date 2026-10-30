@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public final class MusicLocalUtils {
+    private static final int HIGH_QUALITY_BITRATE = 256_000;
+
     private MusicLocalUtils() {
     }
 
@@ -68,6 +70,7 @@ public final class MusicLocalUtils {
                 song.setPath(filePath);
                 song.setDuration(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)));
                 song.setSize(fileSize);
+                song.setQuality(resolveQuality(filePath, mimeType));
                 song.setAlbum(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)));
 
                 String[] parsedData = parseDisplayName(displayName);
@@ -110,6 +113,60 @@ public final class MusicLocalUtils {
             return true;
         }
         return hasAudioMetadata(filePath);
+    }
+
+    private static boolean isLossless(String filePath, String mimeType) {
+        if (!TextUtils.isEmpty(mimeType)) {
+            if ("audio/flac".equalsIgnoreCase(mimeType)
+                    || "audio/wav".equalsIgnoreCase(mimeType)
+                    || "audio/x-wav".equalsIgnoreCase(mimeType)
+                    || "audio/alac".equalsIgnoreCase(mimeType)
+                    || "audio/ape".equalsIgnoreCase(mimeType)) {
+                return true;
+            }
+            if (mimeType.startsWith("audio/")) {
+                return false;
+            }
+        }
+        MediaExtractor extractor = new MediaExtractor();
+        try {
+            extractor.setDataSource(filePath);
+            for (int index = 0; index < extractor.getTrackCount(); index++) {
+                MediaFormat format = extractor.getTrackFormat(index);
+                String trackMime = format.getString(MediaFormat.KEY_MIME);
+                if ("audio/flac".equalsIgnoreCase(trackMime)
+                        || "audio/raw".equalsIgnoreCase(trackMime)) {
+                    return true;
+                }
+            }
+        } catch (IOException | RuntimeException ignored) {
+        } finally {
+            extractor.release();
+        }
+        return false;
+    }
+
+    private static int resolveQuality(String filePath, String mimeType) {
+        if (isLossless(filePath, mimeType)) {
+            return Song.QUALITY_LOSSLESS;
+        }
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath);
+            String bitrateValue = retriever.extractMetadata(
+                    MediaMetadataRetriever.METADATA_KEY_BITRATE);
+            if (!TextUtils.isEmpty(bitrateValue)
+                    && Integer.parseInt(bitrateValue) >= HIGH_QUALITY_BITRATE) {
+                return Song.QUALITY_HIGH;
+            }
+        } catch (RuntimeException ignored) {
+        } finally {
+            try {
+                retriever.release();
+            } catch (IOException ignored) {
+            }
+        }
+        return Song.QUALITY_STANDARD;
     }
 
     private static boolean hasAudioTrack(String filePath) {

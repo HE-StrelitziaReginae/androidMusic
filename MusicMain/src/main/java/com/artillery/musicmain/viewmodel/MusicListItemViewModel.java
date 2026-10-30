@@ -13,6 +13,7 @@ import com.artillery.musicmain.ui.MusicMainDialog;
 import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.utils.TimeUtils;
 import com.artillery.musicservice.data.Song;
+import com.artillery.musicmain.R;
 
 import java.util.ArrayList;
 
@@ -26,11 +27,14 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
     public ObservableField<String> musicName = new ObservableField<>();
     public ObservableField<String> musicArtist = new ObservableField<>();
     public ObservableField<String> musicDuration = new ObservableField<>();
+    public ObservableField<String> musicQuality = new ObservableField<>();
+    public ObservableBoolean lossless = new ObservableBoolean(false);
     public ObservableField<android.graphics.drawable.GradientDrawable> cardBackground = new ObservableField<>();
     public ObservableBoolean selected = new ObservableBoolean(false);
     public ObservableInt musicNameColor = new ObservableInt();
     public ObservableInt musicArtistColor = new ObservableInt();
     public ObservableInt musicDurationColor = new ObservableInt();
+    public ObservableInt musicQualityColor = new ObservableInt();
     public ObservableInt selectedIndicatorColor = new ObservableInt();
     private final ArrayList<Song> mSongList = new ArrayList<>();
     private final Song mSong;
@@ -44,6 +48,10 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
         musicName.set(song.getTitle());
         musicArtist.set(song.getArtist());
         musicDuration.set(TimeUtils.formatDuration(song.getDuration()));
+        lossless.set(song.getQuality() != Song.QUALITY_STANDARD);
+        musicQuality.set(song.getQuality() == Song.QUALITY_LOSSLESS
+                ? mViewModel.getApplication().getString(R.string.music_quality_lossless)
+                : mViewModel.getApplication().getString(R.string.music_quality_high));
         updateBackground();
     }
 
@@ -68,6 +76,7 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
         musicNameColor.set(isSelected ? skin.headerPrimaryText(context) : skin.primaryText(context));
         musicArtistColor.set(isSelected ? skin.headerSecondaryText(context) : skin.secondaryText(context));
         musicDurationColor.set(isSelected ? skin.headerSecondaryText(context) : skin.secondaryText(context));
+        musicQualityColor.set(isSelected ? skin.headerPrimaryText(context) : skin.accent(context));
         selectedIndicatorColor.set(skin.headerPrimaryText(context));
     }
 

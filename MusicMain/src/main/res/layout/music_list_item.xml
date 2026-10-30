@@ -60,7 +60,7 @@
                 android:textColor="@{musicListItemModel.musicNameColor}"
                 android:textSize="@dimen/sp_15"
                 app:layout_constraintBottom_toTopOf="@id/music_artist"
-                app:layout_constraintEnd_toStartOf="@id/music_duration"
+                app:layout_constraintEnd_toStartOf="@id/music_quality"
                 app:layout_constraintStart_toEndOf="@id/music_album"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed" />
@@ -78,9 +78,27 @@
                 android:textColor="@{musicListItemModel.musicArtistColor}"
                 android:textSize="@dimen/sp_10"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/music_duration"
+                app:layout_constraintEnd_toStartOf="@id/music_quality"
                 app:layout_constraintStart_toEndOf="@id/music_album"
                 app:layout_constraintTop_toBottomOf="@id/music_name" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/music_quality"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:background="@drawable/music_quality_badge"
+                android:paddingStart="@dimen/dp_6"
+                android:paddingTop="@dimen/dp_2"
+                android:paddingEnd="@dimen/dp_6"
+                android:paddingBottom="@dimen/dp_2"
+                android:text="@{musicListItemModel.musicQuality}"
+                android:textColor="@{musicListItemModel.musicQualityColor}"
+                android:textSize="@dimen/sp_9"
+                android:visibility="@{musicListItemModel.lossless ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/music_duration"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/music_duration"
