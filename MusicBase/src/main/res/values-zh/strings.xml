@@ -22,4 +22,8 @@
     <string name="base_notification_title">音乐</string>
     <string name="base_notification_text">暂无播放</string>
     <string name="base_notification_channel_name">音乐播放</string>
+    <string name="base_notification_previous">上一首</string>
+    <string name="base_notification_play">播放</string>
+    <string name="base_notification_pause">暂停</string>
+    <string name="base_notification_next">下一首</string>
 </resources>

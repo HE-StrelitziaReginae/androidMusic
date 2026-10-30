@@ -21,4 +21,8 @@
     <string name="base_notification_title">Music</string>
     <string name="base_notification_text">Nothing is playing</string>
     <string name="base_notification_channel_name">Music playback</string>
+    <string name="base_notification_previous">Previous</string>
+    <string name="base_notification_play">Play</string>
+    <string name="base_notification_pause">Pause</string>
+    <string name="base_notification_next">Next</string>
 </resources>

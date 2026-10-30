@@ -39,6 +39,7 @@ import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicbase.binding.command.BindingCommand;
 import com.artillery.musicbase.utils.BackgroundThreadUtils;
 import com.artillery.musicbase.utils.KLogUtils;
+import com.artillery.musicbase.helper.NotificationHelper;
 import com.artillery.musicbase.utils.SystemBarUtils;
 import com.artillery.musicmain.BR;
 import com.artillery.musicmain.R;
@@ -305,6 +306,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     private void applySkin(MusicSkin skin) {
         mMusicSkin = skin;
         skin.save(requireContext());
+        NotificationHelper.getInstance(requireContext()).refreshAccentColorFromSavedSkin();
         int background = skin.background(requireContext());
         int surface = skin.surface(requireContext());
         int icon = skin.icon(requireContext());
