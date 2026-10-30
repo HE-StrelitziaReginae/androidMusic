@@ -8,14 +8,17 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.artillery.musicbase.R;
+
 public class NotificationHelper {
     private static final String CHANNEL_ID = "custom_notification_channel";
-    private static final String CHANNEL_NAME = "custom_notification_channel_name";
     private static volatile NotificationHelper instance; // 添加 volatile 保证可见性
+    private final Context mContext;
     private final NotificationManager mNotificationManager;
 
     private NotificationHelper(Context context) {
-        mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mContext = context.getApplicationContext();
+        mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         createNotificationChannel();
     }
 
@@ -34,7 +37,7 @@ public class NotificationHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
-                    CHANNEL_NAME,
+                    mContext.getString(R.string.base_notification_channel_name),
                     NotificationManager.IMPORTANCE_HIGH
             );
             channel.setSound(null, null);

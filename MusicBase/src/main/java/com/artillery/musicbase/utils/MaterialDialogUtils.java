@@ -2,7 +2,6 @@ package com.artillery.musicbase.utils;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -28,15 +27,14 @@ public class MaterialDialogUtils {
         new MaterialDialog.Builder(context)
                 .title(title)
                 .content(content)
-                .positiveText("agree")
-                .negativeText("disagree")
+                .positiveText(R.string.base_dialog_agree)
+                .negativeText(R.string.base_dialog_disagree)
                 .positiveColorRes(R.color.white)
                 .negativeColorRes(R.color.white)
                 .titleGravity(GravityEnum.CENTER)
                 .titleColorRes(R.color.white)
                 .contentColorRes(android.R.color.white)
                 .dividerColorRes(R.color.white)
-                .positiveColor(Color.WHITE)
                 .negativeColorAttr(android.R.attr.textColorSecondaryInverse)
                 .theme(Theme.DARK)
                 .autoDismiss(true)  //点击是否关闭对话框
@@ -97,8 +95,8 @@ public class MaterialDialogUtils {
             content) {
         return new MaterialDialog.Builder(context)
                 .title(content)
-                .positiveText("确定")
-                .negativeText("取消");
+                .positiveText(R.string.base_dialog_confirm)
+                .negativeText(android.R.string.cancel);
     }
 
     /***
@@ -108,8 +106,8 @@ public class MaterialDialogUtils {
     public static MaterialDialog.Builder showBasicDialogNoTitle(final Context context, String content) {
         return new MaterialDialog.Builder(context)
                 .content(content)
-                .positiveText("确定")
-                .negativeText("取消");
+                .positiveText(R.string.base_dialog_confirm)
+                .negativeText(android.R.string.cancel);
     }
 
     /***
@@ -122,7 +120,7 @@ public class MaterialDialogUtils {
         return new MaterialDialog.Builder(context)
                 .title(title)
                 .content(content)
-                .positiveText("确定");
+                .positiveText(R.string.base_dialog_confirm);
     }
 
     /***
@@ -134,8 +132,8 @@ public class MaterialDialogUtils {
         return new MaterialDialog.Builder(context)
                 .title(title)
                 .content(content)
-                .positiveText("确定")
-                .negativeText("取消");
+                .positiveText(R.string.base_dialog_confirm)
+                .negativeText(android.R.string.cancel);
     }
 
     /***
@@ -147,8 +145,8 @@ public class MaterialDialogUtils {
         return new MaterialDialog.Builder(context)
                 .title(title)
                 .content(content)
-                .positiveText("复制")
-                .negativeText("取消");
+                .positiveText(R.string.base_dialog_copy)
+                .negativeText(android.R.string.cancel);
     }
 
     /***
@@ -158,8 +156,8 @@ public class MaterialDialogUtils {
     public static MaterialDialog.Builder getSelectDialog(Context context, String title, String[] arrays) {
         MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
                 .items(arrays)
-                .itemsColor(0XFF456ea6)
-                .negativeText("取消");
+                .itemsColorRes(R.color.royalblue)
+                .negativeText(android.R.string.cancel);
         if (!TextUtils.isEmpty(title)) {
             builder.title(title);
         }
@@ -182,7 +180,7 @@ public class MaterialDialogUtils {
 
                     }
                 })
-                .negativeText("取消");
+                .negativeText(android.R.string.cancel);
     }
 
     /***
@@ -204,7 +202,7 @@ public class MaterialDialogUtils {
                         return true; // allow selection
                     }
                 })
-                .positiveText("选择");
+                .positiveText(R.string.base_dialog_select);
     }
 
 
@@ -235,7 +233,7 @@ public class MaterialDialogUtils {
                 })
                 .alwaysCallMultiChoiceCallback()
                 .autoDismiss(false)
-                .neutralText("clear")
+                .neutralText(R.string.base_dialog_clear)
                 .itemsDisabledIndices(0, 1);
     }
 
@@ -249,7 +247,7 @@ public class MaterialDialogUtils {
         return new MaterialDialog.Builder(context)
                 .title(title)
                 .customView(content, true)
-                .positiveText("确定")
+                .positiveText(R.string.base_dialog_confirm)
                 .negativeText(android.R.string.cancel)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
@@ -272,9 +270,9 @@ public class MaterialDialogUtils {
                 .inputType(InputType.TYPE_CLASS_TEXT |
                         InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
                         InputType.TYPE_TEXT_FLAG_CAP_WORDS)
-                .positiveText("确定")
-                .negativeText("取消")
-                .input("hint", "prefill", true, new MaterialDialog.InputCallback() {
+                .positiveText(R.string.base_dialog_confirm)
+                .negativeText(android.R.string.cancel)
+                .input(R.string.base_dialog_input_hint, 0, true, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
 

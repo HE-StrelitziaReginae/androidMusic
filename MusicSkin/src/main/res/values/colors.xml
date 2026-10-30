@@ -48,4 +48,15 @@
     <color name="music_noa_header_primary">#FFFFFFFF</color>
     <color name="music_noa_icon">#FFE3B95F</color>
     <color name="music_noa_accent">#FFF0C86A</color>
+    <color name="music_avatar_ring_fill">#22FFFFFF</color>
+    <color name="music_avatar_ring_stroke">#AAFFFFFF</color>
+    <color name="music_banner_scrim_start">#ED3E2B5E</color>
+    <color name="music_banner_scrim_end">#160C0A20</color>
+    <color name="music_character_scrim_start">#000C0920</color>
+    <color name="music_character_scrim_end">#990C0920</color>
+    <color name="music_drawer_character_scrim_start">#E83E2B5E</color>
+    <color name="music_drawer_character_scrim_end">#160D2138</color>
+    <color name="music_seekbar_start">#FFFF0000</color>
+    <color name="music_seekbar_center">#FFFFD700</color>
+    <color name="music_seekbar_end">#FFB8860B</color>
 </resources>

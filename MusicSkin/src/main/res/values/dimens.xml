@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="music_skin_avatar_ring_stroke_width">2dp</dimen>
+    <dimen name="music_skin_seekbar_radius">25dp</dimen>
+</resources>

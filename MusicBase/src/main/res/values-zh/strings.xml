@@ -12,4 +12,14 @@
     <string name="customactivityoncrash_error_activity_error_details_clipboard_label">错误信息</string>
 
     <string name="base_dialog_label">请稍后…</string>
+    <string name="base_dialog_agree">同意</string>
+    <string name="base_dialog_disagree">不同意</string>
+    <string name="base_dialog_confirm">确定</string>
+    <string name="base_dialog_copy">复制</string>
+    <string name="base_dialog_select">选择</string>
+    <string name="base_dialog_clear">清除</string>
+    <string name="base_dialog_input_hint">请输入内容</string>
+    <string name="base_notification_title">音乐</string>
+    <string name="base_notification_text">暂无播放</string>
+    <string name="base_notification_channel_name">音乐播放</string>
 </resources>

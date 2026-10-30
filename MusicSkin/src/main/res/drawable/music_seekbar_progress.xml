@@ -2,18 +2,18 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
-            <corners android:radius="25dp" />
-            <solid android:color="#FF000000" />
+            <corners android:radius="@dimen/music_skin_seekbar_radius" />
+            <solid android:color="@color/black" />
         </shape>
     </item>
     <item android:id="@android:id/secondaryProgress">
         <clip>
             <shape>
-                <corners android:radius="25dp" />
+                <corners android:radius="@dimen/music_skin_seekbar_radius" />
                 <gradient
-                    android:centerColor="#FFFFD700"
-                    android:endColor="#FFB8860B"
-                    android:startColor="#FFFF0000"
+                    android:centerColor="@color/music_seekbar_center"
+                    android:endColor="@color/music_seekbar_end"
+                    android:startColor="@color/music_seekbar_start"
                     android:type="linear" />
             </shape>
         </clip>

@@ -10,6 +10,11 @@ import android.graphics.Rect;
 import android.media.MediaMetadataRetriever;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
+import com.artillery.musicbase.utils.Utils;
+import com.artillery.musicmain.R;
+
 import com.artillery.musicservice.data.Song;
 
 import java.io.File;
@@ -40,7 +45,7 @@ public class AlbumUtils {
                 bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
-        final int color = 0xff424242;
+        final int color = ContextCompat.getColor(Utils.getContext(), R.color.music_album_placeholder);
         final Paint paint = new Paint();
         final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 

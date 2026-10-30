@@ -563,7 +563,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             indicatorBackground.setStroke(dp(1), withAlpha(secondary, 110));
         }
         indicator.setBackground(indicatorBackground);
-        indicatorDot.setBackground(roundBackground(android.graphics.Color.WHITE, 4));
+        indicatorDot.setBackground(roundBackground(skin.headerPrimaryText(requireContext()), 4));
         indicatorDot.setVisibility(selected ? View.VISIBLE : View.GONE);
         GradientDrawable rowBackground = roundBackground(
                 selected ? withAlpha(accent, 24) : withAlpha(secondary, 10), 16);

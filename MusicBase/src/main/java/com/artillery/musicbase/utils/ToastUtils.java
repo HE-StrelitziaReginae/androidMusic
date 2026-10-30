@@ -17,17 +17,20 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
+import com.artillery.musicbase.R;
+
 import java.lang.ref.WeakReference;
 
 /**
  * 吐司工具类
  */
 public final class ToastUtils {
-    private static final int DEFAULT_COLOR = 0x12000000;
+    private static final int DEFAULT_COLOR = Utils.getContext().getColor(R.color.base_toast_default);
     private static Toast sToast;
     private static int gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
     private static int xOffset = 0;
-    private static int yOffset = (int) (64 * Utils.getContext().getResources().getDisplayMetrics().density + 0.5);
+    private static int yOffset = Utils.getContext().getResources()
+            .getDimensionPixelSize(R.dimen.dp_64);
     private static int backgroundColor = DEFAULT_COLOR;
     private static int bgResource = -1;
     private static int messageColor = DEFAULT_COLOR;

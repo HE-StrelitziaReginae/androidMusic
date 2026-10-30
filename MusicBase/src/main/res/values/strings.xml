@@ -11,4 +11,14 @@
     <string name="customactivityoncrash_error_activity_error_details_clipboard_label">errorMessage</string>
 
     <string name="base_dialog_label">pleaseWait…</string>
+    <string name="base_dialog_agree">Agree</string>
+    <string name="base_dialog_disagree">Disagree</string>
+    <string name="base_dialog_confirm">Confirm</string>
+    <string name="base_dialog_copy">Copy</string>
+    <string name="base_dialog_select">Select</string>
+    <string name="base_dialog_clear">Clear</string>
+    <string name="base_dialog_input_hint">Enter content</string>
+    <string name="base_notification_title">Music</string>
+    <string name="base_notification_text">Nothing is playing</string>
+    <string name="base_notification_channel_name">Music playback</string>
 </resources>

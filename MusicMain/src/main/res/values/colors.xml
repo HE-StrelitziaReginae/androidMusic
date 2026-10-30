@@ -7,4 +7,6 @@
     <color name="music_text_primary">#FF202124</color>
     <color name="music_text_secondary">#FF74757C</color>
     <color name="music_drawer_icon">#FF5F6368</color>
+    <color name="music_album_scrim">#22000000</color>
+    <color name="music_album_placeholder">#FF424242</color>
 </resources>

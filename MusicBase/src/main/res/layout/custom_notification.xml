@@ -8,12 +8,12 @@
         android:id="@+id/notification_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="音乐" />
+        android:text="@string/base_notification_title" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/notification_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="邓紫棋" />
+        android:text="@string/base_notification_text" />
 
 </LinearLayout>
