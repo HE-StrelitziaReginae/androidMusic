@@ -1,22 +1,16 @@
 package com.artillery.musicservice.service;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
 import com.artillery.musicbase.helper.NotificationHelper;
-import com.artillery.musicbase.utils.BackgroundThreadUtils;
 import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
@@ -30,10 +24,6 @@ public class MusicService extends Service implements MusicListener, MusicListene
     private static final int NOTIFICATION_ID = 1;
     private MusicPlayer mMusicPlayer;
     private NotificationHelper mNotificationHelper;
-    private final Handler mMainHandler = new Handler(Looper.getMainLooper());
-    private String mArtworkPath;
-    private Bitmap mArtwork;
-    private long mArtworkRequest;
     private boolean mForegroundStarted;
     private final Binder mBinder = new LocalBinder();
 
@@ -262,10 +252,7 @@ public class MusicService extends Service implements MusicListener, MusicListene
             return;
         }
         if (song == null) {
-            mArtworkPath = null;
             mNotificationHelper.clearPlaybackNotification(NOTIFICATION_ID);
-            mArtwork = null;
-            ++mArtworkRequest;
             stopForeground(true);
             mForegroundStarted = false;
             return;
@@ -273,12 +260,11 @@ public class MusicService extends Service implements MusicListener, MusicListene
         String title = TextUtils.isEmpty(song.getTitle()) ? song.getDisplayName() : song.getTitle();
         String artist = TextUtils.isEmpty(song.getArtist())
                 ? getString(com.artillery.musicbase.R.string.base_notification_text) : song.getArtist();
-        loadArtworkIfNeeded(song);
         mNotificationHelper.refreshAccentColorFromSavedSkin();
         android.app.Notification notification = mNotificationHelper.buildPlaybackNotification(title, artist, playing,
                 getLaunchPendingIntent(), getPendingIntent(MusicContext.ACTION_PLAY_PRE),
                 getPendingIntent(MusicContext.ACTION_PLAY), getPendingIntent(MusicContext.ACTION_PLAY_NEXT),
-                position, song.getDuration(), mArtwork, NOTIFICATION_ID);
+                position, song.getDuration(), NOTIFICATION_ID);
         if (!mForegroundStarted) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                 startForeground(NOTIFICATION_ID, notification,
@@ -292,91 +278,11 @@ public class MusicService extends Service implements MusicListener, MusicListene
         }
     }
 
-    private void loadArtworkIfNeeded(@Nullable Song song) {
-        String path = song == null ? null : song.getPath();
-        if (TextUtils.equals(path, mArtworkPath)) {
-            return;
-        }
-        mArtworkPath = path;
-        mArtwork = null;
-        final long request = ++mArtworkRequest;
-        if (TextUtils.isEmpty(path)) {
-            return;
-        }
-        BackgroundThreadUtils.getInstance().post(() -> {
-            Bitmap artwork = readArtwork(path);
-            mMainHandler.post(() -> {
-                if (request != mArtworkRequest || !TextUtils.equals(path, mArtworkPath)) {
-                    if (artwork != null && !artwork.isRecycled()) {
-                        artwork.recycle();
-                    }
-                    return;
-                }
-                mArtwork = artwork;
-                if (artwork != null) {
-                    updateNotification();
-                }
-            });
-        });
-    }
-
-    @Nullable
-    private Bitmap readArtwork(String path) {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        try {
-            retriever.setDataSource(path);
-            byte[] picture = retriever.getEmbeddedPicture();
-            if (picture == null || picture.length == 0) {
-                return null;
-            }
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeByteArray(picture, 0, picture.length, options);
-            options.inSampleSize = sampleSize(options.outWidth, options.outHeight);
-            options.inJustDecodeBounds = false;
-            Bitmap artwork = BitmapFactory.decodeByteArray(picture, 0, picture.length, options);
-            if (artwork == null) {
-                return null;
-            }
-            int maxSize = 512;
-            int largestSide = Math.max(artwork.getWidth(), artwork.getHeight());
-            if (largestSide > maxSize) {
-                float scale = (float) maxSize / largestSide;
-                Bitmap scaled = Bitmap.createScaledBitmap(artwork,
-                        Math.max(1, Math.round(artwork.getWidth() * scale)),
-                        Math.max(1, Math.round(artwork.getHeight() * scale)), true);
-                if (scaled != artwork) {
-                    artwork.recycle();
-                    artwork = scaled;
-                }
-            }
-            return artwork;
-        } catch (RuntimeException ignored) {
-            return null;
-        } finally {
-            try {
-                retriever.release();
-            } catch (java.io.IOException ignored) {
-            }
-        }
-    }
-
-    private int sampleSize(int width, int height) {
-        int largestSide = Math.max(width, height);
-        int sampleSize = 1;
-        while (largestSide / sampleSize > 512) {
-            sampleSize *= 2;
-        }
-        return sampleSize;
-    }
-
     @Override
     public void onDestroy() {
-        mArtworkRequest++;
         if (mNotificationHelper != null) {
             mNotificationHelper.clearPlaybackNotification(NOTIFICATION_ID);
         }
-        mArtwork = null;
         mForegroundStarted = false;
         mMusicPlayer.unregisterCallback(this);
         releasePlayer();

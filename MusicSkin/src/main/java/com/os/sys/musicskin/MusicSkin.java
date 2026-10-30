@@ -278,6 +278,17 @@ public enum MusicSkin {
         return resolve(context, accentColor);
     }
 
+    public Drawable notificationArtwork(Context context) {
+        boolean useDefaultIcon = musicTab == 0;
+        int artworkResId = useDefaultIcon ? R.drawable.music_tab_home : musicTab;
+        Drawable artwork = ContextCompat.getDrawable(context, artworkResId);
+        if (artwork != null && useDefaultIcon) {
+            artwork = artwork.mutate();
+            artwork.setTint(accent(context));
+        }
+        return artwork;
+    }
+
     public ColorStateList tabTextColors(Context context) {
         return new ColorStateList(
                 new int[][]{

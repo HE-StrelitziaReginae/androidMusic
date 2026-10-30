@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 
 import android.support.v4.media.MediaMetadataCompat;
@@ -30,6 +32,8 @@ public class NotificationHelper {
     private long mLastDuration;
     private long mLastPosition;
     private Bitmap mLastArtwork;
+    private Bitmap mThemeArtwork;
+    private int mThemeArtworkSkin = -1;
     private boolean mLastPlaying;
     private PendingIntent mLastContentIntent;
     private PendingIntent mLastPreviousIntent;
@@ -99,7 +103,13 @@ public class NotificationHelper {
     }
 
     public void refreshAccentColorFromSavedSkin() {
-        setAccentColor(MusicSkin.load(mContext).accent(mContext));
+        MusicSkin skin = MusicSkin.load(mContext);
+        mAccentColor = skin.accent(mContext);
+        if (mLastTitle != null) {
+            mLastArtwork = getThemeArtwork(skin);
+            updateMediaSession();
+            refreshNotification();
+        }
     }
 
     public void setSeekListener(SeekListener seekListener) {
@@ -113,7 +123,6 @@ public class NotificationHelper {
                                                    PendingIntent nextIntent,
                                                    long position,
                                                    long duration,
-                                                   Bitmap artwork,
                                                    int notificationId) {
         mLastTitle = title;
         mLastArtist = artist;
@@ -124,7 +133,7 @@ public class NotificationHelper {
         mLastNextIntent = nextIntent;
         mLastPosition = Math.max(0, position);
         mLastDuration = Math.max(0, duration);
-        mLastArtwork = artwork;
+        mLastArtwork = getThemeArtwork(MusicSkin.load(mContext));
         mLastNotificationId = notificationId;
         mMediaSession.setActive(true);
         if (contentIntent != null) {
@@ -132,6 +141,23 @@ public class NotificationHelper {
         }
         updateMediaSession();
         return createPlaybackNotification();
+    }
+
+    private Bitmap getThemeArtwork(MusicSkin skin) {
+        if (mThemeArtwork != null && mThemeArtworkSkin == skin.ordinal()) {
+            return mThemeArtwork;
+        }
+        Drawable drawable = skin.notificationArtwork(mContext);
+        if (drawable == null) {
+            return null;
+        }
+        int size = Math.round(64 * mContext.getResources().getDisplayMetrics().density);
+        Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+        drawable.setBounds(0, 0, size, size);
+        drawable.draw(new Canvas(bitmap));
+        mThemeArtwork = bitmap;
+        mThemeArtworkSkin = skin.ordinal();
+        return bitmap;
     }
 
     public void clearPlaybackNotification(int notificationId) {
