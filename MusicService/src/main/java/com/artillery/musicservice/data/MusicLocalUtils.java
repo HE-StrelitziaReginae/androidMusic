@@ -68,7 +68,8 @@ public final class MusicLocalUtils {
                 song.setId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)));
                 song.setDisplayName(displayName);
                 song.setPath(filePath);
-                song.setDuration(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)));
+                int duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+                song.setDuration(duration > 0 ? duration : resolveDuration(filePath));
                 song.setSize(fileSize);
                 song.setQuality(resolveQuality(filePath, mimeType));
                 song.setAlbum(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)));
@@ -169,6 +170,25 @@ public final class MusicLocalUtils {
         return Song.QUALITY_STANDARD;
     }
 
+    private static int resolveDuration(String filePath) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath);
+            String durationValue = retriever.extractMetadata(
+                    MediaMetadataRetriever.METADATA_KEY_DURATION);
+            if (!TextUtils.isEmpty(durationValue)) {
+                return Integer.parseInt(durationValue);
+            }
+        } catch (RuntimeException ignored) {
+        } finally {
+            try {
+                retriever.release();
+            } catch (IOException ignored) {
+            }
+        }
+        return 0;
+    }
+
     private static boolean hasAudioTrack(String filePath) {
         MediaExtractor extractor = new MediaExtractor();
         try {
@@ -176,7 +196,7 @@ public final class MusicLocalUtils {
             for (int index = 0; index < extractor.getTrackCount(); index++) {
                 MediaFormat format = extractor.getTrackFormat(index);
                 String trackMime = format.getString(MediaFormat.KEY_MIME);
-                if (!TextUtils.isEmpty(trackMime) && trackMime.startsWith("audio/")) {
+                if (!TextUtils.isEmpty(trackMime) && trackMime.startsWith("audio/*")) {
                     return true;
                 }
             }
