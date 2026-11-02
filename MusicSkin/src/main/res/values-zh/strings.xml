@@ -8,6 +8,8 @@
     <string name="music_skin_sakura">樱花幻想</string>
     <string name="music_skin_kira">琪拉·维加：霓虹频率</string>
     <string name="music_skin_noa">诺亚·流明：森语共鸣</string>
+    <string name="music_skin_luna">露娜·塞蕾斯蒂亚：月海回声</string>
+    <string name="music_skin_akari">焰明朱莉：夕照律动</string>
     <string name="music_character_name">星野琉璃</string>
     <string name="music_character_badge">午夜樱花 · 音乐选择者</string>
     <string name="music_character_hint">原创角色主题</string>
@@ -44,6 +46,30 @@
     <string name="music_noa_mine_eyebrow">我的收藏 · 诺亚·流明</string>
     <string name="music_noa_mine_title">让喜欢的歌继续生长</string>
     <string name="music_noa_mine_subtitle">收藏歌曲与微小奇迹的生命档案</string>
+    <string name="music_luna_name">露娜·塞蕾斯蒂亚</string>
+    <string name="music_luna_badge">月海回声 · 星海歌姬</string>
+    <string name="music_luna_hint">原创角色主题</string>
+    <string name="music_luna_music_eyebrow">月色潮汐 · 本地音乐</string>
+    <string name="music_luna_music_title">露娜的月海舞台</string>
+    <string name="music_luna_music_subtitle">让每段旋律都漂向银色潮汐</string>
+    <string name="music_luna_online_eyebrow">追寻远方的回声</string>
+    <string name="music_luna_online_title">露娜的星潮雷达</string>
+    <string name="music_luna_online_subtitle">在月光尽头发现下一首歌</string>
+    <string name="music_luna_mine_eyebrow">我的收藏 · 露娜·塞蕾斯蒂亚</string>
+    <string name="music_luna_mine_title">把月光留在身边</string>
+    <string name="music_luna_mine_subtitle">收藏潮汐、星辰与歌声的安静宇宙</string>
+    <string name="music_akari_name">焰明朱莉</string>
+    <string name="music_akari_badge">夕照律动 · 天台摇滚主唱</string>
+    <string name="music_akari_hint">原创角色主题</string>
+    <string name="music_akari_music_eyebrow">夕照现场 · 本地音乐</string>
+    <string name="music_akari_music_title">朱莉的天台专场</string>
+    <string name="music_akari_music_subtitle">把每一次落日唱成新的副歌</string>
+    <string name="music_akari_online_eyebrow">追逐下一次安可</string>
+    <string name="music_akari_online_title">朱莉的歌单雷达</string>
+    <string name="music_akari_online_subtitle">为前方的旅途找到更响亮的歌</string>
+    <string name="music_akari_mine_eyebrow">我的收藏 · 焰明朱莉</string>
+    <string name="music_akari_mine_title">别让热情熄灭</string>
+    <string name="music_akari_mine_subtitle">收藏喜欢的歌与每一次热烈回忆</string>
     <string-array name="music_skins">
         <item>@string/music_skin_light</item>
         <item>@string/music_skin_dark</item>
@@ -51,5 +77,7 @@
         <item>@string/music_skin_sakura</item>
         <item>@string/music_skin_kira</item>
         <item>@string/music_skin_noa</item>
+        <item>@string/music_skin_luna</item>
+        <item>@string/music_skin_akari</item>
     </string-array>
 </resources>

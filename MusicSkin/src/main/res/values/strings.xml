@@ -8,6 +8,8 @@
     <string name="music_skin_sakura">Sakura Fantasy</string>
     <string name="music_skin_kira">Kira Vega: Neon Frequency</string>
     <string name="music_skin_noa">Noa Lumen: Verdant Resonance</string>
+    <string name="music_skin_luna">Luna Celestia: Moonsea Echo</string>
+    <string name="music_skin_akari">Akari Homura: Sunset Rhythm</string>
     <string name="music_character_name">HOSHINO RURI</string>
     <string name="music_character_badge">MIDNIGHT CHERRY / MUSIC SELECTOR</string>
     <string name="music_character_hint">ORIGINAL CHARACTER THEME</string>
@@ -44,6 +46,30 @@
     <string name="music_noa_mine_eyebrow">MY COLLECTION / NOA LUMEN</string>
     <string name="music_noa_mine_title">LET YOUR FAVORITES BLOOM</string>
     <string name="music_noa_mine_subtitle">A living archive of songs and small wonders</string>
+    <string name="music_luna_name">LUNA CELESTIA</string>
+    <string name="music_luna_badge">MOONSEA ECHO / CELESTIAL VOCALIST</string>
+    <string name="music_luna_hint">ORIGINAL CHARACTER THEME</string>
+    <string name="music_luna_music_eyebrow">MOONLIT TIDE / LOCAL LIBRARY</string>
+    <string name="music_luna_music_title">LUNA MOONSEA STAGE</string>
+    <string name="music_luna_music_subtitle">Let every melody drift across the silver tide</string>
+    <string name="music_luna_online_eyebrow">FOLLOW THE DISTANT ECHO</string>
+    <string name="music_luna_online_title">LUNA STARWAVE RADAR</string>
+    <string name="music_luna_online_subtitle">Discover a song beyond the moonlit horizon</string>
+    <string name="music_luna_mine_eyebrow">MY ARCHIVE / LUNA CELESTIA</string>
+    <string name="music_luna_mine_title">KEEP THE MOONLIGHT CLOSE</string>
+    <string name="music_luna_mine_subtitle">Your quiet collection of tides, stars and songs</string>
+    <string name="music_akari_name">AKARI HOMURA</string>
+    <string name="music_akari_badge">SUNSET RHYTHM / ROOFTOP ROCK VOCALIST</string>
+    <string name="music_akari_hint">ORIGINAL CHARACTER THEME</string>
+    <string name="music_akari_music_eyebrow">SUNSET LIVE / LOCAL LIBRARY</string>
+    <string name="music_akari_music_title">AKARI ROOFTOP SESSION</string>
+    <string name="music_akari_music_subtitle">Turn every fading sunset into one more chorus</string>
+    <string name="music_akari_online_eyebrow">CHASE THE NEXT ENCORE</string>
+    <string name="music_akari_online_title">AKARI SETLIST RADAR</string>
+    <string name="music_akari_online_subtitle">Find a louder song for the road ahead</string>
+    <string name="music_akari_mine_eyebrow">MY ARCHIVE / AKARI HOMURA</string>
+    <string name="music_akari_mine_title">NEVER LET THE FIRE FADE</string>
+    <string name="music_akari_mine_subtitle">Your personal encore of favorite songs and memories</string>
     <string-array name="music_skins">
         <item>@string/music_skin_light</item>
         <item>@string/music_skin_dark</item>
@@ -51,5 +77,7 @@
         <item>@string/music_skin_sakura</item>
         <item>@string/music_skin_kira</item>
         <item>@string/music_skin_noa</item>
+        <item>@string/music_skin_luna</item>
+        <item>@string/music_skin_akari</item>
     </string-array>
 </resources>

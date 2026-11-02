@@ -373,7 +373,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             return;
         }
         int size = getResources().getDimensionPixelSize(skin.isCharacterSkin()
-                ? com.artillery.musicbase.R.dimen.dp_34
+                ? com.artillery.musicbase.R.dimen.dp_40
                 : com.artillery.musicbase.R.dimen.dp_20);
         drawable.setBounds(0, 0, size, size);
         tab.setCompoundDrawables(null, drawable, null, null);
