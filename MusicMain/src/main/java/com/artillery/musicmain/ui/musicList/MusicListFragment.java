@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.os.Handler;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.artillery.musicbase.base.BaseFragment;
 import com.artillery.musicbase.utils.BackgroundThreadUtils;
@@ -32,11 +34,16 @@ import java.util.ArrayList;
 public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, MusicListViewModel> {
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
     private int mRefreshGeneration;
+    private boolean mMusicListLoaded;
+    private boolean mScanInProgress;
+    private boolean mRefreshRequested;
+    private final Runnable mDebouncedRefresh = this::refreshMusicList;
     private final ContentObserver mMusicObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            refreshMusicList();
+            mMainHandler.removeCallbacks(mDebouncedRefresh);
+            mMainHandler.postDelayed(mDebouncedRefresh, 500);
         }
     };
 
@@ -62,9 +69,12 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
     @Override
     public void onStart() {
         super.onStart();
+        configureListPerformance();
         Song playingSong = MusicDaraListener.getInstance().getPlayingSong();
         mViewModel.selectSong(playingSong);
-        refreshMusicList();
+        if (!mMusicListLoaded) {
+            refreshMusicList();
+        }
         applySkin(MusicSkin.load(requireContext()));
         if (!mObserverRegistered) {
             requireContext().getContentResolver().registerContentObserver(
@@ -73,9 +83,23 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
         }
     }
 
+    private void configureListPerformance() {
+        if (mBinding == null) {
+            return;
+        }
+        RecyclerView recyclerView = mBinding.musicList;
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(8);
+        RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
+    }
+
     @Override
     public void onStop() {
         mRefreshGeneration++;
+        mMainHandler.removeCallbacks(mDebouncedRefresh);
         if (mObserverRegistered) {
             requireContext().getContentResolver().unregisterContentObserver(mMusicObserver);
             mObserverRegistered = false;
@@ -87,23 +111,41 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
         if (mViewModel == null || !isAdded() || getView() == null) {
             return;
         }
+        if (mScanInProgress) {
+            mRefreshRequested = true;
+            return;
+        }
+        mScanInProgress = true;
+        mRefreshRequested = false;
         final int generation = ++mRefreshGeneration;
         BackgroundThreadUtils.getInstance().post(() -> {
             ArrayList<Song> music = mViewModel.scanMusicList();
             mMainHandler.post(() -> {
+                mScanInProgress = false;
                 if (!isAdded() || mViewModel == null || generation != mRefreshGeneration) {
+                    refreshIfRequested();
                     return;
                 }
                 if (music == null) {
+                    refreshIfRequested();
                     return;
                 }
+                mMusicListLoaded = true;
                 mViewModel.updateMusicList(music);
                 MusicDaraListener.getInstance().updateMusicList(music);
                 if (mMusicSkin != null) {
                     applySkin(mMusicSkin);
                 }
+                refreshIfRequested();
             });
         });
+    }
+
+    private void refreshIfRequested() {
+        if (mRefreshRequested && isAdded() && getView() != null) {
+            mRefreshRequested = false;
+            refreshMusicList();
+        }
     }
 
     private MusicSkin mMusicSkin;
@@ -127,19 +169,6 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
             mBinding.musicSkinBannerTitle.setTextColor(skin.headerPrimaryText(requireContext()));
             mBinding.musicSkinBannerSubtitle.setTextColor(skin.headerSecondaryText(requireContext()));
         }
-        mBinding.musicList.post(() -> {
-            for (int index = 0; index < mBinding.musicList.getChildCount(); index++) {
-                android.view.View item = mBinding.musicList.getChildAt(index);
-                android.widget.TextView title = item.findViewById(R.id.music_name);
-                android.widget.TextView artist = item.findViewById(R.id.music_artist);
-                if (title != null) {
-                    title.setTextColor(skin.primaryText(requireContext()));
-                }
-                if (artist != null) {
-                    artist.setTextColor(skin.secondaryText(requireContext()));
-                }
-            }
-        });
     }
 
     public void selectSong(@Nullable Song song) {

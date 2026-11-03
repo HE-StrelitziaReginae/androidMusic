@@ -76,6 +76,11 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     private boolean mMusicListLoaded;
     private int mStartIndex = 0;
     private MusicSkin mMusicSkin;
+    private String mDisplayedSongPath;
+    private long mDisplayedSongId;
+    private boolean mHasDisplayedSong;
+    private boolean mLastReportedPlaying;
+    private boolean mHasReportedPlaybackStatus;
 
     @Override
     public void initData() {
@@ -113,6 +118,8 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public void initViewObservable() {
         applySystemBarInsets();
+        mHasDisplayedSong = false;
+        mHasReportedPlaybackStatus = false;
         mViewModel.binMusicView(this);
         mBinding.musicGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -632,13 +639,38 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
 
     @Override
     public void onPlaybackStateChanged(@Nullable Song song, long position, boolean isPlaying) {
-        onSongUpdated(song);
-        updatePlayToggle(isPlaying);
+        if (!isSameDisplayedSong(song)) {
+            mDisplayedSongPath = song == null ? null : song.getPath();
+            mDisplayedSongId = song == null ? 0 : song.getId();
+            mHasDisplayedSong = true;
+            onSongUpdated(song);
+        }
+        updatePlayToggleIfChanged(isPlaying);
         MusicDaraListener.getInstance().setUpdatePosition(position);
+    }
+
+    private boolean isSameDisplayedSong(@Nullable Song song) {
+        if (!mHasDisplayedSong) {
+            return false;
+        }
+        if (song == null) {
+            return mDisplayedSongId == 0 && mDisplayedSongPath == null;
+        }
+        return mDisplayedSongId == song.getId()
+                && TextUtils.equals(mDisplayedSongPath, song.getPath());
     }
 
     @Override
     public void onPlayStatusChanged(boolean isPlaying) {
+        updatePlayToggleIfChanged(isPlaying);
+    }
+
+    private void updatePlayToggleIfChanged(boolean isPlaying) {
+        if (mHasReportedPlaybackStatus && mLastReportedPlaying == isPlaying) {
+            return;
+        }
+        mLastReportedPlaying = isPlaying;
+        mHasReportedPlaybackStatus = true;
         updatePlayToggle(isPlaying);
     }
 
@@ -738,7 +770,12 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
     @Override
     public void updatePlayToggle(boolean play) {
         KLogUtils.e("updatePlayToggle: " + play);
-        MusicDaraListener.getInstance().setUpdateUi(play);
+        MusicMainDialog existingDialog = MusicMainDialog.getExistingInstance();
+        if (existingDialog != null && existingDialog.isShowing()) {
+            existingDialog.updateUi(play);
+        } else {
+            MusicDaraListener.getInstance().setUpdateUi(play);
+        }
         mBinding.musicPlayBtn.setImageDrawable(play ? ContextCompat.getDrawable(requireContext(), R.drawable.pause)
                 : ContextCompat.getDrawable(requireContext(), R.drawable.play));
         mBinding.musicPlayBtn.setColorFilter((mMusicSkin == null ? MusicSkin.load(requireContext()) : mMusicSkin)

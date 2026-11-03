@@ -36,13 +36,15 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
     public ObservableInt musicDurationColor = new ObservableInt();
     public ObservableInt musicQualityColor = new ObservableInt();
     public ObservableInt selectedIndicatorColor = new ObservableInt();
-    private final ArrayList<Song> mSongList = new ArrayList<>();
+    private final ArrayList<Song> mSongList;
     private final Song mSong;
     private final int mStartIndex;
+    private MusicSkin mMusicSkin;
 
-    public MusicListItemViewModel(@NonNull MusicListViewModel viewModel, Song song, ArrayList<Song> music, int start) {
+    public MusicListItemViewModel(@NonNull MusicListViewModel viewModel, Song song, ArrayList<Song> music, int start,
+                                  MusicSkin skin) {
         super(viewModel);
-        mSongList.addAll(music);
+        mSongList = music;
         mSong = song;
         mStartIndex = start;
         musicName.set(song.getTitle());
@@ -52,7 +54,7 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
         musicQuality.set(song.getQuality() == Song.QUALITY_LOSSLESS
                 ? mViewModel.getApplication().getString(R.string.music_quality_lossless)
                 : mViewModel.getApplication().getString(R.string.music_quality_high));
-        updateBackground();
+        applySkin(skin);
     }
 
     public BindingCommand musicPlay = new BindingCommand(new BindingAction() {
@@ -66,10 +68,13 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
 
     public void setSelected(boolean value) {
         selected.set(value);
-        applySkin(MusicSkin.load(mViewModel.getApplication()));
+        if (mMusicSkin != null) {
+            applySkin(mMusicSkin);
+        }
     }
 
     public void applySkin(MusicSkin skin) {
+        mMusicSkin = skin;
         android.content.Context context = mViewModel.getApplication();
         boolean isSelected = selected.get();
         cardBackground.set(skin.cardBackground(context, isSelected));
@@ -82,9 +87,5 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
 
     public String getSongPath() {
         return mSong.getPath();
-    }
-
-    private void updateBackground() {
-        setSelected(false);
     }
 }

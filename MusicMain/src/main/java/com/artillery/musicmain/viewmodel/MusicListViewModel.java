@@ -25,9 +25,11 @@ import me.tatarka.bindingcollectionadapter2.ItemBinding;
 public class MusicListViewModel extends BaseViewModel<MusicRepository> {
     private MusicListItemViewModel selectedItem;
     private String selectedSongPath;
+    private MusicSkin musicSkin;
 
     public MusicListViewModel(@NonNull Application application, @NonNull MusicRepository repository) {
         super(application, repository);
+        musicSkin = MusicSkin.load(application);
     }
 
     @Nullable
@@ -41,22 +43,27 @@ public class MusicListViewModel extends BaseViewModel<MusicRepository> {
             music = new ArrayList<>();
         }
         String selectedPath = selectedItem == null ? selectedSongPath : selectedItem.getSongPath();
-        musicListItem.clear();
-        selectedItem = null;
         ArrayList<Song> currentMusic = new ArrayList<>(music);
+        ArrayList<MusicListItemViewModel> updatedItems = new ArrayList<>(currentMusic.size());
+        selectedItem = null;
         currentMusic.forEach(LambadaTools.forEachWithIndex((song, start) -> {
-            MusicListItemViewModel item = new MusicListItemViewModel(this, song, currentMusic, start);
-            musicListItem.add(item);
+            MusicListItemViewModel item = new MusicListItemViewModel(this, song, currentMusic, start, musicSkin);
+            updatedItems.add(item);
             if (selectedPath != null && selectedPath.equals(song.getPath())) {
                 selectItem(item);
             }
         }));
+        musicListItem.clear();
+        musicListItem.addAll(updatedItems);
     }
 
     public ObservableList<MusicListItemViewModel> musicListItem = new ObservableArrayList<>();
     public ItemBinding<MusicListItemViewModel> musicListBinding = ItemBinding.of(BR.musicListItemModel, R.layout.music_list_item);
 
     public void selectItem(MusicListItemViewModel item) {
+        if (selectedItem == item) {
+            return;
+        }
         if (selectedItem != null && selectedItem != item) {
             selectedItem.setSelected(false);
         }
@@ -69,6 +76,11 @@ public class MusicListViewModel extends BaseViewModel<MusicRepository> {
 
     public void selectSong(@Nullable Song song) {
         selectedSongPath = song == null ? null : song.getPath();
+        if (selectedItem != null
+                && selectedSongPath != null
+                && selectedSongPath.equals(selectedItem.getSongPath())) {
+            return;
+        }
         MusicListItemViewModel matchingItem = null;
         if (selectedSongPath != null) {
             for (MusicListItemViewModel item : musicListItem) {
@@ -89,6 +101,7 @@ public class MusicListViewModel extends BaseViewModel<MusicRepository> {
     }
 
     public void applySkin(MusicSkin skin) {
+        musicSkin = skin;
         for (MusicListItemViewModel item : musicListItem) {
             item.applySkin(skin);
         }
