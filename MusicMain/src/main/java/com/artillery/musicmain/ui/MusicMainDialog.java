@@ -33,7 +33,21 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     private Song mSong;
     private boolean mLyricsVisible;
     private boolean mPlaying;
+    private int mPlaybackSyncAttempts;
     private ObjectAnimator mAlbumRotationAnimator;
+    private final Runnable mPlaybackStateSync = new Runnable() {
+        @Override
+        public void run() {
+            if (!isShowing() || mBinding == null || mFragment == null || mFragment.mMusicListener == null) {
+                return;
+            }
+            updateUi(mFragment.mMusicListener.isPlaying());
+            updatePosition(mFragment.mMusicListener.currentPosition());
+            if (!mPlaying && mPlaybackSyncAttempts-- > 0) {
+                mBinding.musicPlayBtn.postDelayed(this, 120);
+            }
+        }
+    };
     public final Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
@@ -72,6 +86,7 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
                 dialog.show();
             }
             dialog.syncCurrentPlaybackState();
+            dialog.schedulePlaybackStateSync();
         }
     }
 
@@ -123,6 +138,15 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         update(mFragment.mMusicListener.getPlayingSong());
         updateUi(mFragment.mMusicListener.isPlaying());
         updatePosition(mFragment.mMusicListener.currentPosition());
+    }
+
+    private void schedulePlaybackStateSync() {
+        if (mBinding == null) {
+            return;
+        }
+        mPlaybackSyncAttempts = 8;
+        mBinding.musicPlayBtn.removeCallbacks(mPlaybackStateSync);
+        mBinding.musicPlayBtn.post(mPlaybackStateSync);
     }
 
     public void applySkin(MusicSkin skin) {
@@ -234,6 +258,9 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
     @Override
     public void dismiss() {
         BackgroundThreadUtils.getInstance().removeCallbacks(mProgressCallback);
+        if (mBinding != null) {
+            mBinding.musicPlayBtn.removeCallbacks(mPlaybackStateSync);
+        }
         stopAlbumRotation(true);
         mLyricsVisible = false;
         mPlaying = false;
