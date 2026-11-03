@@ -21,6 +21,7 @@ import java.lang.ref.WeakReference;
  */
 public class ContainerActivity extends RxAppCompatActivity {
     private static final String FRAGMENT_TAG = "content_fragment_tag";
+    public static final String MAIN_FRAGMENT_METADATA = "com.artillery.music.main_fragment";
     public static final String FRAGMENT = "fragment";
     public static final String BUNDLE = "bundle";
     protected WeakReference<Fragment> mFragment;
@@ -44,6 +45,33 @@ public class ContainerActivity extends RxAppCompatActivity {
         trans.replace(R.id.content, fragment);
         trans.commitAllowingStateLoss();
         mFragment = new WeakReference<>(fragment);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        String requestedFragment = intent.getStringExtra(FRAGMENT);
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content);
+        if (currentFragment != null && currentFragment.getClass().getName().equals(requestedFragment)) {
+            mFragment = new WeakReference<>(currentFragment);
+            if (currentFragment instanceof OnContainerReusedListener) {
+                ((OnContainerReusedListener) currentFragment).onContainerReused();
+            }
+            return;
+        }
+        if (requestedFragment == null || requestedFragment.isEmpty()) {
+            return;
+        }
+        Fragment fragment = initFromIntent(intent);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content, fragment)
+                .commitAllowingStateLoss();
+        mFragment = new WeakReference<>(fragment);
+    }
+
+    public interface OnContainerReusedListener {
+        void onContainerReused();
     }
 
     @Override

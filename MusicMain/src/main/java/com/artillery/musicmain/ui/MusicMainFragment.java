@@ -36,6 +36,7 @@ import com.bumptech.glide.Glide;
 
 import com.artillery.musicbase.base.AppManager;
 import com.artillery.musicbase.base.BaseFragment;
+import com.artillery.musicbase.base.ContainerActivity;
 import com.artillery.musicbase.binding.command.BindingCommand;
 import com.artillery.musicbase.utils.BackgroundThreadUtils;
 import com.artillery.musicbase.utils.KLogUtils;
@@ -63,7 +64,7 @@ import java.util.ArrayList;
  * @author ArtilleryOrchid
  */
 public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, MusicMainViewModel>
-        implements MusicPlayView, MusicListener.Callback {
+        implements MusicPlayView, MusicListener.Callback, ContainerActivity.OnContainerReusedListener {
     private static final int REQUEST_PROFILE_IMAGE = 1001;
     private static final int REQUEST_PROFILE_CROP = 1002;
     private static final String PROFILE_PREFERENCES = "music_profile_preferences";
@@ -656,6 +657,21 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         updateDrawerPlayMode(mMusicListener.getPlayMode());
         if (mMusicListLoaded) {
             mMusicListener.syncPlayList(mMusicList);
+        }
+    }
+
+    @Override
+    public void onContainerReused() {
+        MusicMainDialog.dismissCurrent();
+        if (mBinding == null) {
+            return;
+        }
+        if (mBinding.musicDrawerLayout.isDrawerOpen(mBinding.musicDrawerPanel)) {
+            mBinding.musicDrawerLayout.closeDrawer(mBinding.musicDrawerPanel);
+        }
+        if (mMusicListener != null) {
+            onPlaybackStateChanged(mMusicListener.getPlayingSong(),
+                    mMusicListener.currentPosition(), mMusicListener.isPlaying());
         }
     }
 

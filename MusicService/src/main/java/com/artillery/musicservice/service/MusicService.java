@@ -2,8 +2,11 @@ package com.artillery.musicservice.service;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Binder;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -11,6 +14,7 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 
 import com.artillery.musicbase.helper.NotificationHelper;
+import com.artillery.musicbase.base.ContainerActivity;
 import com.artillery.musicbase.utils.KLogUtils;
 import com.artillery.musicservice.data.PlayList;
 import com.artillery.musicservice.data.Song;
@@ -19,6 +23,7 @@ import java.util.ArrayList;
 
 /**
  * @author ArtilleryOrchid
+ *
  */
 public class MusicService extends Service implements MusicListener, MusicListener.Callback {
     private static final int NOTIFICATION_ID = 1;
@@ -232,11 +237,31 @@ public class MusicService extends Service implements MusicListener, MusicListene
 
     @SuppressLint("UnspecifiedImmutableFlag")
     private PendingIntent getLaunchPendingIntent() {
-        Intent launchIntent = getPackageManager().getLaunchIntentForPackage(getPackageName());
-        if (launchIntent == null) {
-            return null;
+        String mainFragment = null;
+        try {
+            ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo(
+                    getPackageName(), PackageManager.GET_META_DATA);
+            Bundle metadata = applicationInfo.metaData;
+            if (metadata != null) {
+                mainFragment = metadata.getString(ContainerActivity.MAIN_FRAGMENT_METADATA);
+            }
+        } catch (PackageManager.NameNotFoundException ignored) {
         }
         int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
+        Intent launchIntent;
+        if (!TextUtils.isEmpty(mainFragment)) {
+            launchIntent = new Intent(this, ContainerActivity.class)
+                    .putExtra(ContainerActivity.FRAGMENT, mainFragment)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        } else {
+            launchIntent = getPackageManager().getLaunchIntentForPackage(getPackageName());
+            if (launchIntent == null) {
+                return null;
+            }
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        }
         return PendingIntent.getActivity(this, MusicContext.ACTION_CODE, launchIntent, flags);
     }
 
