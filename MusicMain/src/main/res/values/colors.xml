@@ -12,4 +12,6 @@
     <color name="music_quality_badge">#331F9D75</color>
     <color name="music_disc_spindle">#DDFFFFFF</color>
     <color name="music_disc_groove">#55FFFFFF</color>
+    <color name="music_play_button_surface">#1A5F6368</color>
+    <color name="music_play_button_stroke">#335F6368</color>
 </resources>

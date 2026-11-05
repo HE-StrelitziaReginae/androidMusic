@@ -164,13 +164,13 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                     mBinding.musicToolbar.getPaddingBottom());
 
             ViewGroup.LayoutParams groupParams = mBinding.musicGroup.getLayoutParams();
-            groupParams.height = getResources().getDimensionPixelSize(com.artillery.musicbase.R.dimen.dp_60) + bottomInset;
+            groupParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             mBinding.musicGroup.setLayoutParams(groupParams);
             mBinding.musicGroup.setPadding(
                     mBinding.musicGroup.getPaddingLeft(),
                     mBinding.musicGroup.getPaddingTop(),
                     mBinding.musicGroup.getPaddingRight(),
-                    bottomInset);
+                    getResources().getDimensionPixelSize(com.artillery.musicbase.R.dimen.dp_4) + bottomInset);
 
             mBinding.musicDrawerPanel.setPadding(
                     mBinding.musicDrawerPanel.getPaddingLeft(),
@@ -319,14 +319,15 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         int surface = skin.surface(requireContext());
         int icon = skin.icon(requireContext());
         mBinding.musicDrawerLayout.setBackgroundColor(background);
+        mBinding.musicMainContent.setBackgroundColor(background);
         mBinding.musicToolbar.setBackgroundColor(surface);
         mBinding.musicToolbarTitle.setTextColor(skin.primaryText(requireContext()));
         mBinding.musicMenuBtn.setColorFilter(icon);
-        mBinding.musicShowDialog.setBackgroundColor(surface);
+        mBinding.musicShowDialog.setBackground(skin.miniPlayerBackground(requireContext()));
         mBinding.musicNamePlay.setTextColor(skin.primaryText(requireContext()));
         mBinding.musicArtistPlay.setTextColor(skin.secondaryText(requireContext()));
-        mBinding.musicLine.setBackgroundColor(skin.secondaryText(requireContext()));
         mBinding.musicPlayBtn.setColorFilter(icon);
+        mBinding.musicPlayBtn.setBackground(skin.miniPlayerButtonBackground(requireContext()));
         mBinding.musicDrawerPanel.setBackgroundColor(skin.drawer(requireContext()));
         mBinding.drawerProfile.setBackground(skin.drawerHeaderBackground(requireContext()));
         mBinding.drawerCharacterArt.setVisibility(skin.isCharacterSkin() ? View.VISIBLE : View.GONE);

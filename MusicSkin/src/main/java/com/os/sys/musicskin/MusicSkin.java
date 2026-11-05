@@ -343,6 +343,21 @@ public enum MusicSkin {
         return drawable;
     }
 
+    public GradientDrawable miniPlayerBackground(Context context) {
+        GradientDrawable drawable = new GradientDrawable(
+                GradientDrawable.Orientation.TL_BR,
+                new int[]{surface(context), withAlpha(accent(context), isCharacterSkin() ? 48 : 22)});
+        drawable.setCornerRadius(dp(context, 22));
+        drawable.setStroke(dp(context, 1), withAlpha(accent(context), isCharacterSkin() ? 105 : 55));
+        return drawable;
+    }
+
+    public GradientDrawable miniPlayerButtonBackground(Context context) {
+        GradientDrawable drawable = roundedDrawable(withAlpha(accent(context), 24), 26, context);
+        drawable.setStroke(dp(context, 1), withAlpha(accent(context), 90));
+        return drawable;
+    }
+
     public GradientDrawable drawerHeaderBackground(Context context) {
         if (!isCharacterSkin()) {
             return roundedDrawable(header(context), 0, context);
