@@ -1,6 +1,7 @@
 package com.artillery.musicmain.ui.musicList;
 
 import android.database.ContentObserver;
+import android.os.Build;
 import android.os.Looper;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -35,6 +36,7 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
     private int mRefreshGeneration;
     private boolean mMusicListLoaded;
+    private long mLastMediaGeneration = -1;
     private boolean mScanInProgress;
     private boolean mRefreshRequested;
     private final Runnable mDebouncedRefresh = this::refreshMusicList;
@@ -72,7 +74,8 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
         configureListPerformance();
         Song playingSong = MusicDaraListener.getInstance().getPlayingSong();
         mViewModel.selectSong(playingSong);
-        if (!mMusicListLoaded) {
+        long mediaGeneration = getMediaGeneration();
+        if (!mMusicListLoaded || mediaGeneration < 0 || mediaGeneration != mLastMediaGeneration) {
             refreshMusicList();
         }
         applySkin(MusicSkin.load(requireContext()));
@@ -131,6 +134,7 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
                     return;
                 }
                 mMusicListLoaded = true;
+                mLastMediaGeneration = getMediaGeneration();
                 mViewModel.updateMusicList(music);
                 MusicDaraListener.getInstance().updateMusicList(music);
                 if (mMusicSkin != null) {
@@ -145,6 +149,17 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
         if (mRefreshRequested && isAdded() && getView() != null) {
             mRefreshRequested = false;
             refreshMusicList();
+        }
+    }
+
+    private long getMediaGeneration() {
+        if (!isAdded() || Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            return -1;
+        }
+        try {
+            return MediaStore.getGeneration(requireContext(), MediaStore.VOLUME_EXTERNAL);
+        } catch (RuntimeException ignored) {
+            return -1;
         }
     }
 

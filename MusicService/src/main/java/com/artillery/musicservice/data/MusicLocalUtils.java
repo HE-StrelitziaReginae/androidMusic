@@ -1,15 +1,19 @@
 package com.artillery.musicservice.data;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaMetadataRetriever;
+import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -34,12 +38,20 @@ public final class MusicLocalUtils {
         };
         Cursor cursor;
         try {
-            cursor = context.getContentResolver().query(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    projection,
-                    null,
-                    null,
-                    MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Bundle queryArgs = new Bundle();
+                queryArgs.putInt(MediaStore.QUERY_ARG_MATCH_PENDING,
+                        MediaStore.MATCH_INCLUDE);
+                queryArgs.putString(ContentResolver.QUERY_ARG_SQL_SORT_ORDER,
+                        MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+                cursor = context.getContentResolver().query(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        projection, queryArgs, null);
+            } else {
+                cursor = context.getContentResolver().query(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        projection, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+            }
         } catch (SecurityException error) {
             return null;
         }
@@ -59,18 +71,21 @@ public final class MusicLocalUtils {
                     continue;
                 }
 
-                int fileSize = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
-                if (fileSize <= 800 * 1000) {
-                    continue;
+                int sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE);
+                long fileSize = cursor.isNull(sizeColumn) ? 0 : cursor.getLong(sizeColumn);
+                if (fileSize <= 0) {
+                    fileSize = new File(filePath).length();
                 }
 
                 Song song = new Song();
                 song.setId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)));
                 song.setDisplayName(displayName);
                 song.setPath(filePath);
-                int duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
-                song.setDuration(duration > 0 ? duration : resolveDuration(filePath));
-                song.setSize(fileSize);
+                int durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
+                int duration = cursor.isNull(durationColumn) ? 0 : cursor.getInt(durationColumn);
+                duration = duration > 0 ? duration : resolveDuration(filePath);
+                song.setDuration(duration);
+                song.setSize((int) Math.min(Integer.MAX_VALUE, fileSize));
                 song.setQuality(resolveQuality(filePath, mimeType));
                 song.setAlbum(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)));
 
@@ -196,7 +211,7 @@ public final class MusicLocalUtils {
             for (int index = 0; index < extractor.getTrackCount(); index++) {
                 MediaFormat format = extractor.getTrackFormat(index);
                 String trackMime = format.getString(MediaFormat.KEY_MIME);
-                if (!TextUtils.isEmpty(trackMime) && trackMime.startsWith("audio/*")) {
+                if (!TextUtils.isEmpty(trackMime) && trackMime.startsWith("audio/")) {
                     return true;
                 }
             }
