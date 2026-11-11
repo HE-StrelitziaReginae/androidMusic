@@ -28,6 +28,7 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
     public ObservableField<String> musicArtist = new ObservableField<>();
     public ObservableField<String> musicDuration = new ObservableField<>();
     public ObservableField<String> musicQuality = new ObservableField<>();
+    public ObservableField<String> musicIndex = new ObservableField<>();
     public ObservableBoolean lossless = new ObservableBoolean(false);
     public ObservableField<android.graphics.drawable.GradientDrawable> cardBackground = new ObservableField<>();
     public ObservableBoolean selected = new ObservableBoolean(false);
@@ -50,6 +51,7 @@ public class MusicListItemViewModel extends MultiItemViewModel<MusicListViewMode
         musicName.set(song.getTitle());
         musicArtist.set(song.getArtist());
         musicDuration.set(TimeUtils.formatDuration(song.getDuration()));
+        musicIndex.set(String.format(java.util.Locale.getDefault(), "%02d", start + 1));
         lossless.set(song.getQuality() != Song.QUALITY_STANDARD);
         musicQuality.set(song.getQuality() == Song.QUALITY_LOSSLESS
                 ? mViewModel.getApplication().getString(R.string.music_quality_lossless)

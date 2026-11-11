@@ -172,13 +172,13 @@ public enum MusicSkin {
 
     public static MusicSkin load(Context context) {
         String value = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
-                .getString(KEY_SKIN, LIGHT.value);
+                .getString(KEY_SKIN, SAKURA.value);
         for (MusicSkin skin : values()) {
             if (skin.value.equals(value)) {
                 return skin;
             }
         }
-        return LIGHT;
+        return SAKURA;
     }
 
     public void save(Context context) {
@@ -369,15 +369,40 @@ public enum MusicSkin {
         return drawable;
     }
 
+    public GradientDrawable drawerProfileCardBackground(Context context) {
+        GradientDrawable drawable = drawerHeaderBackground(context);
+        drawable.setCornerRadius(dp(context, 22));
+        drawable.setStroke(dp(context, 1), withAlpha(accent(context), 75));
+        return drawable;
+    }
+
     public GradientDrawable featureBackground(Context context) {
         if (!isCharacterSkin()) {
-            return cardBackground(context, false);
+            GradientDrawable drawable = new GradientDrawable(
+                    GradientDrawable.Orientation.TL_BR,
+                    new int[]{surface(context), withAlpha(accent(context), 34)});
+            drawable.setCornerRadius(dp(context, 24));
+            drawable.setStroke(dp(context, 1), withAlpha(accent(context), 70));
+            return drawable;
         }
         GradientDrawable drawable = new GradientDrawable(
                 GradientDrawable.Orientation.LEFT_RIGHT,
                 new int[]{withAlpha(header(context), 240), header(context), accent(context)});
-        drawable.setCornerRadius(dp(context, 20));
+        drawable.setCornerRadius(dp(context, 24));
         drawable.setStroke(dp(context, 1), withAlpha(headerPrimaryText(context), 65));
+        return drawable;
+    }
+
+    public GradientDrawable toolbarMascotBackground(Context context) {
+        GradientDrawable drawable = roundedDrawable(withAlpha(accent(context), 22), 22, context);
+        drawable.setShape(GradientDrawable.OVAL);
+        drawable.setStroke(dp(context, 1), withAlpha(accent(context), 115));
+        return drawable;
+    }
+
+    public GradientDrawable accentPillBackground(Context context) {
+        GradientDrawable drawable = roundedDrawable(withAlpha(accent(context), 20), 18, context);
+        drawable.setStroke(dp(context, 1), withAlpha(accent(context), 80));
         return drawable;
     }
 

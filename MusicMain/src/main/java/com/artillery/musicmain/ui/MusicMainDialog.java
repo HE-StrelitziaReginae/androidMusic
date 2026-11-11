@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.graphics.drawable.GradientDrawable;
 import android.text.format.DateUtils;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.View;
 import android.widget.SeekBar;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.artillery.musicmain.observer.MusicObserver;
 import com.os.sys.musicskin.MusicSkin;
 import com.artillery.musicmain.utils.TimeUtils;
 import com.artillery.musicservice.data.Song;
+import com.artillery.musicservice.service.MusicMode;
 
 import static com.artillery.musicbase.R.dimen.*;
 
@@ -138,6 +140,7 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         update(mFragment.mMusicListener.getPlayingSong());
         updateUi(mFragment.mMusicListener.isPlaying());
         updatePosition(mFragment.mMusicListener.currentPosition());
+        updateModeButton();
     }
 
     private void schedulePlaybackStateSync() {
@@ -184,8 +187,13 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicNowPlayingBadge.setBackground(skin.cardBackground(getContext(), false));
         mBinding.musicNowPlayingIndicator.setBackground(roundBackground(skin.accent(getContext()), 4));
         mBinding.musicNowPlayingText.setTextColor(skin.secondaryText(getContext()));
+        mBinding.musicTrackLabel.setTextColor(skin.secondaryText(getContext()));
         mBinding.musicDialogRoot.setBackground(skin.cardBackground(getContext(), false));
         mBinding.musicActionLiner.setBackground(skin.cardBackground(getContext(), false));
+        mBinding.musicModeButton.setBackground(skin.accentPillBackground(getContext()));
+        mBinding.musicLyricsButton.setBackground(skin.accentPillBackground(getContext()));
+        mBinding.musicModeButton.setTextColor(skin.accent(getContext()));
+        mBinding.musicLyricsButton.setTextColor(skin.accent(getContext()));
         int accent = skin.accent(getContext());
         int lyricsPrimary = skin.isCharacterSkin() ? skin.headerPrimaryText(getContext()) : primaryText;
         int lyricsSecondary = skin.isCharacterSkin() ? skin.headerSecondaryText(getContext()) : secondaryText;
@@ -200,6 +208,7 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicDialogRoot.setBackground(skin.cardBackground(getContext(), false));
         mBinding.musicActionLiner.setBackground(skin.cardBackground(getContext(), false));
         updateCoverPresentation();
+        updateModeButton();
         if (getWindow() != null) {
             SystemBarUtils.setLightSystemBars(getWindow(), skin.usesLightSystemBars());
         }
@@ -299,6 +308,26 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         updateCoverPresentation();
     }
 
+    private void switchPlayMode() {
+        if (mFragment == null || mFragment.mMusicListener == null) {
+            return;
+        }
+        MusicMode mode = MusicMode.switchNextMode(mFragment.mMusicListener.getPlayMode());
+        mFragment.mMusicListener.setPlayMode(mode);
+        mFragment.updatePlayMode(mode);
+        updateModeButton();
+    }
+
+    private void updateModeButton() {
+        if (mBinding == null) {
+            return;
+        }
+        MusicMode mode = mFragment == null || mFragment.mMusicListener == null
+                ? MusicMode.getDefault() : mFragment.mMusicListener.getPlayMode();
+        String[] names = getContext().getResources().getStringArray(R.array.music_play_modes);
+        mBinding.musicModeButton.setText(names[(mode == null ? MusicMode.getDefault() : mode).ordinal()]);
+    }
+
     private void updateCoverPresentation() {
         if (mBinding == null) {
             return;
@@ -309,6 +338,8 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
                 withAlpha(MusicSkin.load(getContext()).surface(getContext()), 230),
                 getContext().getResources().getDimension(dp_116)));
         mBinding.musicAlbumCard.setContentDescription(getContext().getString(R.string.music_album_toggle));
+        mBinding.musicLyricsButton.setText(mLyricsVisible
+                ? R.string.music_show_cover : R.string.music_show_lyrics);
         if (mPlaying && !mLyricsVisible) {
             mBinding.musicNowPlayingIndicator.setAlpha(1f);
             startAlbumRotation();
@@ -367,6 +398,24 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
 
     private int dp(int value) {
         return Math.round(value * getContext().getResources().getDisplayMetrics().density);
+    }
+
+    private void bindPressAnimation(View view, float pressedScale) {
+        view.setOnTouchListener((pressedView, event) -> {
+            if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+                pressedView.animate().cancel();
+                pressedView.animate().scaleX(pressedScale).scaleY(pressedScale)
+                        .setDuration(80).start();
+            } else if (event.getAction() == android.view.MotionEvent.ACTION_UP
+                    || event.getAction() == android.view.MotionEvent.ACTION_CANCEL) {
+                pressedView.animate().cancel();
+                pressedView.animate().scaleX(1f).scaleY(1f)
+                        .setDuration(180)
+                        .setInterpolator(new DecelerateInterpolator())
+                        .start();
+            }
+            return false;
+        });
     }
 
     private void activateMarquee(boolean activate) {
@@ -436,6 +485,15 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicDialogClose.setOnClickListener(view -> dismiss());
         mBinding.musicAlbumCard.setOnClickListener(view -> toggleLyrics());
         mBinding.musicLyricsPage.setOnClickListener(view -> toggleLyrics());
+        mBinding.musicLyricsButton.setOnClickListener(view -> toggleLyrics());
+        mBinding.musicModeButton.setOnClickListener(view -> switchPlayMode());
+        bindPressAnimation(mBinding.musicDialogClose, 0.88f);
+        bindPressAnimation(mBinding.musicAlbumCard, 0.97f);
+        bindPressAnimation(mBinding.musicLyricsButton, 0.96f);
+        bindPressAnimation(mBinding.musicModeButton, 0.96f);
+        bindPressAnimation(mBinding.musicPreBtn, 0.86f);
+        bindPressAnimation(mBinding.musicPlayBtn, 0.84f);
+        bindPressAnimation(mBinding.musicNextBtn, 0.86f);
         mBinding.musicPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

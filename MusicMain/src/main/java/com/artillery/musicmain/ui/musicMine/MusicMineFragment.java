@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -32,17 +34,27 @@ public class MusicMineFragment extends BaseFragment<FragmentMusicMineBinding, Mu
         }
         boolean characterSkin = skin.isCharacterSkin();
         mBinding.musicMineRoot.setBackgroundColor(skin.background(requireContext()));
-        mBinding.musicMineSkinBanner.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
+        mBinding.musicMineSkinBanner.setBackground(skin.featureBackground(requireContext()));
+        mBinding.musicMineSkinBannerArt.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
+        mBinding.musicMineSkinScrim.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         if (characterSkin) {
             mBinding.musicMineSkinBannerArt.setImageResource(skin.keyArt());
-            mBinding.musicMineSkinBanner.setBackground(skin.featureBackground(requireContext()));
             mBinding.musicMineSkinEyebrow.setText(skin.mineEyebrow());
             mBinding.musicMineSkinTitle.setText(skin.mineTitle());
             mBinding.musicMineSkinSubtitle.setText(skin.mineSubtitle());
-            mBinding.musicMineSkinEyebrow.setTextColor(skin.headerSecondaryText(requireContext()));
-            mBinding.musicMineSkinTitle.setTextColor(skin.headerPrimaryText(requireContext()));
-            mBinding.musicMineSkinSubtitle.setTextColor(skin.headerSecondaryText(requireContext()));
+            mBinding.musicMineEmptyIcon.setImageResource(skin.avatar());
+        } else {
+            mBinding.musicMineSkinEyebrow.setText(R.string.music_mine_default_eyebrow);
+            mBinding.musicMineSkinTitle.setText(R.string.music_mine_default_title);
+            mBinding.musicMineSkinSubtitle.setText(R.string.music_mine_default_subtitle);
+            mBinding.musicMineEmptyIcon.setImageResource(R.drawable.music_player);
         }
+        int bannerPrimary = characterSkin ? skin.headerPrimaryText(requireContext()) : skin.primaryText(requireContext());
+        int bannerSecondary = characterSkin ? skin.headerSecondaryText(requireContext()) : skin.secondaryText(requireContext());
+        mBinding.musicMineSkinEyebrow.setTextColor(bannerSecondary);
+        mBinding.musicMineSkinTitle.setTextColor(bannerPrimary);
+        mBinding.musicMineSkinSubtitle.setTextColor(bannerSecondary);
+        mBinding.musicMineSectionTitle.setTextColor(skin.secondaryText(requireContext()));
         mBinding.musicMineFavorites.setBackground(skin.outlinedCardBackground(requireContext()));
         mBinding.musicMineLocalTracks.setBackground(skin.outlinedCardBackground(requireContext()));
         mBinding.musicMinePlaylists.setBackground(skin.outlinedCardBackground(requireContext()));
@@ -50,9 +62,34 @@ public class MusicMineFragment extends BaseFragment<FragmentMusicMineBinding, Mu
         mBinding.musicMineLocalTracks.setTextColor(skin.primaryText(requireContext()));
         mBinding.musicMinePlaylists.setTextColor(skin.primaryText(requireContext()));
         mBinding.musicMineEmptyCard.setBackground(skin.outlinedCardBackground(requireContext()));
+        mBinding.musicMineEmptyIcon.setBackground(skin.toolbarMascotBackground(requireContext()));
         mBinding.musicMineEmptyIcon.setColorFilter(skin.icon(requireContext()));
         mBinding.musicMineEmptyTitle.setTextColor(skin.primaryText(requireContext()));
         mBinding.musicMineEmptyMessage.setTextColor(skin.secondaryText(requireContext()));
+    }
+
+    @Override
+    public void initViewObservable() {
+        bindCard(mBinding.musicMineFavorites, R.string.music_mine_favorites);
+        bindCard(mBinding.musicMineLocalTracks, R.string.music_mine_local_tracks);
+        bindCard(mBinding.musicMinePlaylists, R.string.music_mine_playlists);
+        bindCard(mBinding.musicMineEmptyCard, R.string.music_mine_empty_message);
+    }
+
+    private void bindCard(View view, int messageRes) {
+        view.setOnClickListener(clicked -> Toast.makeText(requireContext(), messageRes, Toast.LENGTH_SHORT).show());
+        view.setOnTouchListener((pressedView, event) -> {
+            if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+                pressedView.animate().cancel();
+                pressedView.animate().scaleX(0.97f).scaleY(0.97f).setDuration(80).start();
+            } else if (event.getAction() == android.view.MotionEvent.ACTION_UP
+                    || event.getAction() == android.view.MotionEvent.ACTION_CANCEL) {
+                pressedView.animate().cancel();
+                pressedView.animate().scaleX(1f).scaleY(1f).setDuration(180)
+                        .setInterpolator(new DecelerateInterpolator()).start();
+            }
+            return false;
+        });
     }
 
     @Override

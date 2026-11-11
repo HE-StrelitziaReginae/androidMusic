@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.Button;
 import android.widget.TextView;
+import android.view.animation.DecelerateInterpolator;
 
 import java.io.File;
 
@@ -124,13 +125,20 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         mBinding.musicGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                View selectedTab;
                 if (checkedId == mBinding.musicMain.getId()) {
                     mViewModel.showFragment(requireActivity(), 0);
+                    selectedTab = mBinding.musicMain;
                 } else if (checkedId == mBinding.musicOnline.getId()) {
                     mViewModel.showFragment(requireActivity(), 1);
+                    selectedTab = mBinding.musicOnline;
                 } else if (checkedId == mBinding.musicMine.getId()) {
                     mViewModel.showFragment(requireActivity(), 2);
+                    selectedTab = mBinding.musicMine;
+                } else {
+                    return;
                 }
+                animateSelection(selectedTab);
             }
         });
         mViewModel.mPlay = new BindingCommand(() -> {
@@ -147,7 +155,23 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             MusicMainDialog.showCurrent();
         });
         initDrawer();
+        mBinding.musicToolbarMascot.setOnClickListener(view -> {
+            animateSelection(view);
+            showSkinDialog();
+        });
         applySkin(MusicSkin.load(requireContext()));
+    }
+
+    private void animateSelection(View view) {
+        view.animate().cancel();
+        view.setScaleX(0.92f);
+        view.setScaleY(0.92f);
+        view.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(240)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
     }
 
     private void applySystemBarInsets() {
@@ -155,7 +179,7 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
             int topInset = windowInsets.getSystemWindowInsetTop();
             int bottomInset = windowInsets.getSystemWindowInsetBottom();
             ViewGroup.LayoutParams toolbarParams = mBinding.musicToolbar.getLayoutParams();
-            toolbarParams.height = getResources().getDimensionPixelSize(com.artillery.musicbase.R.dimen.dp_56) + topInset;
+            toolbarParams.height = getResources().getDimensionPixelSize(com.artillery.musicbase.R.dimen.dp_64) + topInset;
             mBinding.musicToolbar.setLayoutParams(toolbarParams);
             mBinding.musicToolbar.setPadding(
                     mBinding.musicToolbar.getPaddingLeft(),
@@ -186,7 +210,15 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         updateDrawerPlayMode(MusicMode.getDefault());
         mBinding.musicMenuBtn.setOnClickListener(view -> mBinding.musicDrawerLayout.openDrawer(mBinding.musicDrawerPanel));
         mBinding.drawerProfile.setOnClickListener(view -> showProfileDialog());
-        mBinding.drawerAvatar.setOnClickListener(view -> openProfileImagePicker());
+        mBinding.drawerAvatarContainer.setOnClickListener(view -> openProfileImagePicker());
+        mBinding.drawerProfile.setOnTouchListener((view, event) -> {
+            animatePressedView(view, event, 0.985f);
+            return false;
+        });
+        mBinding.drawerAvatarContainer.setOnTouchListener((view, event) -> {
+            animatePressedView(view, event, 0.9f);
+            return false;
+        });
         mBinding.drawerRefresh.setOnClickListener(view -> {
             mViewModel.refreshMusicList(requireActivity());
             mBinding.musicDrawerLayout.closeDrawer(mBinding.musicDrawerPanel);
@@ -199,6 +231,36 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         });
         mBinding.drawerSkin.setOnClickListener(view -> showSkinDialog());
         mBinding.drawerAbout.setOnClickListener(view -> showAboutDialog());
+        mBinding.drawerRefresh.setOnTouchListener((view, event) -> {
+            animatePressedView(view, event, 0.98f);
+            return false;
+        });
+        mBinding.drawerPlayMode.setOnTouchListener((view, event) -> {
+            animatePressedView(view, event, 0.98f);
+            return false;
+        });
+        mBinding.drawerSkin.setOnTouchListener((view, event) -> {
+            animatePressedView(view, event, 0.98f);
+            return false;
+        });
+        mBinding.drawerAbout.setOnTouchListener((view, event) -> {
+            animatePressedView(view, event, 0.98f);
+            return false;
+        });
+        mBinding.drawerFooterDivider.setBackgroundColor(withAlpha(
+                MusicSkin.load(requireContext()).accent(requireContext()), 40));
+    }
+
+    private void animatePressedView(View view, android.view.MotionEvent event, float pressedScale) {
+        if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+            view.animate().cancel();
+            view.animate().scaleX(pressedScale).scaleY(pressedScale).setDuration(80).start();
+        } else if (event.getAction() == android.view.MotionEvent.ACTION_UP
+                || event.getAction() == android.view.MotionEvent.ACTION_CANCEL) {
+            view.animate().cancel();
+            view.animate().scaleX(1f).scaleY(1f).setDuration(160)
+                    .setInterpolator(new DecelerateInterpolator()).start();
+        }
     }
 
     private void switchNextPlayMode() {
@@ -322,14 +384,20 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         mBinding.musicMainContent.setBackgroundColor(background);
         mBinding.musicToolbar.setBackgroundColor(surface);
         mBinding.musicToolbarTitle.setTextColor(skin.primaryText(requireContext()));
+        mBinding.musicToolbarSubtitle.setTextColor(skin.secondaryText(requireContext()));
         mBinding.musicMenuBtn.setColorFilter(icon);
+        mBinding.musicToolbarMascot.setBackground(skin.toolbarMascotBackground(requireContext()));
+        mBinding.musicToolbarMascotImage.setImageResource(skin.isCharacterSkin()
+                ? skin.avatar() : R.drawable.ellipse);
+        mBinding.musicToolbarMascotStatus.setBackground(roundBackground(skin.accent(requireContext()), 5));
         mBinding.musicShowDialog.setBackground(skin.miniPlayerBackground(requireContext()));
+        mBinding.musicPlayerAccent.setBackground(roundBackground(skin.accent(requireContext()), 2));
         mBinding.musicNamePlay.setTextColor(skin.primaryText(requireContext()));
         mBinding.musicArtistPlay.setTextColor(skin.secondaryText(requireContext()));
         mBinding.musicPlayBtn.setColorFilter(icon);
         mBinding.musicPlayBtn.setBackground(skin.miniPlayerButtonBackground(requireContext()));
         mBinding.musicDrawerPanel.setBackgroundColor(skin.drawer(requireContext()));
-        mBinding.drawerProfile.setBackground(skin.drawerHeaderBackground(requireContext()));
+        mBinding.drawerProfile.setBackground(skin.drawerProfileCardBackground(requireContext()));
         mBinding.drawerCharacterArt.setVisibility(skin.isCharacterSkin() ? View.VISIBLE : View.GONE);
         mBinding.drawerCharacterScrim.setVisibility(skin.isCharacterSkin() ? View.VISIBLE : View.GONE);
         if (skin.isCharacterSkin()) {
@@ -344,9 +412,11 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         mBinding.drawerProfileName.setTextColor(skin.headerPrimaryText(requireContext()));
         mBinding.drawerProfileSubtitle.setTextColor(skin.headerSecondaryText(requireContext()));
         mBinding.drawerProfileHint.setTextColor(skin.headerSecondaryText(requireContext()));
+        mBinding.drawerProfileStatus.setTextColor(skin.headerSecondaryText(requireContext()));
         applyProfileAvatar(skin);
         mBinding.musicAlbumImg.setImageResource(skin.isCharacterSkin()
                 ? skin.avatar() : R.drawable.ellipse);
+        mBinding.musicAlbumImg.setRotation(0f);
         mBinding.drawerLibrarySection.setTextColor(skin.secondaryText(requireContext()));
         mBinding.drawerPlayerSection.setTextColor(skin.secondaryText(requireContext()));
         mBinding.drawerRefreshText.setTextColor(skin.primaryText(requireContext()));
@@ -423,9 +493,24 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 mBinding.drawerAbout
         };
         for (View drawerItem : drawerItems) {
-            drawerItem.setBackground(skin.cardBackground(requireContext(), false));
+            drawerItem.setBackground(skin.outlinedCardBackground(requireContext()));
             drawerItem.setElevation(elevation);
         }
+        int accent = skin.accent(requireContext());
+        int secondary = skin.secondaryText(requireContext());
+        mBinding.drawerProfileEyebrow.setTextColor(skin.headerSecondaryText(requireContext()));
+        mBinding.drawerProfileEyebrow.setBackground(roundBackground(
+                withAlpha(skin.headerPrimaryText(requireContext()), 22), 12));
+        mBinding.drawerProfileGlow.setBackground(roundBackground(withAlpha(accent, 30), 46));
+        mBinding.drawerAvatarContainer.setBackground(skin.toolbarMascotBackground(requireContext()));
+        mBinding.drawerAvatarStatus.setBackground(roundBackground(accent, 7));
+        mBinding.drawerProfileStatusDot.setBackground(roundBackground(accent, 3));
+        mBinding.drawerRefreshBadge.setTextColor(accent);
+        mBinding.drawerRefreshBadge.setBackground(roundBackground(withAlpha(accent, 22), 12));
+        mBinding.drawerFooterDivider.setBackgroundColor(withAlpha(accent, 55));
+        mBinding.drawerFooter.setTextColor(secondary);
+        mBinding.drawerAvatar.setElevation(getResources().getDimensionPixelSize(
+                com.artillery.musicbase.R.dimen.dp_4));
     }
 
     private void showProfileDialog() {
@@ -781,6 +866,12 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 : ContextCompat.getDrawable(requireContext(), R.drawable.play));
         mBinding.musicPlayBtn.setColorFilter((mMusicSkin == null ? MusicSkin.load(requireContext()) : mMusicSkin)
                 .icon(requireContext()));
+        mBinding.musicAlbumImg.animate().cancel();
+        mBinding.musicAlbumImg.setRotation(0f);
+        if (play) {
+            mBinding.musicAlbumImg.animate().rotationBy(360f).setDuration(12000)
+                    .setInterpolator(new android.view.animation.LinearInterpolator()).start();
+        }
     }
 
     @Override

@@ -74,8 +74,11 @@
                 android:layout_gravity="end|top"
                 android:layout_marginTop="@dimen/dp_8"
                 android:layout_marginEnd="@dimen/dp_12"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/music_quick_action_background"
+                android:clipToOutline="true"
                 android:contentDescription="@string/music_dialog_close"
+                android:foreground="@drawable/music_ripple_circle"
+                android:outlineProvider="background"
                 android:padding="@dimen/dp_12"
                 android:src="@drawable/music_close" />
 
@@ -89,6 +92,9 @@
                 android:contentDescription="@string/music_album_toggle"
                 android:elevation="@dimen/dp_20"
                 android:focusable="true"
+                android:foreground="@drawable/music_ripple_circle"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
                 android:padding="@dimen/dp_8">
 
                 <FrameLayout
@@ -232,6 +238,20 @@
                 android:layout_gravity="center_horizontal">
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/music_track_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:letterSpacing="0.16"
+                    android:text="@string/music_current_track"
+                    android:textSize="@dimen/sp_9"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/music_name_play"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/music_name_play"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -250,7 +270,7 @@
                     app:layout_constraintBottom_toTopOf="@id/music_artist_play"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/music_track_label" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/music_artist_play"
@@ -266,6 +286,53 @@
                     app:layout_constraintVertical_chainStyle="packed" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/music_player_tools"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_42"
+                android:layout_marginTop="@dimen/dp_16"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/music_mode_button"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_38"
+                    android:layout_weight="1"
+                    android:background="@drawable/music_quick_action_background"
+                    android:clickable="true"
+                    android:clipToOutline="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/music_ripple_rounded_18"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/dp_10"
+                    android:paddingEnd="@dimen/dp_10"
+                    android:text="@string/music_play_mode"
+                    android:textSize="@dimen/sp_10"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/music_lyrics_button"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_38"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:background="@drawable/music_quick_action_background"
+                    android:clickable="true"
+                    android:clipToOutline="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/music_ripple_rounded_18"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/dp_10"
+                    android:paddingEnd="@dimen/dp_10"
+                    android:text="@string/music_show_lyrics"
+                    android:textSize="@dimen/sp_10"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/music_progress"
@@ -319,6 +386,8 @@
                 android:layout_marginTop="@dimen/dp_18"
                 android:layout_marginBottom="@dimen/dp_8"
                 android:background="@drawable/music_player_panel"
+                android:clipToOutline="true"
+                android:elevation="@dimen/dp_4"
                 android:gravity="center"
                 android:orientation="horizontal">
 

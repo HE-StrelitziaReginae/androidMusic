@@ -24,11 +24,11 @@
             android:layout_marginTop="@dimen/dp_10"
             android:layout_marginEnd="@dimen/dp_12"
             android:clipToOutline="true"
-            android:visibility="gone">
+            android:elevation="@dimen/dp_6">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/online_skin_banner_art"
-                android:layout_width="@dimen/dp_160"
+                android:layout_width="@dimen/dp_180"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
                 android:alpha="0.68"
@@ -37,6 +37,7 @@
                 android:src="@drawable/skin_sakura_key_art" />
 
             <View
+                android:id="@+id/online_skin_banner_scrim"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/music_banner_scrim" />
@@ -91,7 +92,10 @@
             <FrameLayout
                 android:id="@+id/online_search_bar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_48">
+                android:layout_height="@dimen/dp_52"
+                android:clipToOutline="true"
+                android:elevation="@dimen/dp_3"
+                android:outlineProvider="background">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/online_search_leading"
@@ -123,7 +127,8 @@
                     android:layout_height="@dimen/dp_40"
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="@dimen/dp_44"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:background="@android:color/transparent"
+                    android:foreground="@drawable/music_ripple_circle"
                     android:contentDescription="@string/music_online_clear"
                     android:padding="@dimen/dp_10"
                     android:src="@drawable/music_close"
@@ -135,8 +140,11 @@
                     android:layout_height="@dimen/dp_44"
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="@dimen/dp_2"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/music_quick_action_background"
+                    android:clipToOutline="true"
                     android:contentDescription="@string/music_online_search"
+                    android:foreground="@drawable/music_ripple_circle"
+                    android:outlineProvider="background"
                     android:padding="@dimen/dp_12"
                     android:src="@drawable/music_search" />
             </FrameLayout>
@@ -149,6 +157,7 @@
                 android:checkedButton="@id/online_category_chinese"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:clipToOutline="true"
                 android:padding="@dimen/dp_2">
 
                 <androidx.appcompat.widget.AppCompatRadioButton
@@ -157,6 +166,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:button="@null"
+                    android:foreground="@drawable/music_ripple_rounded_18"
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="@string/music_online_category_chinese"
@@ -168,6 +178,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:button="@null"
+                    android:foreground="@drawable/music_ripple_rounded_18"
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="@string/music_online_category_western"
@@ -179,6 +190,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:button="@null"
+                    android:foreground="@drawable/music_ripple_rounded_18"
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="@string/music_online_category_japan_korea"
@@ -190,6 +202,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:button="@null"
+                    android:foreground="@drawable/music_ripple_rounded_18"
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="@string/music_online_category_other"
@@ -223,18 +236,23 @@
 
             <LinearLayout
                 android:id="@+id/online_empty_state"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_180"
                 android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:gravity="center"
                 android:orientation="vertical"
+                android:padding="@dimen/dp_20"
                 android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/online_empty_icon"
-                    android:layout_width="@dimen/dp_32"
-                    android:layout_height="@dimen/dp_32"
+                    android:layout_width="@dimen/dp_64"
+                    android:layout_height="@dimen/dp_64"
+                    android:background="@drawable/music_toolbar_mascot_background"
                     android:contentDescription="@null"
+                    android:padding="@dimen/dp_16"
                     android:src="@drawable/music_player" />
 
                 <androidx.appcompat.widget.AppCompatTextView

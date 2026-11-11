@@ -2,9 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
-        <import type="com.artillery.musicmain.viewmodel.MusicMineViewModel" />
-
         <variable
             name="musicMineModel"
             type="com.artillery.musicmain.viewmodel.MusicMineViewModel" />
@@ -28,21 +25,22 @@
             <FrameLayout
                 android:id="@+id/music_mine_skin_banner"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_156"
+                android:layout_height="@dimen/dp_168"
                 android:clipToOutline="true"
-                android:visibility="gone">
+                android:elevation="@dimen/dp_6">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/music_mine_skin_banner_art"
-                    android:layout_width="@dimen/dp_190"
+                    android:layout_width="@dimen/dp_208"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
-                    android:alpha="0.7"
+                    android:alpha="0.78"
                     android:contentDescription="@null"
                     android:scaleType="centerCrop"
                     android:src="@drawable/skin_sakura_key_art" />
 
                 <View
+                    android:id="@+id/music_mine_skin_scrim"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/music_banner_scrim" />
@@ -60,7 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:letterSpacing="0.1"
-                        android:text="@string/music_character_mine_eyebrow"
+                        android:text="@string/music_mine_default_eyebrow"
                         android:textSize="@dimen/sp_10"
                         android:textStyle="bold" />
 
@@ -69,83 +67,117 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_5"
-                        android:text="@string/music_character_mine_title"
-                        android:textSize="@dimen/sp_20"
+                        android:text="@string/music_mine_default_title"
+                        android:textSize="@dimen/sp_21"
                         android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/music_mine_skin_subtitle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/dp_190"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_4"
-                        android:text="@string/music_character_mine_subtitle"
+                        android:maxLines="2"
+                        android:text="@string/music_mine_default_subtitle"
                         android:textSize="@dimen/sp_11" />
 
                 </LinearLayout>
             </FrameLayout>
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/music_mine_section_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_18"
+                android:layout_marginStart="@dimen/dp_4"
+                android:letterSpacing="0.1"
+                android:text="@string/music_mine_quick_access"
+                android:textSize="@dimen/sp_10"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:id="@+id/music_mine_stats"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_12"
+                android:layout_marginTop="@dimen/dp_8"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/music_mine_favorites"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_82"
+                    android:layout_height="@dimen/dp_92"
                     android:layout_marginEnd="@dimen/dp_4"
                     android:layout_weight="1"
+                    android:clickable="true"
+                    android:clipToOutline="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/music_ripple_rounded_18"
                     android:gravity="center"
                     android:text="@string/music_mine_favorites"
-                    android:textSize="@dimen/sp_13" />
+                    android:textSize="@dimen/sp_13"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/music_mine_local_tracks"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_82"
+                    android:layout_height="@dimen/dp_92"
                     android:layout_marginStart="@dimen/dp_4"
                     android:layout_marginEnd="@dimen/dp_4"
                     android:layout_weight="1"
+                    android:clickable="true"
+                    android:clipToOutline="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/music_ripple_rounded_18"
                     android:gravity="center"
                     android:text="@string/music_mine_local_tracks"
-                    android:textSize="@dimen/sp_13" />
+                    android:textSize="@dimen/sp_13"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/music_mine_playlists"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_82"
+                    android:layout_height="@dimen/dp_92"
                     android:layout_marginStart="@dimen/dp_4"
                     android:layout_weight="1"
+                    android:clickable="true"
+                    android:clipToOutline="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/music_ripple_rounded_18"
                     android:gravity="center"
                     android:text="@string/music_mine_playlists"
-                    android:textSize="@dimen/sp_13" />
+                    android:textSize="@dimen/sp_13"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/music_mine_empty_card"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_180"
-                android:layout_marginTop="@dimen/dp_12"
+                android:layout_height="@dimen/dp_190"
+                android:layout_marginTop="@dimen/dp_14"
+                android:clickable="true"
+                android:clipToOutline="true"
+                android:focusable="true"
+                android:foreground="@drawable/music_ripple_rounded_18"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/dp_20">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/music_mine_empty_icon"
-                    android:layout_width="@dimen/dp_40"
-                    android:layout_height="@dimen/dp_40"
+                    android:layout_width="@dimen/dp_68"
+                    android:layout_height="@dimen/dp_68"
+                    android:background="@drawable/music_toolbar_mascot_background"
                     android:contentDescription="@null"
+                    android:padding="@dimen/dp_18"
                     android:src="@drawable/music_player" />
 
                 <TextView
                     android:id="@+id/music_mine_empty_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginTop="@dimen/dp_12"
                     android:text="@string/music_mine_empty_title"
-                    android:textSize="@dimen/sp_16"
+                    android:textSize="@dimen/sp_17"
                     android:textStyle="bold" />
 
                 <TextView
@@ -153,8 +185,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_5"
+                    android:gravity="center"
                     android:text="@string/music_mine_empty_message"
-                    android:textSize="@dimen/sp_12" />
+                    android:textSize="@dimen/sp_11" />
 
             </LinearLayout>
         </LinearLayout>

@@ -4,8 +4,6 @@
 
     <data>
 
-        <import type="com.artillery.musicmain.viewmodel.MusicListViewModel" />
-
         <import type="com.artillery.musicbase.binding.viewadapter.recyclerview.LayoutManagers" />
 
         <import type="com.artillery.musicbase.binding.viewadapter.recyclerview.LineManagers" />
@@ -25,24 +23,25 @@
         <FrameLayout
             android:id="@+id/music_skin_banner"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_132"
+            android:layout_height="@dimen/dp_148"
             android:layout_marginStart="@dimen/dp_12"
             android:layout_marginTop="@dimen/dp_10"
             android:layout_marginEnd="@dimen/dp_12"
             android:clipToOutline="true"
-            android:visibility="gone">
+            android:elevation="@dimen/dp_6">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/music_skin_banner_art"
-                android:layout_width="@dimen/dp_160"
+                android:layout_width="@dimen/dp_184"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
-                android:alpha="0.68"
+                android:alpha="0.82"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
                 android:src="@drawable/skin_sakura_key_art" />
 
             <View
+                android:id="@+id/music_skin_banner_scrim"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/music_banner_scrim" />
@@ -59,9 +58,9 @@
                     android:id="@+id/music_skin_banner_eyebrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:letterSpacing="0.1"
-                    android:text="@string/music_character_music_eyebrow"
-                    android:textSize="@dimen/sp_10"
+                    android:letterSpacing="0.11"
+                    android:text="@string/music_library_greeting"
+                    android:textSize="@dimen/sp_9"
                     android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -69,30 +68,140 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_5"
-                    android:text="@string/music_character_music_title"
-                    android:textSize="@dimen/sp_20"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/music_library_title"
+                    android:textSize="@dimen/sp_21"
                     android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/music_skin_banner_subtitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/dp_190"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_4"
-                    android:text="@string/music_character_music_subtitle"
+                    android:maxLines="2"
+                    android:text="@string/music_library_subtitle"
                     android:textSize="@dimen/sp_11" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/music_skin_banner_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/music_banner_count_background"
+                    android:paddingStart="@dimen/dp_9"
+                    android:paddingTop="@dimen/dp_4"
+                    android:paddingEnd="@dimen/dp_9"
+                    android:paddingBottom="@dimen/dp_4"
+                    android:text="@string/music_library_count"
+                    android:textSize="@dimen/sp_9"
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </FrameLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/music_list"
+        <LinearLayout
+            android:id="@+id/music_quick_actions"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_9"
+            android:layout_marginEnd="@dimen/dp_12"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/music_library_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:letterSpacing="0.08"
+                android:text="@string/music_section_library"
+                android:textSize="@dimen/sp_11"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/music_shuffle_button"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_36"
+                android:background="@drawable/music_quick_action_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:gravity="center"
+                android:paddingStart="@dimen/dp_12"
+                android:paddingEnd="@dimen/dp_12"
+                android:text="@string/music_library_shuffle"
+                android:textSize="@dimen/sp_11"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/music_refresh_button"
+                android:layout_width="@dimen/dp_36"
+                android:layout_height="@dimen/dp_36"
+                android:layout_marginStart="@dimen/dp_8"
+                android:background="@drawable/music_quick_action_background"
+                android:contentDescription="@string/music_library_refresh"
+                android:padding="@dimen/dp_9"
+                android:src="@drawable/music_refresh" />
+
+        </LinearLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            binding:itemBinding="@{musicListModel.musicListBinding}"
-            binding:items="@{musicListModel.musicListItem}"
-            binding:layoutManager="@{LayoutManagers.linear()}"
-            binding:lineManager="@{LineManagers.horizontal()}" />
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/music_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="@dimen/dp_8"
+                binding:itemBinding="@{musicListModel.musicListBinding}"
+                binding:items="@{musicListModel.musicListItem}"
+                binding:layoutManager="@{LayoutManagers.linear()}"
+                binding:lineManager="@{LineManagers.horizontal()}" />
+
+            <LinearLayout
+                android:id="@+id/music_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/dp_32"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/music_empty_avatar"
+                    android:layout_width="@dimen/dp_82"
+                    android:layout_height="@dimen/dp_82"
+                    android:background="@drawable/music_album_background"
+                    android:padding="@dimen/dp_4"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ellipse" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/music_empty_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_14"
+                    android:gravity="center"
+                    android:text="@string/music_empty_title"
+                    android:textSize="@dimen/sp_18"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/music_empty_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:gravity="center"
+                    android:text="@string/music_empty_subtitle"
+                    android:textSize="@dimen/sp_11" />
+
+            </LinearLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 

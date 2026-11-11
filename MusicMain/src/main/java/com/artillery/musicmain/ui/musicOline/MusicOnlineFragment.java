@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
+import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -42,26 +43,35 @@ public class MusicOnlineFragment extends BaseFragment<FragmentMusicOnlineBinding
         mBinding.onlineRoot.setBackgroundColor(skin.background(requireContext()));
         mBinding.onlineList.setBackgroundColor(skin.background(requireContext()));
         boolean characterSkin = skin.isCharacterSkin();
-        mBinding.onlineSkinBanner.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
+        mBinding.onlineSkinBanner.setBackground(skin.featureBackground(requireContext()));
+        mBinding.onlineSkinBannerArt.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
+        mBinding.onlineSkinBannerScrim.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         if (characterSkin) {
             mBinding.onlineSkinBannerArt.setImageResource(skin.keyArt());
-            mBinding.onlineSkinBanner.setBackground(skin.featureBackground(requireContext()));
             mBinding.onlineSkinBannerEyebrow.setText(skin.onlineEyebrow());
             mBinding.onlineSkinBannerTitle.setText(skin.onlineTitle());
             mBinding.onlineSkinBannerSubtitle.setText(skin.onlineSubtitle());
-            mBinding.onlineSkinBannerEyebrow.setTextColor(skin.headerSecondaryText(requireContext()));
-            mBinding.onlineSkinBannerTitle.setTextColor(skin.headerPrimaryText(requireContext()));
-            mBinding.onlineSkinBannerSubtitle.setTextColor(skin.headerSecondaryText(requireContext()));
+        } else {
+            mBinding.onlineSkinBannerEyebrow.setText(R.string.music_online_default_eyebrow);
+            mBinding.onlineSkinBannerTitle.setText(R.string.music_online_default_title);
+            mBinding.onlineSkinBannerSubtitle.setText(R.string.music_online_default_subtitle);
         }
+        int bannerPrimary = characterSkin ? skin.headerPrimaryText(requireContext()) : skin.primaryText(requireContext());
+        int bannerSecondary = characterSkin ? skin.headerSecondaryText(requireContext()) : skin.secondaryText(requireContext());
+        mBinding.onlineSkinBannerEyebrow.setTextColor(bannerSecondary);
+        mBinding.onlineSkinBannerTitle.setTextColor(bannerPrimary);
+        mBinding.onlineSkinBannerSubtitle.setTextColor(bannerSecondary);
         mBinding.onlineEmpty.setTextColor(skin.secondaryText(requireContext()));
         mBinding.onlineSearchInput.setTextColor(skin.primaryText(requireContext()));
         mBinding.onlineSearchInput.setHintTextColor(skin.secondaryText(requireContext()));
         mBinding.onlineSearchBar.setBackground(roundBackground(skin.surface(requireContext()), 14));
         mBinding.onlineCategoryGroup.setBackground(roundBackground(skin.surface(requireContext()), 12));
+        mBinding.onlineEmptyState.setBackground(skin.outlinedCardBackground(requireContext()));
         mBinding.onlineSearchLeading.setColorFilter(skin.icon(requireContext()));
         mBinding.onlineSearchButton.setColorFilter(skin.icon(requireContext()));
         mBinding.onlineClearButton.setColorFilter(skin.secondaryText(requireContext()));
         mBinding.onlineEmptyIcon.setColorFilter(skin.icon(requireContext()));
+        mBinding.onlineEmptyIcon.setBackground(skin.toolbarMascotBackground(requireContext()));
         updateCategoryStyles(skin);
     }
 
@@ -69,6 +79,12 @@ public class MusicOnlineFragment extends BaseFragment<FragmentMusicOnlineBinding
     public void initViewObservable() {
         mBinding.onlineSearchButton.setOnClickListener(view -> search());
         mBinding.onlineClearButton.setOnClickListener(view -> clearSearch());
+        bindPressAnimation(mBinding.onlineSearchButton, 0.86f);
+        bindPressAnimation(mBinding.onlineClearButton, 0.88f);
+        bindPressAnimation(mBinding.onlineCategoryChinese, 0.96f);
+        bindPressAnimation(mBinding.onlineCategoryWestern, 0.96f);
+        bindPressAnimation(mBinding.onlineCategoryJapanKorea, 0.96f);
+        bindPressAnimation(mBinding.onlineCategoryOther, 0.96f);
         mBinding.onlineSearchInput.setOnEditorActionListener((view, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 search();
@@ -178,6 +194,22 @@ public class MusicOnlineFragment extends BaseFragment<FragmentMusicOnlineBinding
         drawable.setColor(color);
         drawable.setCornerRadius(radiusDp * getResources().getDisplayMetrics().density);
         return drawable;
+    }
+
+    private void bindPressAnimation(View view, float pressedScale) {
+        view.setOnTouchListener((pressedView, event) -> {
+            if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+                pressedView.animate().cancel();
+                pressedView.animate().scaleX(pressedScale).scaleY(pressedScale)
+                        .setDuration(80).start();
+            } else if (event.getAction() == android.view.MotionEvent.ACTION_UP
+                    || event.getAction() == android.view.MotionEvent.ACTION_CANCEL) {
+                pressedView.animate().cancel();
+                pressedView.animate().scaleX(1f).scaleY(1f)
+                        .setDuration(180).setInterpolator(new DecelerateInterpolator()).start();
+            }
+            return false;
+        });
     }
 
     @Override
