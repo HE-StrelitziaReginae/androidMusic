@@ -159,7 +159,6 @@
                 android:background="@drawable/music_album_background"
                 android:clipToOutline="true"
                 android:outlineProvider="background"
-                android:padding="@dimen/dp_3"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ellipse"
                 app:layout_constraintBottom_toBottomOf="parent"

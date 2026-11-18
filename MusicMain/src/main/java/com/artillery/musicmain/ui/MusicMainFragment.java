@@ -421,7 +421,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         applyProfileAvatar(skin);
         mBinding.musicAlbumImg.setImageResource(skin.isCharacterSkin()
                 ? skin.avatar() : R.drawable.ellipse);
-        mBinding.musicAlbumImg.setRotation(0f);
         mBinding.drawerLibrarySection.setTextColor(skin.secondaryText(requireContext()));
         mBinding.drawerPlayerSection.setTextColor(skin.secondaryText(requireContext()));
         mBinding.drawerRefreshText.setTextColor(skin.primaryText(requireContext()));
@@ -878,12 +877,6 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
                 : ContextCompat.getDrawable(requireContext(), R.drawable.play));
         mBinding.musicPlayBtn.setColorFilter((mMusicSkin == null ? MusicSkin.load(requireContext()) : mMusicSkin)
                 .icon(requireContext()));
-        mBinding.musicAlbumImg.animate().cancel();
-        mBinding.musicAlbumImg.setRotation(0f);
-        if (play) {
-            mBinding.musicAlbumImg.animate().rotationBy(360f).setDuration(12000)
-                    .setInterpolator(new android.view.animation.LinearInterpolator()).start();
-        }
     }
 
     @Override
