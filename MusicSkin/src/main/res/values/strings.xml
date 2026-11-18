@@ -10,6 +10,8 @@
     <string name="music_skin_noa">Noa Lumen: Verdant Resonance</string>
     <string name="music_skin_luna">Luna Celestia: Moonsea Echo</string>
     <string name="music_skin_akari">Akari Homura: Sunset Rhythm</string>
+    <string name="music_skin_tsukimi">Mio Tsukimi: Moonlit Shrine Warden</string>
+    <string name="music_skin_matsuri">Mio Matsune: Neon Summer Festival</string>
     <string name="music_character_name">HOSHINO RURI</string>
     <string name="music_character_badge">MIDNIGHT CHERRY / MUSIC SELECTOR</string>
     <string name="music_character_hint">ORIGINAL CHARACTER THEME</string>
@@ -70,6 +72,30 @@
     <string name="music_akari_mine_eyebrow">MY ARCHIVE / AKARI HOMURA</string>
     <string name="music_akari_mine_title">NEVER LET THE FIRE FADE</string>
     <string name="music_akari_mine_subtitle">Your personal encore of favorite songs and memories</string>
+    <string name="music_tsukimi_name">MIO TSUKIMI</string>
+    <string name="music_tsukimi_badge">MOONLIT SHRINE / NIGHT WARDEN</string>
+    <string name="music_tsukimi_hint">Guarding every melody beneath the moon</string>
+    <string name="music_tsukimi_music_eyebrow">MOONLIT WARD / NOW PLAYING</string>
+    <string name="music_tsukimi_music_title">MIO AFTER DARK</string>
+    <string name="music_tsukimi_music_subtitle">Silver talismans guide tonight\'s soundtrack</string>
+    <string name="music_tsukimi_online_eyebrow">FOLLOW THE FOXFIRE</string>
+    <string name="music_tsukimi_online_title">MOON ECHO RADAR</string>
+    <string name="music_tsukimi_online_subtitle">Find your next song in the quiet night</string>
+    <string name="music_tsukimi_mine_eyebrow">MY COLLECTION / MIO TSUKIMI</string>
+    <string name="music_tsukimi_mine_title">KEEP THE MOONLIGHT CLOSE</string>
+    <string name="music_tsukimi_mine_subtitle">Every melody echoes through the shrine night watch</string>
+    <string name="music_matsuri_name">MIO MATSUNE</string>
+    <string name="music_matsuri_badge">NEON SUMMER FESTIVAL / BEAT GUIDE</string>
+    <string name="music_matsuri_hint">Lanterns up, music on</string>
+    <string name="music_matsuri_music_eyebrow">FESTIVAL LIVE / SUMMER NIGHT</string>
+    <string name="music_matsuri_music_title">MIO SUMMER SETLIST</string>
+    <string name="music_matsuri_music_subtitle">Fireworks and heartbeats, woven into every beat</string>
+    <string name="music_matsuri_online_eyebrow">DISCOVER THE NEON NIGHT</string>
+    <string name="music_matsuri_online_title">SUMMER ENCORE RADAR</string>
+    <string name="music_matsuri_online_subtitle">Your next song is just beyond the next lantern</string>
+    <string name="music_matsuri_mine_eyebrow">MY COLLECTION / MIO MATSUNE</string>
+    <string name="music_matsuri_mine_title">SAVE TONIGHT\'S BRIGHTEST BEATS</string>
+    <string name="music_matsuri_mine_subtitle">A private setlist for the next summer festival</string>
     <string-array name="music_skins">
         <item>@string/music_skin_light</item>
         <item>@string/music_skin_dark</item>
@@ -79,5 +105,7 @@
         <item>@string/music_skin_noa</item>
         <item>@string/music_skin_luna</item>
         <item>@string/music_skin_akari</item>
+        <item>@string/music_skin_tsukimi</item>
+        <item>@string/music_skin_matsuri</item>
     </string-array>
 </resources>

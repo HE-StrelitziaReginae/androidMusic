@@ -232,7 +232,10 @@ public class MusicListFragment extends BaseFragment<FragmentMusicListBinding, Mu
         mBinding.musicSkinBannerArt.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         mBinding.musicSkinBannerScrim.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         if (characterSkin) {
-            mBinding.musicSkinBannerArt.setImageResource(skin.keyArt());
+            mBinding.musicSkinBannerArt.setImageResource(skin.bannerArt());
+            mBinding.musicSkinBannerArt.setScaleType(skin.hasSeparateBannerArt()
+                    ? android.widget.ImageView.ScaleType.FIT_END
+                    : android.widget.ImageView.ScaleType.CENTER_CROP);
             mBinding.musicSkinBannerEyebrow.setText(skin.musicEyebrow());
             mBinding.musicSkinBannerTitle.setText(skin.musicTitle());
             mBinding.musicSkinBannerSubtitle.setText(skin.musicSubtitle());

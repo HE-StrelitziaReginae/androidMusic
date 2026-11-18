@@ -59,6 +59,8 @@
                 android:layout_height="@dimen/dp_48"
                 android:layout_marginStart="@dimen/dp_7"
                 android:background="@drawable/music_album_background"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
                 android:padding="@dimen/dp_13"
                 android:scaleType="centerInside"
                 android:src="@drawable/music_player"

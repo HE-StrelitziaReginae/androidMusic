@@ -10,6 +10,8 @@
     <string name="music_skin_noa">诺亚·流明：森语共鸣</string>
     <string name="music_skin_luna">露娜·塞蕾斯蒂亚：月海回声</string>
     <string name="music_skin_akari">焰明朱莉：夕照律动</string>
+    <string name="music_skin_tsukimi">月见澪：神社守望者</string>
+    <string name="music_skin_matsuri">祭音澪：霓虹夏日祭</string>
     <string name="music_character_name">星野琉璃</string>
     <string name="music_character_badge">午夜樱花 · 音乐选择者</string>
     <string name="music_character_hint">原创角色主题</string>
@@ -70,6 +72,30 @@
     <string name="music_akari_mine_eyebrow">我的收藏 · 焰明朱莉</string>
     <string name="music_akari_mine_title">别让热情熄灭</string>
     <string name="music_akari_mine_subtitle">收藏喜欢的歌与每一次热烈回忆</string>
+    <string name="music_tsukimi_name">月见澪</string>
+    <string name="music_tsukimi_badge">月影神社 · 夜巡守护者</string>
+    <string name="music_tsukimi_hint">月下聆听，守护每段旋律</string>
+    <string name="music_tsukimi_music_eyebrow">月色结界 · 正在播放</string>
+    <string name="music_tsukimi_music_title">澪的月夜曲库</string>
+    <string name="music_tsukimi_music_subtitle">让银色符光指引今晚的旋律</string>
+    <string name="music_tsukimi_online_eyebrow">循着狐火寻觅新声</string>
+    <string name="music_tsukimi_online_title">月影回声雷达</string>
+    <string name="music_tsukimi_online_subtitle">在静谧夜色里发现下一首歌</string>
+    <string name="music_tsukimi_mine_eyebrow">我的收藏 · 月见澪</string>
+    <string name="music_tsukimi_mine_title">把月光与歌声一并收藏</string>
+    <string name="music_tsukimi_mine_subtitle">每段旋律，都是神社夜巡的回响</string>
+    <string name="music_matsuri_name">祭音澪</string>
+    <string name="music_matsuri_badge">霓虹夏祭 · 节拍引路人</string>
+    <string name="music_matsuri_hint">灯火点亮，音乐开场</string>
+    <string name="music_matsuri_music_eyebrow">祭典开场 · 夏夜现场</string>
+    <string name="music_matsuri_music_title">澪的夏日祭歌单</string>
+    <string name="music_matsuri_music_subtitle">把烟火与心跳都编进节拍</string>
+    <string name="music_matsuri_online_eyebrow">霓虹灯下探索新曲</string>
+    <string name="music_matsuri_online_title">夏夜安可雷达</string>
+    <string name="music_matsuri_online_subtitle">下一首歌，就在下一盏灯火之后</string>
+    <string name="music_matsuri_mine_eyebrow">我的收藏 · 祭音澪</string>
+    <string name="music_matsuri_mine_title">留住今夜最闪耀的旋律</string>
+    <string name="music_matsuri_mine_subtitle">为下一场夏日祭典珍藏专属歌单</string>
     <string-array name="music_skins">
         <item>@string/music_skin_light</item>
         <item>@string/music_skin_dark</item>
@@ -79,5 +105,7 @@
         <item>@string/music_skin_noa</item>
         <item>@string/music_skin_luna</item>
         <item>@string/music_skin_akari</item>
+        <item>@string/music_skin_tsukimi</item>
+        <item>@string/music_skin_matsuri</item>
     </string-array>
 </resources>

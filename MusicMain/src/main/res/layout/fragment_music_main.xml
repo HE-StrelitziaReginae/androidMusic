@@ -87,8 +87,10 @@
                     android:layout_height="@dimen/dp_38"
                     android:background="@drawable/music_toolbar_mascot_background"
                     android:clickable="true"
+                    android:clipToOutline="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                    android:outlineProvider="background"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -156,6 +158,7 @@
                 android:layout_marginStart="@dimen/dp_8"
                 android:background="@drawable/music_album_background"
                 android:clipToOutline="true"
+                android:outlineProvider="background"
                 android:padding="@dimen/dp_3"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ellipse"
@@ -312,7 +315,7 @@
                         android:alpha="0.86"
                         android:contentDescription="@null"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/skin_sakura_key_art"
+                        android:src="@drawable/skin_sakura_key_art_v3"
                         android:visibility="gone" />
 
                     <View

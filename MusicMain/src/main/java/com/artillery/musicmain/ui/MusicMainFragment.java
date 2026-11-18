@@ -401,7 +401,12 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
         mBinding.drawerCharacterArt.setVisibility(skin.isCharacterSkin() ? View.VISIBLE : View.GONE);
         mBinding.drawerCharacterScrim.setVisibility(skin.isCharacterSkin() ? View.VISIBLE : View.GONE);
         if (skin.isCharacterSkin()) {
-            mBinding.drawerCharacterArt.setImageResource(skin.keyArt());
+            mBinding.drawerCharacterArt.setImageResource(skin.bannerArt());
+            if (skin.hasSeparateBannerArt()) {
+                mBinding.drawerCharacterArt.setScaleType(android.widget.ImageView.ScaleType.FIT_END);
+            } else {
+                mBinding.drawerCharacterArt.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
+            }
         }
         mBinding.drawerProfileName.setText(skin.isCharacterSkin()
                 ? skin.characterName() : R.string.music_profile_name);
@@ -446,20 +451,27 @@ public class MusicMainFragment extends BaseFragment<FragmentMusicMainBinding, Mu
 
     private void applyTabVisual(android.widget.TextView tab, MusicSkin skin,
                                 int standardIcon, int characterIcon) {
+        boolean hasCharacterTabArtwork = skin.hasCharacterTabArtwork();
+        boolean hasTransparentCharacterTabs = skin.hasTransparentCharacterTabs();
         Drawable drawable = ContextCompat.getDrawable(requireContext(),
-                skin.isCharacterSkin() ? characterIcon : standardIcon);
+                hasCharacterTabArtwork ? characterIcon : standardIcon);
+        if (hasTransparentCharacterTabs) {
+            int characterArtwork = tab == mBinding.musicMain ? skin.musicTab()
+                    : tab == mBinding.musicOnline ? skin.onlineTab() : skin.mineTab();
+            drawable = ContextCompat.getDrawable(requireContext(), characterArtwork);
+        }
         if (drawable == null) {
             return;
         }
-        int size = getResources().getDimensionPixelSize(skin.isCharacterSkin()
+        int size = getResources().getDimensionPixelSize(hasCharacterTabArtwork
                 ? com.artillery.musicbase.R.dimen.dp_40
                 : com.artillery.musicbase.R.dimen.dp_20);
         drawable.setBounds(0, 0, size, size);
         tab.setCompoundDrawables(null, drawable, null, null);
         tab.setCompoundDrawablePadding(getResources().getDimensionPixelSize(
                 com.artillery.musicbase.R.dimen.dp_2));
-        TextViewCompat.setCompoundDrawableTintList(tab,
-                skin.isCharacterSkin() ? null : skin.tabIconTint(requireContext()));
+        TextViewCompat.setCompoundDrawableTintList(tab, hasCharacterTabArtwork
+                ? null : skin.tabIconTint(requireContext()));
     }
 
     private void applyProfileAvatar(MusicSkin skin) {

@@ -47,7 +47,10 @@ public class MusicOnlineFragment extends BaseFragment<FragmentMusicOnlineBinding
         mBinding.onlineSkinBannerArt.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         mBinding.onlineSkinBannerScrim.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         if (characterSkin) {
-            mBinding.onlineSkinBannerArt.setImageResource(skin.keyArt());
+            mBinding.onlineSkinBannerArt.setImageResource(skin.bannerArt());
+            mBinding.onlineSkinBannerArt.setScaleType(skin.hasSeparateBannerArt()
+                    ? android.widget.ImageView.ScaleType.FIT_END
+                    : android.widget.ImageView.ScaleType.CENTER_CROP);
             mBinding.onlineSkinBannerEyebrow.setText(skin.onlineEyebrow());
             mBinding.onlineSkinBannerTitle.setText(skin.onlineTitle());
             mBinding.onlineSkinBannerSubtitle.setText(skin.onlineSubtitle());

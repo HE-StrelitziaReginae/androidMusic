@@ -38,7 +38,10 @@ public class MusicMineFragment extends BaseFragment<FragmentMusicMineBinding, Mu
         mBinding.musicMineSkinBannerArt.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         mBinding.musicMineSkinScrim.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         if (characterSkin) {
-            mBinding.musicMineSkinBannerArt.setImageResource(skin.keyArt());
+            mBinding.musicMineSkinBannerArt.setImageResource(skin.bannerArt());
+            mBinding.musicMineSkinBannerArt.setScaleType(skin.hasSeparateBannerArt()
+                    ? android.widget.ImageView.ScaleType.FIT_END
+                    : android.widget.ImageView.ScaleType.CENTER_CROP);
             mBinding.musicMineSkinEyebrow.setText(skin.mineEyebrow());
             mBinding.musicMineSkinTitle.setText(skin.mineTitle());
             mBinding.musicMineSkinSubtitle.setText(skin.mineSubtitle());

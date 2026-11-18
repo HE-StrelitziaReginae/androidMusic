@@ -38,7 +38,7 @@
                 android:alpha="0.82"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
-                android:src="@drawable/skin_sakura_key_art" />
+                android:src="@drawable/skin_sakura_key_art_v3" />
 
             <View
                 android:id="@+id/music_skin_banner_scrim"
@@ -176,6 +176,8 @@
                     android:layout_width="@dimen/dp_82"
                     android:layout_height="@dimen/dp_82"
                     android:background="@drawable/music_album_background"
+                    android:clipToOutline="true"
+                    android:outlineProvider="background"
                     android:padding="@dimen/dp_4"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ellipse" />

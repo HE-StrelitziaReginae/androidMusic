@@ -176,6 +176,10 @@ public class MusicMainDialog extends BaseDialog<MusicMianDialogBinding> implemen
         mBinding.musicCharacterName.setVisibility(characterSkin ? View.VISIBLE : View.GONE);
         if (characterSkin) {
             mBinding.musicCharacterBackground.setImageResource(skin.keyArt());
+            mBinding.musicCharacterBackground.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
+            float backgroundScale = skin.hasSeparateBannerArt() ? 1f : 1.12f;
+            mBinding.musicCharacterBackground.setScaleX(backgroundScale);
+            mBinding.musicCharacterBackground.setScaleY(backgroundScale);
             mBinding.musicCharacterBadge.setText(skin.characterBadge());
             mBinding.musicCharacterName.setText(skin.characterName());
         }
